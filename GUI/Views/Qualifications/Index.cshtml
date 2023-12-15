@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DTO.QualificationDto>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    Html.RenderPartial("_Notification");
+}
+
+<div class="p-3" style="border :1px solid #ccc; min-height: 250px">
+    <div>
+        <h2>Danh sách văn bằng</h2>
+        <p>
+            @Html.ActionLink("Thêm mới văn bằng", "Create", new { area = "" }, new { @class = "btn btn-primary" })
+        </p>
+
+        @using (Html.BeginForm("Index", "Qualifications", FormMethod.Get))
+        {
+            @Html.TextBox("searchString") <input type="submit" value="Tìm kiếm" />
+        }
+        <br />
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Tên văn bằng")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ngày cấp")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Đơn vị cấp (Tỉnh)")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ngày hết hạn")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="3" style="color:red;">
+                            Không tìm thấy kết quả
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.ReleaseDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.IssuancePlaceName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.ExpirationDate)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Cập nhập", "Edit", new { id = item.Id}, new { @class = "btn btn-success btn-sm" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

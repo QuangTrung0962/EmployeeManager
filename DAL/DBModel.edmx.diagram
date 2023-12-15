@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0a2fa80a75044aee81de1162f153d519" Name="Diagram1" ZoomLevel="80">
+        <EntityTypeShape EntityType="EmployeesDBModel.District" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Employee" Width="1.5" PointX="3.625" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Ethnicity" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Job" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Province" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.sysdiagram" Width="1.5" PointX="7.125" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Town" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <AssociationConnector Association="EmployeesDBModel.FK_District_Province" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Town_District" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employees_Ethnicity" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employees_Job" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employees_Province" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Qualification" Width="1.5" PointX="7.875" PointY="6" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Employee" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Province1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

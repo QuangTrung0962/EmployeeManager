@@ -1,0 +1,275 @@
+﻿@model DTO.EmployeeDto
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="p-3" style="border :1px solid #ccc; min-height: 250px">
+        <div class="form-horizontal">
+            <h2>Cập nhập thông tin</h2>
+
+            <h4>Employee</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>1. Họ Tên</label>
+                            <div>
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>2. Ngày sinh</label>
+                            <div>
+                                @{
+                                    int currentYear = DateTime.Now.Year;
+                                }
+                                @Html.EditorFor(model => model.DateOfBirth, new
+                                   {
+                                       htmlAttributes = new
+                                       {
+                                           @class = "form-control",
+                                           placeholder = "mm/dd/yyyy",
+                                           autocomplete = "off",
+                                           @id = "dob",
+                                           max = currentYear.ToString() + "-12-31"
+                                       }
+                                   })
+                                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>3. Tuổi</label>
+                            <div>
+                                @Html.EditorFor(model => model.Age, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @readonly = true,
+                                        @id = "age"
+                                    }
+                                })
+                                @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>4. Dân tộc</label>
+                            @Html.DropDownList("EthnicityName", Model.Ethnicities, new { @class = "form-control selectpicker" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>5. Công việc</label>
+                            @Html.DropDownList("JobName", Model.Jobs, new { @class = "form-control selectpicker" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>6. Căn cước công dân</label>
+                            <div>
+                                @Html.EditorFor(model => model.IdCard, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @id = "id-card",
+                                        autocomplete = "off"
+                                    }
+                                })
+                                <div>
+                                    @Html.CheckBox("not-idcard", false, new
+                                    {
+                                        @id = "not-idcard"
+                                    }) Không có CCCD
+                                </div>
+                                @Html.ValidationMessageFor(model => model.IdCard, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <label>7. Số điện thoại</label>
+                            <div>
+                                @Html.EditorFor(model => model.PhoneNumber, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @id = "phone-number",
+                                        autocomplete = "off"
+                                    }
+                                })
+                                <div>
+                                    @Html.CheckBox("not-phonenumber", false, new
+                                    {
+                                      @id = "not-phonenumber"
+                                    }) Không có số điện thoại
+                                </div>
+                                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label>8. Địa chỉ</label>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <label>Tỉnh / Thành phố</label>
+                                <select class="form-control selectpicker" data-bind="value: selectedProvince" name="provinceId">
+                                    @foreach (var item in Model.Provinces)
+                                    {
+                                        <option id="test" class="selectpicker" value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <label>Quận / Huyện</label>
+                                <select data-bind="foreach: districts, value: selectedDistrict" class="form-control" name="districtId">
+                                    <option data-bind="text: DistrictName, value: Id"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <label>Xã / Phường</label>
+                                <select data-bind="foreach: towns" class="form-control" name="townId">
+                                    <option data-bind="text: TownName, value: Id"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <label>Cụ thể</label>
+                                <div>
+                                    @Html.EditorFor(model => model.Details, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group mt-3">
+        <div class="d-flex justify-content-between">
+            <div class="d-grid align-items-center">
+                @Html.ActionLink("< Danh sách Employee", "Index")
+            </div>
+            <div>
+                <input type="submit" value="Cập nhập" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        var dobInput = document.getElementById('dob');
+        var ageDisplay = document.getElementById('age');
+
+        dobInput.addEventListener('input', function () {
+            var dob = new Date(this.value);
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+
+            //Vì dob đang ở dạng dd/MM/yyyy
+            if (today.getMonth() < dob.getDate() || (today.getMonth() === dob.getDate() && today.getDate() < dob.getMonth())) {
+                age--;
+            }
+            if (age < 0) age = "";
+            ageDisplay.value = age;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var phoneNumberCheckbox = document.getElementById('not-phonenumber');
+            var phoneNumberInput = document.getElementById('phone-number');
+
+            var idCardCheckbox = document.getElementById('not-idcard');
+            var idCardInput = document.getElementById('id-card');
+
+            // Thêm sự kiện click cho checkbox
+            phoneNumberCheckbox.addEventListener('click', function () {
+                // Kiểm tra trạng thái của checkbox
+                if (phoneNumberCheckbox.checked) {
+                    phoneNumberInput.readOnly = true;
+                    phoneNumberInput.value = '';
+                } else {
+                    phoneNumberInput.readOnly = false;
+                }
+            });
+
+            idCardCheckbox.addEventListener('click', function () {
+                // Kiểm tra trạng thái của checkbox
+                if (idCardCheckbox.checked) {
+                    idCardInput.readOnly = true;
+                    idCardInput.value = '';
+                } else {
+                    idCardInput.readOnly = false;
+                }
+            });
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/app")
+}
