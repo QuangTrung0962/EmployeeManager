@@ -6,17 +6,17 @@ namespace GUI.Controllers
 {
     public class ProvincesController : Controller
     {
-        private readonly IProvinceBus _province;
+        private readonly IProvinceBus _provinceBus;
 
-        public ProvincesController(IProvinceBus province)
+        public ProvincesController(IProvinceBus provinceBus)
         {
-            _province = province;
+            _provinceBus = provinceBus;
         }
 
         // GET: Provinces
         public ActionResult Index(string searchString)
         {
-            var provinces = _province.GetProvincesData(searchString);
+            var provinces = _provinceBus.GetProvincesData(searchString);
             return View(provinces);
         }
 
@@ -28,9 +28,9 @@ namespace GUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProvinceDto provinceDTO)
+        public ActionResult Create(ProvinceDto provinceDto)
         {
-            if (!ModelState.IsValid || !_province.AddProvice(provinceDTO))
+            if (!ModelState.IsValid || !_provinceBus.AddProvice(provinceDto))
             {
                 TempData["error"] = "Có lỗi xảy ra";
                 return RedirectToAction("Index");
@@ -42,22 +42,23 @@ namespace GUI.Controllers
 
         public ActionResult Details(int? id)
         {
-            ProvinceDto provinceDTO = _province.GetProvineById(id);
+            ProvinceDto provinceDTO = _provinceBus.GetProvineById(id);
             if (provinceDTO == null) return RedirectToAction("Index");
             return View(provinceDTO);
         }
 
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
-            var province = _province.GetProvineById(id);
+            var province = _provinceBus.GetProvineById(id);
             return View(province);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ProvinceDto provinceDTO)
+        public ActionResult Edit(ProvinceDto provinceDto)
         {
-            if (!ModelState.IsValid || !_province.UpdateProvince(provinceDTO))
+            if (!ModelState.IsValid || !_provinceBus.UpdateProvince(provinceDto))
             {
                 TempData["error"] = "Có lỗi xảy ra";
                 return RedirectToAction("Index");
@@ -67,9 +68,9 @@ namespace GUI.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Delete(int? employeeId)
+        public ActionResult Delete(int? provinceId)
         {
-            ProvinceDto provinceDTO = _province.GetProvineById(employeeId);
+            ProvinceDto provinceDTO = _provinceBus.GetProvineById(provinceId);
 
             if (provinceDTO == null) return RedirectToAction("Index");
             return View(provinceDTO);
@@ -79,7 +80,7 @@ namespace GUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (!_province.DeleteProvice(id))
+            if (!_provinceBus.DeleteProvice(id))
             {
                 TempData["error"] = "Có lỗi xảy ra";
                 return RedirectToAction("Index");

@@ -60,15 +60,13 @@ namespace DAL
 		{
 			Province province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == provinceDto.Id);
 
-			if (province != null) 
-			{
-				province.ProvinceId = provinceDto.Id;
-				province.ProvinceName = provinceDto.ProvinceName;
-			}
-
+			if (province == null) return false;
+ 
 			try
 			{
-				_db.SaveChanges();
+                province.ProvinceId = provinceDto.Id;
+                province.ProvinceName = provinceDto.ProvinceName;
+                _db.SaveChanges();
 				return true;
 			}
             catch (DbUpdateException ex)

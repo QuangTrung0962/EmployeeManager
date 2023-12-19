@@ -9,5 +9,7 @@ namespace DTO
         [Required(ErrorMessage = "Tên quận không được để trống")]
         [StringLength(250)]
         public string DistrictName { get; set; }
+
+        public int ProvinceId { get; set; }
     }
 }
