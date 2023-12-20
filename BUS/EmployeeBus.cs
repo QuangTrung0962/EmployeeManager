@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using DTO.Utils;
 using BUS.Interfaces;
 using DAL.Interfaces;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.IO;
 
@@ -206,8 +205,8 @@ namespace BUS
                     var i = 0;
                     var name = row.Cell(++i).Value.ToString();
                     var dateOfBirth = row.Cell(++i).Value.ToString();
-                    var ethnicityName = row.Cell(++i).Value.ToString();
-                    var jobName = row.Cell(++i).Value.ToString();
+                    var ethnicityId = row.Cell(++i).Value.ToString();
+                    var jobId = row.Cell(++i).Value.ToString();
                     var idCard = row.Cell(++i).Value.ToString();
                     var phoneNumber = row.Cell(++i).Value.ToString();
                     var provinceId = row.Cell(++i).Value.ToString();
@@ -220,8 +219,8 @@ namespace BUS
                         !ExcelValidators.IsNonEmptyString(idCard) || 
                         !ExcelValidators.IsNonEmptyString(addressDescription) ||
                         !ExcelValidators.IsNonEmptyString
-                        (ethnicityName)||
-                        !ExcelValidators.IsNonEmptyString(jobName))
+                        (ethnicityId)||
+                        !ExcelValidators.IsNonEmptyString(jobId))
 
                     {
                         errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
@@ -263,8 +262,8 @@ namespace BUS
                     var name = row.Cell(++i).Value.ToString();
                     var dateOfBirth = row.Cell(++i).GetDateTime();
                     var age = DateTime.Now.Year - dateOfBirth.Year;
-                    var ethnicityName = row.Cell(++i).Value.ToString();
-                    var jobName = row.Cell(++i).Value.ToString();
+                    var ethnicityId = row.Cell(++i).Value.ToString();
+                    var jobId = row.Cell(++i).Value.ToString();
                     var idCard = row.Cell(++i).Value.ToString();
                     var phoneNumber = row.Cell(++i).Value.ToString();
                     var provinceId = int.Parse(row.Cell(++i).Value.ToString());
@@ -272,22 +271,22 @@ namespace BUS
                     var townId = int.Parse(row.Cell(++i).Value.ToString());
                     var details = row.Cell(++i).Value.ToString();
 
-                    var employee = new EmployeeDto
+                    var employee = new Employee
                     {
                         Name = name,
                         DateOfBirth = dateOfBirth,
                         Age = age,
-                        EthnicityName = ethnicityName,
-                        JobName = jobName,
+                        Ethnicity = ethnicityId,
+                        Job = jobId,
                         IdCard = idCard,
                         PhoneNumber = phoneNumber,
-                        Province = new ProvinceDto {Id = provinceId },
-                        District = new DistrictDto {Id = districtId },
-                        Town = new TownDto { Id = townId},
+                        ProvinceId = provinceId ,
+                        DistrictId = districtId,
+                        TownId = townId,
                         Details = details,
                     };
 
-                    AddEmployee(employee);
+                    _dataLayer.AddEmployee(employee);
                 }
 
                 errorMessage = null;

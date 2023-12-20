@@ -6,7 +6,7 @@ namespace DTO.Utils
 {
     public static class ExcelValidators
     {
-        private const string phoneNumberPattern = @"^(0)[1-9][0-9]{8}$";
+        private const string phoneNumberPattern = @"^0[0-9]{9}$";
         private const string idCardPattern = @"^[0-9]{12}$";
         private static readonly CultureInfo vietnamCulture = new CultureInfo("vi-VN");
 
@@ -30,10 +30,9 @@ namespace DTO.Utils
             return Regex.IsMatch(input, idCardPattern);
         }
 
-        public static bool IsDateTime(string value)
+        public static bool IsDateTime(string input)
         {
-            return DateTime.TryParseExact(value, "M/d/yyyy", vietnamCulture,
-                DateTimeStyles.None, out _);
+            return DateTime.TryParse(input, vietnamCulture, DateTimeStyles.None, out _);
         }
 
     }

@@ -23,8 +23,10 @@ namespace DTO
 		public int Age { get; set; }
 
 		public IEnumerable<SelectListItem> Ethnicities { get; set; }
-		public string EthnicityName { get; set; }
+        public int EthnicId { get; set; }
+        public string EthnicityName { get; set; }
 		public IEnumerable<SelectListItem> Jobs { get; set; }
+		public int JobId { get; set; }
 		public string JobName { get; set; }
 
 		[StringLength(12)]

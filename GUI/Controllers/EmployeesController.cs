@@ -164,7 +164,7 @@ namespace GUI.Controllers
                     TempData["error"] = message;
                 else
                 {
-                    TempData["success"] = message;
+                    TempData["success"] = "Thành công";
                 }
 
                 return RedirectToAction("Index");
