@@ -19,11 +19,26 @@ namespace DAL
 
         public List<DistrictDto> GetDistrictsData(string searchString)
         {
+            bool isNumeric = int.TryParse(searchString, out int provinceId);
+
+            if(isNumeric)
+            {
+                return _db.Districts.Where(i => i.ProvinceId.ToString() == searchString)
+               .Select(i => new DistrictDto
+               {
+                   Id = i.DistrictId,
+                   DistrictName = i.DistrictName,
+                   ProvinceId = i.ProvinceId,
+               })
+               .ToList();
+            }
+
             return _db.Districts.Where(i => i.DistrictName.ToLower().Contains(searchString.ToLower()) || string.IsNullOrEmpty(searchString))
                .Select(i => new DistrictDto
                {
                    Id = i.DistrictId,
                    DistrictName = i.DistrictName,
+                   ProvinceId = i.ProvinceId,
                }).ToList();
         }
 

@@ -14,9 +14,44 @@ namespace BUS
             _townDal = town;
         }
 
-        public List<TownDto> GetDistrictsByProvinceId(int districtId)
+        public bool AddTown(TownDto townDto)
+        {
+            Town town = new Town()
+            {
+                TownId = townDto.Id,
+                TownName = townDto.TownName,
+                DistrictId = townDto.DistrictId
+            };
+
+            if (_townDal.AddTown(town)) return true;
+            else return false;
+        }
+
+        public bool DeleteTown(int id)
+        {
+            if (_townDal.DeleteTown(id)) return true;
+            else return false;
+        }
+
+        public TownDto GetTownById(int? id)
+        {
+            return _townDal.GetTownById(id);
+        }
+
+        public List<TownDto> GetTownsByDistrictId(int districtId)
 		{
 			return _townDal.GetTownsByDistrictId(districtId);
 		}
-	}
+
+        public List<TownDto> GetTownsData(string searchString)
+        {
+            return _townDal.GetTownsData(searchString);
+        }
+
+        public bool UpdateTown(TownDto townDto)
+        {
+            if (_townDal.UpdateTown(townDto)) return true;
+            else return false;
+        }
+    }
 }

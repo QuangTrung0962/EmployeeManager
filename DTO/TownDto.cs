@@ -9,5 +9,6 @@ namespace DTO
 		[Required(ErrorMessage = "Tên phố không được để trống")]
 		[StringLength(250)]
 		public string TownName { get; set; }
+		public int DistrictId { get; set; }
 	}
 }

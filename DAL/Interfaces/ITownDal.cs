@@ -7,5 +7,9 @@ namespace DAL.Interfaces
     {
         TownDto GetTownById(int? id);
         List<TownDto> GetTownsByDistrictId(int districtId);
+        List<TownDto> GetTownsData(string searchString);
+        bool AddTown(Town town);
+        bool UpdateTown(TownDto townDto);
+        bool DeleteTown(int id);
     }
 }

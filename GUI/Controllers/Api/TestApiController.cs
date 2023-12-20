@@ -32,7 +32,7 @@ namespace GUI.Controllers.Api
         [HttpGet]
         public IHttpActionResult GetTownsByDistrictId(int id)
         {
-            List<TownDto> towns = _townBUS.GetDistrictsByProvinceId(id);
+            List<TownDto> towns = _townBUS.GetTownsByDistrictId(id);
 
             if (towns.Count == 0)
                 return NotFound();
