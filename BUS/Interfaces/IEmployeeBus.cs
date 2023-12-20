@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using DTO;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 
 namespace BUS.Interfaces
@@ -23,5 +24,6 @@ namespace BUS.Interfaces
         int GetPageIndex(int? page);
         int GetPageSize(int? page);
         bool SaveExcelFile(XLWorkbook workbook, string pathFile);
+        bool ImportExcel(Stream excelFileStream, out string errorMessage);
     }
 }

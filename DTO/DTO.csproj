@@ -75,6 +75,7 @@
     <Compile Include="ProvinceDto.cs" />
     <Compile Include="QualificationDto.cs" />
     <Compile Include="TownDto.cs" />
+    <Compile Include="Utils\ExcelValidators.cs" />
     <Compile Include="Utils\PagingConstants.cs" />
   </ItemGroup>
   <ItemGroup>

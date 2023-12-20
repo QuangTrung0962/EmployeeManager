@@ -2,6 +2,7 @@
 using DTO;
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 
 namespace GUI.Controllers
@@ -144,6 +145,33 @@ namespace GUI.Controllers
             catch (Exception ex)
             {
                 ViewBag.Noti = "Lỗi: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportExcel(HttpPostedFileBase file)
+        {
+            if (file == null || file.ContentLength == 0)
+            {
+                TempData["error"] = "Lỗi đọc file";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                if (!_employeeBUS.ImportExcel(file.InputStream, out var message))
+                    TempData["error"] = message;
+                else
+                {
+                    TempData["success"] = message;
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = ex.Message;
                 return RedirectToAction("Index");
             }
         }

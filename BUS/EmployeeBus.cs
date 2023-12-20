@@ -9,6 +9,7 @@ using BUS.Interfaces;
 using DAL.Interfaces;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
+using System.IO;
 
 namespace BUS
 {
@@ -16,7 +17,7 @@ namespace BUS
     {
         private readonly IEmployeeDal _dataLayer;
 
-        public EmployeeBus(IEmployeeDal employee) 
+        public EmployeeBus(IEmployeeDal employee)
         {
             _dataLayer = employee;
         }
@@ -165,7 +166,7 @@ namespace BUS
             return _dataLayer.GetNumberOfRecords(searchString);
         }
 
-        public int GetPageIndex (int? page)
+        public int GetPageIndex(int? page)
         {
             int pageIndex = page ?? PagingConstants.DefaultFirstPage;
 
@@ -193,5 +194,105 @@ namespace BUS
             }
         }
 
+        public bool ImportExcel(Stream excelFileStream, out string errorMessage)
+        {
+            using (var workbook = new XLWorkbook(excelFileStream))
+            {
+                var worksheet = workbook.Worksheet(1);
+                var currentRow = 2;
+                
+                foreach (var row in worksheet.RowsUsed().Skip(1))
+                {
+                    var i = 0;
+                    var name = row.Cell(++i).Value.ToString();
+                    var dateOfBirth = row.Cell(++i).Value.ToString();
+                    var ethnicityName = row.Cell(++i).Value.ToString();
+                    var jobName = row.Cell(++i).Value.ToString();
+                    var idCard = row.Cell(++i).Value.ToString();
+                    var phoneNumber = row.Cell(++i).Value.ToString();
+                    var provinceId = row.Cell(++i).Value.ToString();
+                    var districtId = row.Cell(++i).Value.ToString();
+                    var villageId = row.Cell(++i).Value.ToString();
+                    var addressDescription = row.Cell(++i).Value.ToString();
+
+                    if (!ExcelValidators.IsNonEmptyString(name) || 
+                        !ExcelValidators.IsNonEmptyString(phoneNumber) ||
+                        !ExcelValidators.IsNonEmptyString(idCard) || 
+                        !ExcelValidators.IsNonEmptyString(addressDescription) ||
+                        !ExcelValidators.IsNonEmptyString
+                        (ethnicityName)||
+                        !ExcelValidators.IsNonEmptyString(jobName))
+
+                    {
+                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                        return false;
+                    }
+
+                    if (!ExcelValidators.IsNumber(provinceId) || 
+                        !ExcelValidators.IsNumber(districtId) ||
+                        !ExcelValidators.IsNumber(villageId))
+                    {
+                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                        return false;
+                    }
+
+                    if (!ExcelValidators.IsDateTime(dateOfBirth))
+                    {
+                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                        return false;
+                    }
+
+                    if (!ExcelValidators.IsIdCard(idCard))
+                    {
+                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                        return false;
+                    }
+
+                    if (!ExcelValidators.IsPhoneNumber(phoneNumber))
+                    {
+                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                        return false;
+                    }
+
+                    currentRow++;
+                }
+
+                foreach (var row in worksheet.RowsUsed().Skip(1))
+                {
+                    var i = 0;
+                    var name = row.Cell(++i).Value.ToString();
+                    var dateOfBirth = row.Cell(++i).GetDateTime();
+                    var age = DateTime.Now.Year - dateOfBirth.Year;
+                    var ethnicityName = row.Cell(++i).Value.ToString();
+                    var jobName = row.Cell(++i).Value.ToString();
+                    var idCard = row.Cell(++i).Value.ToString();
+                    var phoneNumber = row.Cell(++i).Value.ToString();
+                    var provinceId = int.Parse(row.Cell(++i).Value.ToString());
+                    var districtId = int.Parse(row.Cell(++i).Value.ToString());
+                    var townId = int.Parse(row.Cell(++i).Value.ToString());
+                    var details = row.Cell(++i).Value.ToString();
+
+                    var employee = new EmployeeDto
+                    {
+                        Name = name,
+                        DateOfBirth = dateOfBirth,
+                        Age = age,
+                        EthnicityName = ethnicityName,
+                        JobName = jobName,
+                        IdCard = idCard,
+                        PhoneNumber = phoneNumber,
+                        Province = new ProvinceDto {Id = provinceId },
+                        District = new DistrictDto {Id = districtId },
+                        Town = new TownDto { Id = townId},
+                        Details = details,
+                    };
+
+                    AddEmployee(employee);
+                }
+
+                errorMessage = null;
+                return true;
+            }
+        }
     }
 }

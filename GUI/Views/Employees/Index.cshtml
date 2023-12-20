@@ -18,6 +18,14 @@
             @Html.ActionLink("Thêm mới Employee", "Create", new { area = "" }, new { @class = "btn btn-primary" })
             @Html.ActionLink("Export ra Excel", "ExportToExcel", new { area = "" }, new { @class = "btn btn-secondary" })
         </p>
+        <div>
+            @using (Html.BeginForm("ImportExcel", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="file" />
+                <input type="submit" value="ImportExcel" />
+            }
+        </div>
+
         <div class="">
             @using (Html.BeginForm("Index", "Employees", FormMethod.Get))
             {
@@ -109,4 +117,3 @@
         </div>
     </div>
 </div>
-
