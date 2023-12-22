@@ -1,0 +1,126 @@
+﻿@model DTO.QualificationDto
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="p-3" style="border :1px solid #ccc; min-height: 250px">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="d-flex flex-column">
+                        <label>1. Tên văn bằng</label>
+                        <div>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="d-flex flex-column">
+                        <label>2. Ngày cấp</label>
+                        <div>
+                            @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "form-control", @id = "releaseDate" } })
+                            @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger",@id= "releaseDate-error" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="d-flex flex-column">
+                        <label>3. Nơi cấp (Tỉnh)</label>
+                        <select class="form-control selectpicker" name="IssuancePlace">
+                            @foreach (var item in ViewBag.provinces)
+                            {
+                                <option id="test" class="selectpicker" value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="d-flex flex-column">
+                        <label>4. Ngày hết hạn</label>
+                        <div>
+                            @Html.EditorFor(model => model.ExpirationDate, new { htmlAttributes = new { @class = "form-control", @id = "expirationDate" } })
+                            @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger", @id = "expirationDate-error" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <div class="d-flex justify-content-between">
+                <div class="d-grid align-items-center">
+                    @Html.ActionLink("< Danh sách Văn bằng", "Index")
+                </div>
+                <div class="">
+                    <input type="reset" value="Hủy" class="btn btn-danger" />
+                    <input type="submit" value="Xác nhận" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var releaseDateInput = document.getElementById("releaseDate");
+            var expirationDateInput = document.getElementById("expirationDate");
+
+            releaseDateInput.addEventListener("blur", function () {
+                validateDates();
+            });
+
+            expirationDateInput.addEventListener("blur", function () {
+                validateDates();
+            });
+
+            function validateDates() {
+                var releaseDateValue = releaseDateInput.value;
+                var expirationDateValue = expirationDateInput.value;
+
+                if (isNaN(Date.parse(releaseDateValue)) || new Date(releaseDateValue).getFullYear() <= 1990) {
+                    document.getElementById("releaseDate-error").innerText = "Ngày phát hành phải là một năm lớn hơn 1990.";
+                    releaseDateInput.value = "";
+                    releaseDateInput.focus();
+                    return;
+                } else {
+                    document.getElementById("releaseDate-error").innerText = "";
+                }
+
+                if (isNaN(Date.parse(expirationDateValue)) || new Date(releaseDateValue).getFullYear() > new Date().getFullYear()) {
+                    document.getElementById("expirationDate-error").innerText = "Ngày hết hạn không hợp lệ.";
+                    expirationDateInput.value = "";
+                    expirationDateInput.focus();
+                    return;
+                } else {
+                    document.getElementById("expirationDate-error").innerText = "";
+                }
+
+                
+                if (new Date(releaseDateValue) >= new Date(expirationDateValue)) {
+                    document.getElementById("releaseDate-error").innerText = "Ngày phát hành phải nhỏ hơn ngày hết hạn.";
+                    releaseDateInput.value = "";
+                    expirationDateInput.value = "";
+                    releaseDateInput.focus();
+                } else {
+                    document.getElementById("releaseDate-error").innerText = "";
+                }
+            }
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -24,6 +24,7 @@ namespace DTO
         [DisplayFormat(DataFormatString = "{0: dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpirationDate { get; set; }
         public EmployeeDto Employee { get; set; }
-      
+        public int EmployeeId { get; set; }
+
     }
 }

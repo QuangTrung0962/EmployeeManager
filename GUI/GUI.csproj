@@ -282,6 +282,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="App_Data\Excel_File\FileTest.xlsx" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -331,11 +332,11 @@
     <Content Include="Views\Towns\Details.cshtml" />
     <Content Include="Views\Towns\Edit.cshtml" />
     <Content Include="Views\Towns\Delete.cshtml" />
+    <Content Include="Views\Qualifications\Create.cshtml" />
+    <Content Include="Views\Qualifications\QualificationsByEmployeeId.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Excel_File\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Qualification\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

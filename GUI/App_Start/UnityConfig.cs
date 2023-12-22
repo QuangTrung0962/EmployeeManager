@@ -27,7 +27,7 @@ public static class UnityConfig
         container.RegisterType<IQualificationBus, QualificationBus>();
 
         // Register your controllers, including TestApiController
-        container.RegisterType<TestApiController>();
+        container.RegisterType<GUI.Controllers.Api.TestApiController>();
 
         // Set the UnityDependencyResolver for MVC
         System.Web.Mvc.DependencyResolver.SetResolver(new Unity.Mvc5.UnityDependencyResolver(container));

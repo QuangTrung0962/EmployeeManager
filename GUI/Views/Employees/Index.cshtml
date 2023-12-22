@@ -22,7 +22,7 @@
             @using (Html.BeginForm("ImportExcel", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <input type="file" name="file" />
-                <input type="submit" value="ImportExcel" />
+                <input type="submit" value="Import file Excel" />
             }
         </div>
 
@@ -108,6 +108,7 @@
                                     @Html.ActionLink("Cập nhập", "Edit", new { id = item.Id }, new { @class = "btn btn-success btn-sm" })
                                     @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
                                     @Html.ActionLink("Xóa", "Delete", new { employeeId = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                                    @Html.ActionLink("TT Văn bằng", "QualificationsByEmployeeId", "Qualifications", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
                                 </td>
                             </tr>
                         }

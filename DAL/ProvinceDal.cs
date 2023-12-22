@@ -58,7 +58,7 @@ namespace DAL
 
 		public bool UpdateProvince(ProvinceDto provinceDto)
 		{
-			Province province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == provinceDto.Id);
+            Province province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == provinceDto.Id);
 
 			if (province == null) return false;
  
