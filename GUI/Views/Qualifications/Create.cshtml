@@ -91,8 +91,9 @@
                 var releaseDateValue = releaseDateInput.value;
                 var expirationDateValue = expirationDateInput.value;
 
-                if (isNaN(Date.parse(releaseDateValue)) || new Date(releaseDateValue).getFullYear() <= 1990) {
-                    document.getElementById("releaseDate-error").innerText = "Ngày phát hành phải là một năm lớn hơn 1990.";
+                if (isNaN(Date.parse(releaseDateValue)) || new Date(releaseDateValue).getFullYear() <= 1990 || new Date(releaseDateValue) > new Date())
+                {
+                    document.getElementById("releaseDate-error").innerText = "Ngày phát hành phải là một năm lớn hơn 1990 và nhỏ hơn năm hiện tại";
                     releaseDateInput.value = "";
                     releaseDateInput.focus();
                     return;
@@ -100,7 +101,7 @@
                     document.getElementById("releaseDate-error").innerText = "";
                 }
 
-                if (isNaN(Date.parse(expirationDateValue)) || new Date(releaseDateValue).getFullYear() > new Date().getFullYear()) {
+                if (isNaN(Date.parse(expirationDateValue)) || new Date(releaseDateValue) > new Date()) {
                     document.getElementById("expirationDate-error").innerText = "Ngày hết hạn không hợp lệ.";
                     expirationDateInput.value = "";
                     expirationDateInput.focus();
