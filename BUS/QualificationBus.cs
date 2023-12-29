@@ -9,13 +9,12 @@ namespace BUS
     public class QualificationBus : IQualificationBus
     {
         private readonly IQualificationDal _qualificationDal;
-
         public QualificationBus(IQualificationDal qualification)
         {
             _qualificationDal = qualification;
         }
 
-        public bool AddQualificatio(QualificationDto qualificationDto)
+        public bool AddQualification(QualificationDto qualificationDto)
         {
             Qualification obj = new Qualification()
             {
@@ -25,14 +24,14 @@ namespace BUS
                 ExpirationDate = qualificationDto.ExpirationDate,
                 EmployeeId = qualificationDto.EmployeeId
             };
-
+            
             if (_qualificationDal.AddQualificatio(obj)) return true;
             else return false;
         }
 
-        public bool DeleteQualificatio(int id)
+        public bool DeleteQualification(int id)
         {
-            if (_qualificationDal.DeleteQualificatio(id)) return true;
+            if (_qualificationDal.DeleteQualification(id)) return true;
             else return false;
         }
 
@@ -41,15 +40,20 @@ namespace BUS
             return _qualificationDal.GetQualificationsData(searchString);
         }
 
-        public bool UpdateQualificatio(QualificationDto qualificationDto)
+        public bool UpdateQualification(QualificationDto qualificationDto)
         {
-            if (_qualificationDal.UpdateQualificatio(qualificationDto)) return true;
+            if (_qualificationDal.UpdateQualification(qualificationDto)) return true;
             else return false;
         }
 
         public List<QualificationDto> GetQualificationsByEmployeeId(int id)
         {
              return _qualificationDal.GetQualificationsByEmployeeId(id);
+        }
+
+        public QualificationDto GetQualificationById(int id)
+        {
+            return _qualificationDal.GetQualificationById(id);
         }
     }
 

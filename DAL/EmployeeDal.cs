@@ -14,10 +14,10 @@ namespace DAL
         private readonly IDistrictDal _districtDal;
         private readonly ITownDal _townDal;
 
-        public EmployeeDal(EmployeesDBEntities context,IProvinceDal province, IDistrictDal district, ITownDal town)
+        public EmployeeDal(EmployeesDBEntities context, IProvinceDal province, IDistrictDal district, ITownDal town)
         {
             _db = context;
-            _provinceDal =  province;
+            _provinceDal = province;
             _districtDal = district;
             _townDal = town;
         }
@@ -25,11 +25,11 @@ namespace DAL
         //Lấy danh sách nhân viên
         public List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize)
         {
-            var qualifications = _db.Qualifications.Where(i => i.ExpirationDate >= DateTime.Now);
-
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
+                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
+                    from qualif in qualifications.DefaultIfEmpty()
                     where string.IsNullOrEmpty(searchString) || e.Name.ToLower().Contains(searchString.ToLower())
                     select new EmployeeDto
                     {
@@ -42,10 +42,12 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = qualifications.Count(q => q.EmployeeId == e.Id),
-                    }).OrderBy(i => i.Id)
-                    .Skip((pageIndex - 1) * pageSize).
-                    Take(pageSize).ToList();
+                        NumberDegree = qualifications.Count()
+                    })
+                      .OrderBy(i => i.Id)
+                      .Skip((pageIndex - 1) * pageSize)
+                      .Take(pageSize)
+                      .ToList();
         }
 
         //Thêm mới 1 nhân viên
@@ -87,9 +89,9 @@ namespace DAL
                     employee.PhoneNumber = employeeDto.PhoneNumber;
                     employee.IdCard = employeeDto.IdCard;
                     employee.Details = employeeDto.Details;
-                    employee.ProvinceId = employeeDto.Province.Id;
-                    employee.DistrictId = employeeDto.District.Id;
-                    employee.TownId = employeeDto.Town.Id;
+                    employee.ProvinceId = employeeDto.ProvinceId;
+                    employee.DistrictId = employeeDto.DistrictId;
+                    employee.TownId = employeeDto.TownId;
                 }
                 _db.SaveChanges();
                 return true;
@@ -111,6 +113,10 @@ namespace DAL
         {
             try
             {
+                var degrees = _db.Qualifications.Where(x => x.EmployeeId == id);
+                if (degrees.Any())
+                    _db.Qualifications.RemoveRange(degrees);
+
                 var employee = _db.Employees.SingleOrDefault(i => i.Id == id);
                 _db.Employees.Remove(employee);
                 _db.SaveChanges();
@@ -198,6 +204,8 @@ namespace DAL
         public EmployeeDto GetEmployeeById(int? id)
         {
             Employee employee = _db.Employees.First(x => x.Id == id);
+            int count = _db.Qualifications.Count(x => x.EmployeeId == id);
+
             return new EmployeeDto
             {
                 Id = employee.Id,
@@ -212,6 +220,7 @@ namespace DAL
                 District = _districtDal.GetDistrictById(employee.DistrictId),
                 Town = _townDal.GetTownById(employee.TownId),
                 Details = employee.Details,
+                NumberDegree = count
             };
         }
 

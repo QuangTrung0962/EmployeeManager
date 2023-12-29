@@ -30,7 +30,7 @@
             <br />
             @using (Html.BeginForm("Index", "Employees", FormMethod.Get))
             {
-                @Html.TextBox("searchString") <input type="submit" value="Tìm kiếm" />
+                @Html.TextBox("searchString", ViewBag.CurrentFilter as string) <input type="submit" value="Tìm kiếm" />
             }
             <br />
 
@@ -115,7 +115,7 @@
                     }
                 </tbody>
             </table>
-            @Html.PagedListPager(Model, pageIndex => Url.Action("Index", new { pageIndex, pageSize = ViewBag.PageSize }))
+            @Html.PagedListPager(Model, pageIndex => Url.Action("Index", new { pageIndex, pageSize = ViewBag.PageSize, currentFilter = ViewBag.CurrentFilter }))
         </div>
     </div>
 </div>

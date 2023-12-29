@@ -8,7 +8,7 @@ namespace BUS.Interfaces
 {
     public interface IEmployeeBus
     {
-        List<EmployeeDto> GetEmployeesData(string searchiString, int? pageIndex, int? pageSize);
+        PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize);
         IEnumerable<SelectListItem> GetJobsDataForDropdown();
         IEnumerable<SelectListItem> GetEthnicityDataForDropdown();
         IEnumerable<SelectListItem> GetProvinceDataForDropdown();

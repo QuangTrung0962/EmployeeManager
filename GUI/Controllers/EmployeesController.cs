@@ -1,7 +1,6 @@
 ﻿using BUS.Interfaces;
 using DTO;
 using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -17,20 +16,16 @@ namespace GUI.Controllers
         }
 
         // GET: Employee
-        public ActionResult Index(int? pageIndex, int? pageSize, string searchString)
+        public ActionResult Index(int? pageIndex, int? pageSize, string searchString, string currentFilter)
         {
-            pageIndex = _employeeBUS.GetPageIndex(pageIndex);
-            pageSize = _employeeBUS.GetPageSize(pageSize);
+            if (string.IsNullOrEmpty(searchString)) 
+                searchString = currentFilter;
+
             ViewBag.PageSize = pageSize;
+            ViewBag.CurrentFilter = searchString;
+            PageList<EmployeeDto> employees = _employeeBUS.GetEmployeesData(searchString, pageIndex, pageSize);
 
-            List<EmployeeDto> employees = _employeeBUS.GetEmployeesData(searchString, pageIndex, pageSize);
-
-            int numberRecords = 
-                _employeeBUS.GetNumberOfRecords(searchString);
-
-            PageList<EmployeeDto> pagedEmployees = new PageList<EmployeeDto>(employees, pageIndex, pageSize, numberRecords);
-
-            return View(pagedEmployees);
+            return View(employees);
         }
 
         // GET: Employees/Create
@@ -49,12 +44,8 @@ namespace GUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(EmployeeDto employee, int provinceId, int districtId, int townId)
+        public ActionResult Create(EmployeeDto employee)
         {
-            employee.Province = new ProvinceDto() { Id = provinceId };
-            employee.District = new DistrictDto() { Id = districtId };
-            employee.Town = new TownDto() { Id = townId };
-
             if (!ModelState.IsValid || !_employeeBUS.AddEmployee(employee))
             {
                 TempData["error"] = "Có lỗi xảy ra";
@@ -85,11 +76,8 @@ namespace GUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EmployeeDto employee, int provinceId, int districtId, int townId)
+        public ActionResult Edit(EmployeeDto employee)
         {
-            employee.Province = new ProvinceDto() { Id = provinceId };
-            employee.District = new DistrictDto() { Id = districtId };
-            employee.Town = new TownDto() { Id = townId };
 
             if (!ModelState.IsValid || !_employeeBUS.UpdateEmployee(employee))
             {

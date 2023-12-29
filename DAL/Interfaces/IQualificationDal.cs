@@ -7,8 +7,9 @@ namespace DAL.Interfaces
     {
         List<QualificationDto> GetQualificationsData(string searchString);
         bool AddQualificatio(Qualification qualification);
-        bool UpdateQualificatio(QualificationDto qualificationDto);
-        bool DeleteQualificatio(int id);
+        bool UpdateQualification(QualificationDto qualificationDto);
+        bool DeleteQualification(int id);
         List<QualificationDto> GetQualificationsByEmployeeId(int id);
+        QualificationDto GetQualificationById(int id);
     }
 }

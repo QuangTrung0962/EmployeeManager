@@ -12,7 +12,7 @@
     <div>
         <h2>Danh sách văn bằng của nhân viên: @ViewBag.id</h2>
         <p>
-            @Html.ActionLink("Thêm mới văn bằng", "Create", new { area = "",id = ViewBag.id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Thêm mới văn bằng", "Create", new { area = "", id = ViewBag.id }, new { @class = "btn btn-primary" })
         </p>
 
         <table class="table">
@@ -30,6 +30,7 @@
                     <th>
                         @Html.DisplayName("Ngày hết hạn")
                     </th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -61,6 +62,9 @@
                             </td>
                             <td>
                                 @Html.ActionLink("Cập nhập", "Edit", new { id = item.Id }, new { @class = "btn btn-success btn-sm" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
                             </td>
                         </tr>
                     }

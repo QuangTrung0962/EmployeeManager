@@ -7,9 +7,10 @@ namespace BUS.Interfaces
     public interface IQualificationBus
     {
         List<QualificationDto> GetQualificationsData(string searchString);
-        bool AddQualificatio(QualificationDto qualificationDto);
-        bool UpdateQualificatio(QualificationDto qualificationDto);
-        bool DeleteQualificatio(int id);
+        bool AddQualification(QualificationDto qualificationDto);
+        bool UpdateQualification(QualificationDto qualificationDto);
+        bool DeleteQualification(int id);
         List<QualificationDto> GetQualificationsByEmployeeId(int id);
+        QualificationDto GetQualificationById (int id);
     }
 }

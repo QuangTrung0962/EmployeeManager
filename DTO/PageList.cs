@@ -11,7 +11,7 @@ namespace DTO
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
 
-        public PageList(List<T> items, int? pageIndex, int? pageSize, int? count)
+        public PageList(List<T> items, int? count,int? pageIndex, int? pageSize)
         {
             Items = items;
             PageIndex = (int)pageIndex;

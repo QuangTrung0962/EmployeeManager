@@ -334,6 +334,8 @@
     <Content Include="Views\Towns\Delete.cshtml" />
     <Content Include="Views\Qualifications\Create.cshtml" />
     <Content Include="Views\Qualifications\QualificationsByEmployeeId.cshtml" />
+    <Content Include="Views\Qualifications\Edit.cshtml" />
+    <Content Include="Views\Qualifications\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

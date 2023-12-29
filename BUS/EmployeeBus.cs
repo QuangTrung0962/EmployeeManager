@@ -21,9 +21,16 @@ namespace BUS
             _dataLayer = employee;
         }
 
-        public List<EmployeeDto> GetEmployeesData(string searchiString, int? pageIndex, int? pageSize)
+        public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
         {
-            return _dataLayer.GetEmployeesData(searchiString, (int)pageIndex, (int)pageSize);
+            pageSize = pageSize ?? PagingConstants.DefaultPageSize;
+            pageIndex = pageIndex ?? PagingConstants.DefaultFirstPage;
+
+            var employees =  _dataLayer.GetEmployeesData(searchString, (int)pageIndex, (int)pageSize);
+
+            int numberRecords = GetNumberOfRecords(searchString);
+
+            return new PageList<EmployeeDto>(employees, numberRecords, pageIndex, pageSize);
         }
 
         public IEnumerable<SelectListItem> GetJobsDataForDropdown()
@@ -89,9 +96,9 @@ namespace BUS
                 PhoneNumber = employeeDTO.PhoneNumber,
                 IdCard = employeeDTO.IdCard,
                 Details = employeeDTO.Details,
-                ProvinceId = employeeDTO.Province.Id,
-                DistrictId = employeeDTO.District.Id,
-                TownId = employeeDTO.Town.Id,
+                ProvinceId = employeeDTO.ProvinceId,
+                DistrictId = employeeDTO.DistrictId,
+                TownId = employeeDTO.TownId,
             };
 
             if (_dataLayer.AddEmployee(employee)) return true;

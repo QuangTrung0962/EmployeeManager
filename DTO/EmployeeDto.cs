@@ -40,14 +40,17 @@ namespace DTO
 
 		public IEnumerable<SelectListItem> Provinces { get; set; }
 		public ProvinceDto Province { get; set; }
+		public int ProvinceId { get; set; }
 
-		public IEnumerable<SelectListItem> Districts { get; set; }
+        public IEnumerable<SelectListItem> Districts { get; set; }
 		public DistrictDto District { get; set; }
+        public int DistrictId { get; set; }
 
-		public IEnumerable<SelectListItem> Towns { get; set; }
-		public TownDto Town { get; set; }	
+        public IEnumerable<SelectListItem> Towns { get; set; }
+		public TownDto Town { get; set; }
+        public int TownId { get; set; }
 
-		[Required(ErrorMessage = "Thông tin cụ thể không được để trống")]
+        [Required(ErrorMessage = "Thông tin cụ thể không được để trống")]
 		[StringLength(250)]
 		public string Details { get; set; }
 

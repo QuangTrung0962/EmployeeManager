@@ -35,7 +35,7 @@ namespace DAL
             }
         }
 
-        public bool DeleteQualificatio(int id)
+        public bool DeleteQualification(int id)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace DAL
                 }).ToList();
         }
 
-        public bool UpdateQualificatio(QualificationDto qualificationDto)
+        public bool UpdateQualification(QualificationDto qualificationDto)
         {
             Qualification qualification = _db.Qualifications.FirstOrDefault(i => i.Id == qualificationDto.Id);
 
@@ -86,7 +86,6 @@ namespace DAL
                 qualification.ReleaseDate = qualificationDto.ReleaseDate;
                 qualification.IssuancePlace = qualificationDto.IssuancePlace;
                 qualification.ExpirationDate = qualificationDto.ExpirationDate;
-                qualification.EmployeeId = qualificationDto.EmployeeId;
                 _db.SaveChanges();
                 return true;
             }
@@ -117,6 +116,20 @@ namespace DAL
                 }).ToList();
 
 
+        }
+
+        public QualificationDto GetQualificationById(int id)
+        {
+            var result = _db.Qualifications.Find(id);
+            return new QualificationDto
+            {
+                Id = result.Id,
+                Name = result.Name,
+                ReleaseDate = result.ReleaseDate,
+                ExpirationDate = result.ExpirationDate,
+                IssuancePlace = result.IssuancePlace,
+                EmployeeId = result.EmployeeId
+            };
         }
     }
 }

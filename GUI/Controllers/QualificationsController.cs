@@ -1,6 +1,4 @@
-﻿using BUS;
-using BUS.Interfaces;
-using DAL;
+﻿using BUS.Interfaces;
 using DTO;
 using System.Web.Mvc;
 
@@ -43,15 +41,62 @@ namespace GUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(int id, QualificationDto qualificationDto)
         {
-            qualificationDto.EmployeeId = id;
+            if (_employeeBUS.GetEmployeeById(id).NumberDegree >= 3)
+            {
+                TempData["error"] = "Nhân viên đã đủ số bằng cấp";
+                return RedirectToAction("Index");
+            }
 
-            if (!ModelState.IsValid || !_qualificationBUS.AddQualificatio(qualificationDto))
+            qualificationDto.EmployeeId = id;
+            if (!ModelState.IsValid || !_qualificationBUS.AddQualification(qualificationDto))
             {
                 TempData["error"] = "Có lỗi xảy ra";
                 return RedirectToAction("Index");
             }
 
             TempData["success"] = "Bạn đã thêm thành công";
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Edit(int id)
+        {
+            ViewBag.provinces = _employeeBUS.GetProvinceDataForDropdown();
+            var obj = _qualificationBUS.GetQualificationById(id);
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, QualificationDto qualificationDto)
+        {
+            qualificationDto.EmployeeId = id;
+            if (!ModelState.IsValid || !_qualificationBUS.UpdateQualification(qualificationDto))
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return RedirectToAction("Index");
+            }
+
+            TempData["success"] = "Bạn đã sửa thành công";
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var obj = _qualificationBUS.GetQualificationById(id);
+            return View(obj);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            
+            if (!ModelState.IsValid || !_qualificationBUS.DeleteQualification(id))
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return RedirectToAction("Index");
+            }
+
+            TempData["success"] = "Bạn đã xóa thành công";
             return RedirectToAction("Index");
         }
     }
