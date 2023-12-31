@@ -18,7 +18,7 @@ namespace GUI.Controllers
         // GET: Employee
         public ActionResult Index(int? pageIndex, int? pageSize, string searchString, string currentFilter)
         {
-            if (string.IsNullOrEmpty(searchString)) 
+            if (string.IsNullOrEmpty(searchString))
                 searchString = currentFilter;
 
             ViewBag.PageSize = pageSize;

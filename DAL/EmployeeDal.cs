@@ -203,9 +203,10 @@ namespace DAL
 
         public EmployeeDto GetEmployeeById(int? id)
         {
-            Employee employee = _db.Employees.First(x => x.Id == id);
-            int count = _db.Qualifications.Count(x => x.EmployeeId == id);
+            var employees = (from e in _db.Employees
+                                 join q in _db.Qualifications on e.Id equals q.EmployeeId where e.Id == id && q.EmployeeId == id select e);
 
+            Employee employee = employees.First();
             return new EmployeeDto
             {
                 Id = employee.Id,
@@ -220,7 +221,7 @@ namespace DAL
                 District = _districtDal.GetDistrictById(employee.DistrictId),
                 Town = _townDal.GetTownById(employee.TownId),
                 Details = employee.Details,
-                NumberDegree = count
+                NumberDegree = employees.Count(),
             };
         }
 
