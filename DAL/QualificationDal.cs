@@ -15,7 +15,7 @@ namespace DAL
             _db = context;
         }
 
-        public bool AddQualificatio(Qualification qualification)
+        public bool AddQualification(Qualification qualification)
         {
             try
             {
@@ -58,34 +58,36 @@ namespace DAL
 
         public List<QualificationDto> GetQualificationsData(string searchString)
         {
-            return _db.Qualifications.Where(j => j.Name.ToLower()
-            .Contains(searchString.ToLower()) || string.IsNullOrEmpty(searchString))
-                .AsEnumerable()
-                .Select(i => new QualificationDto
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    ReleaseDate = i.ReleaseDate,
-                    IssuancePlace = i.IssuancePlace,
-                    ExpirationDate = i.ExpirationDate,
-                    Employee = new EmployeeDto { Id = i.EmployeeId },
-                    IssuancePlaceName = _db.Provinces.First(j => j.ProvinceId == i.IssuancePlace).ProvinceName
-                }).ToList();
+            return (from q in _db.Qualifications
+                    join e in _db.Employees on q.EmployeeId equals e.Id
+                    join p in _db.Provinces on q.IssuancePlace equals p.ProvinceId
+                    where q.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()) || 
+                    string.IsNullOrEmpty(searchString) 
+                    select new QualificationDto
+                    {
+                        Id = q.Id,
+                        Name = q.Name,
+                        ReleaseDate = q.ReleaseDate,
+                        IssuancePlace = q.IssuancePlace,
+                        ExpirationDate = q.ExpirationDate,
+                        EmployeeId = e.Id,
+                        IssuancePlaceName = p.ProvinceName
+                    }).ToList();
         }
 
         public bool UpdateQualification(QualificationDto qualificationDto)
         {
-            Qualification qualification = _db.Qualifications.FirstOrDefault(i => i.Id == qualificationDto.Id);
+            Qualification qualif = _db.Qualifications.FirstOrDefault(i => i.Id == qualificationDto.Id);
 
-            if (qualification == null) return false;
+            if (qualif == null) return false;
 
             try
             {
-                qualification.Id = qualificationDto.Id;
-                qualification.Name = qualificationDto.Name;
-                qualification.ReleaseDate = qualificationDto.ReleaseDate;
-                qualification.IssuancePlace = qualificationDto.IssuancePlace;
-                qualification.ExpirationDate = qualificationDto.ExpirationDate;
+                qualif.Id = qualificationDto.Id;
+                qualif.Name = qualificationDto.Name;
+                qualif.ReleaseDate = qualificationDto.ReleaseDate;
+                qualif.IssuancePlace = qualificationDto.IssuancePlace;
+                qualif.ExpirationDate = qualificationDto.ExpirationDate;
                 _db.SaveChanges();
                 return true;
             }
@@ -103,32 +105,34 @@ namespace DAL
 
         public List<QualificationDto> GetQualificationsByEmployeeId(int id)
         {
-            return _db.Qualifications.Where(i => i.EmployeeId == id)
-                .AsEnumerable()
-                .Select(i => new QualificationDto
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    ReleaseDate = i.ReleaseDate,
-                    IssuancePlaceName = _db.Provinces.Find(i.IssuancePlace).ProvinceName,
-                    ExpirationDate = i.ExpirationDate,
-                    EmployeeId = i.EmployeeId
-                }).ToList();
-
-
+            return (from p in _db.Provinces join q in _db.Qualifications 
+                    on p.ProvinceId equals q.IssuancePlace 
+                    where  q.EmployeeId == id 
+                    select new QualificationDto 
+                    { 
+                        Id = q.Id,
+                        Name = q.Name,
+                        ReleaseDate = q.ReleaseDate,
+                        IssuancePlaceName = p.ProvinceName,
+                        ExpirationDate = q.ExpirationDate,
+                        EmployeeId = q.EmployeeId,
+                    }).ToList();
         }
 
         public QualificationDto GetQualificationById(int id)
         {
-            var result = _db.Qualifications.Find(id);
+            var obj = _db.Qualifications.FirstOrDefault(i => i.Id == id);
+
+            if (obj == null) return null;
+
             return new QualificationDto
             {
-                Id = result.Id,
-                Name = result.Name,
-                ReleaseDate = result.ReleaseDate,
-                ExpirationDate = result.ExpirationDate,
-                IssuancePlace = result.IssuancePlace,
-                EmployeeId = result.EmployeeId
+                Id = obj.Id,
+                Name = obj.Name,
+                ReleaseDate = obj.ReleaseDate,
+                ExpirationDate = obj.ExpirationDate,
+                IssuancePlace = obj.IssuancePlace,
+                EmployeeId = obj.EmployeeId
             };
         }
     }

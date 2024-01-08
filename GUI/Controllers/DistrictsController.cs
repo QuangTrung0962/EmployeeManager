@@ -48,7 +48,7 @@ namespace GUI.Controllers
             DistrictDto districtDto = _districtBus.GetDistrictById(id);
             if (districtDto == null) return RedirectToAction("Index");
 
-            ViewBag.province = _provinceBus.GetProvineById(districtDto.ProvinceId).ProvinceName;
+            ViewBag.province = _provinceBus.GetProvinceById(districtDto.ProvinceId).ProvinceName;
             return View(districtDto);
         }
 
@@ -82,7 +82,7 @@ namespace GUI.Controllers
             DistrictDto districtDto = _districtBus.GetDistrictById(districtId);
             if (districtDto == null) return RedirectToAction("Index");
 
-            ViewBag.province = _provinceBus.GetProvineById(districtDto.ProvinceId).ProvinceName;
+            ViewBag.province = _provinceBus.GetProvinceById(districtDto.ProvinceId).ProvinceName;
             return View(districtDto);
         }
 

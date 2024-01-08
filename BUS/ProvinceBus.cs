@@ -21,12 +21,12 @@ namespace BUS
             return _provinceDal.GetProvincesData(searchString);
         }
 
-        public ProvinceDto GetProvineById(int? id)
+        public ProvinceDto GetProvinceById(int? id)
         {
-            return _provinceDal.GetProvineById(id);
+            return _provinceDal.GetProvinceById(id);
         }
 
-        public bool AddProvice(ProvinceDto provinceDTO)
+        public bool AddProvince(ProvinceDto provinceDTO)
         {
             Province province = new Province()
             {
@@ -44,7 +44,7 @@ namespace BUS
             else return false;
         }
 
-        public bool DeleteProvice(int id)
+        public bool DeleteProvince(int id)
         {
             if (_provinceDal.DeleteProvince(id)) return true;
             else return false;

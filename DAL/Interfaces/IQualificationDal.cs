@@ -6,7 +6,7 @@ namespace DAL.Interfaces
     public interface IQualificationDal
     {
         List<QualificationDto> GetQualificationsData(string searchString);
-        bool AddQualificatio(Qualification qualification);
+        bool AddQualification(Qualification qualification);
         bool UpdateQualification(QualificationDto qualificationDto);
         bool DeleteQualification(int id);
         List<QualificationDto> GetQualificationsByEmployeeId(int id);

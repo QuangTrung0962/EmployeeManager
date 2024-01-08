@@ -26,7 +26,7 @@ namespace BUS
             pageSize = pageSize ?? PagingConstants.DefaultPageSize;
             pageIndex = pageIndex ?? PagingConstants.DefaultFirstPage;
 
-            var employees =  _dataLayer.GetEmployeesData(searchString, (int)pageIndex, (int)pageSize);
+            var employees = _dataLayer.GetEmployeesData(searchString, (int)pageIndex, (int)pageSize);
 
             int numberRecords = GetNumberOfRecords(searchString);
 
@@ -206,7 +206,7 @@ namespace BUS
             {
                 var worksheet = workbook.Worksheet(1);
                 var currentRow = 2;
-                
+
                 foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
                     var i = 0;
@@ -221,12 +221,12 @@ namespace BUS
                     var villageId = row.Cell(++i).Value.ToString();
                     var addressDescription = row.Cell(++i).Value.ToString();
 
-                    if (!ExcelValidators.IsNonEmptyString(name) || 
+                    if (!ExcelValidators.IsNonEmptyString(name) ||
                         !ExcelValidators.IsNonEmptyString(phoneNumber) ||
-                        !ExcelValidators.IsNonEmptyString(idCard) || 
+                        !ExcelValidators.IsNonEmptyString(idCard) ||
                         !ExcelValidators.IsNonEmptyString(addressDescription) ||
                         !ExcelValidators.IsNonEmptyString
-                        (ethnicityId)||
+                        (ethnicityId) ||
                         !ExcelValidators.IsNonEmptyString(jobId))
 
                     {
@@ -234,7 +234,7 @@ namespace BUS
                         return false;
                     }
 
-                    if (!ExcelValidators.IsNumber(provinceId) || 
+                    if (!ExcelValidators.IsNumber(provinceId) ||
                         !ExcelValidators.IsNumber(districtId) ||
                         !ExcelValidators.IsNumber(villageId))
                     {
@@ -287,7 +287,7 @@ namespace BUS
                         Job = jobId,
                         IdCard = idCard,
                         PhoneNumber = phoneNumber,
-                        ProvinceId = provinceId ,
+                        ProvinceId = provinceId,
                         DistrictId = districtId,
                         TownId = townId,
                         Details = details,

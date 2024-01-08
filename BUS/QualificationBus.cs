@@ -25,7 +25,7 @@ namespace BUS
                 EmployeeId = qualificationDto.EmployeeId
             };
             
-            if (_qualificationDal.AddQualificatio(obj)) return true;
+            if (_qualificationDal.AddQualification(obj)) return true;
             else return false;
         }
 

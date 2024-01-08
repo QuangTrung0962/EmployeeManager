@@ -16,19 +16,20 @@ namespace DAL
 			_db = context;
 		}
 
-        public ProvinceDto GetProvineById(int? id)
+        public ProvinceDto GetProvinceById(int? id)
 		{
-			var model = _db.Provinces.First(x => x.ProvinceId == id);
+			var province = _db.Provinces.FirstOrDefault(x => x.ProvinceId == id);
+            if (province == null) return null;
 
 			return new ProvinceDto()
 			{
-				Id = model.ProvinceId, ProvinceName = model.ProvinceName,
+				Id = province.ProvinceId, ProvinceName = province.ProvinceName,
 			};
 		}
 
         public List<ProvinceDto> GetProvincesData(string searchString)
         {
-            return _db.Provinces.Where(i => i.ProvinceName.ToLower().Contains(searchString.ToLower()) || string.IsNullOrEmpty(searchString))
+            return _db.Provinces.Where(i => i.ProvinceName.Trim().ToLower().Contains(searchString.Trim().ToLower()) || string.IsNullOrEmpty(searchString))
                 .Select(i => new ProvinceDto
             {
                 Id = i.ProvinceId,
@@ -85,16 +86,16 @@ namespace DAL
         {
             try
 			{
-                var towns = _db.Towns.Where(t => t.District.ProvinceId == id).ToList();
+                var towns = _db.Towns.Where(t => t.District.ProvinceId == id);
                 _db.Towns.RemoveRange(towns);
 
-                var districts = _db.Districts.Where(i => i.ProvinceId == id).ToList();
+                var districts = _db.Districts.Where(i => i.ProvinceId == id);
                 _db.Districts.RemoveRange(districts);
 
-				var model = _db.Qualifications.Where(i => i.IssuancePlace == id).ToList();
-				_db.Qualifications.RemoveRange(model);
+				var qualif = _db.Qualifications.Where(i => i.IssuancePlace == id);
+				_db.Qualifications.RemoveRange(qualif);
 
-                var province = _db.Provinces.FirstOrDefault(i => i.ProvinceId ==	id);
+                var province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == id);
                 _db.Provinces.Remove(province);
 
 				_db.SaveChanges();

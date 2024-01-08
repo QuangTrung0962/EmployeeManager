@@ -40,7 +40,7 @@ namespace DAL
         {
             try
             {
-                Town town = _db.Towns.First(t => t.TownId == id);
+                Town town = _db.Towns.FirstOrDefault(t => t.TownId == id);
                 _db.Towns.Remove(town);
 
                 _db.SaveChanges();
@@ -60,8 +60,8 @@ namespace DAL
 
         public TownDto GetTownById(int? id)
         {
-            var model = _db.Towns.First(x => x.TownId == id);
-
+            var model = _db.Towns.FirstOrDefault(x => x.TownId == id);
+            if (model == null) return null;
             return new TownDto()
             {
                 Id = model.TownId,
@@ -87,7 +87,7 @@ namespace DAL
 
             if (isNumeric)
             {
-                return _db.Towns.Where(i => i.DistrictId.ToString() == searchString)
+                return _db.Towns.Where(i => i.DistrictId.ToString().Trim() == searchString)
                 .Select(i => new TownDto
                 {
                     Id = i.TownId,
@@ -98,7 +98,7 @@ namespace DAL
             }
 
             return _db.Towns
-                .Where(i => string.IsNullOrEmpty(searchString) || i.TownName.ToLower().Contains(searchString.ToLower())
+                .Where(i => string.IsNullOrEmpty(searchString) || i.TownName.Trim().ToLower().Contains(searchString.Trim().ToLower())
                 )
                 .Select(i => new TownDto
                 {

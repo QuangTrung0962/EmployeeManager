@@ -23,7 +23,7 @@ namespace DAL
 
             if(isNumeric)
             {
-                return _db.Districts.Where(i => i.ProvinceId.ToString() == searchString)
+                return _db.Districts.Where(i => i.ProvinceId.ToString().Trim() == searchString)
                .Select(i => new DistrictDto
                {
                    Id = i.DistrictId,
@@ -33,7 +33,7 @@ namespace DAL
                .ToList();
             }
 
-            return _db.Districts.Where(i => i.DistrictName.ToLower().Contains(searchString.ToLower()) || string.IsNullOrEmpty(searchString))
+            return _db.Districts.Where(i => i.DistrictName.Trim().ToLower().Contains(searchString.Trim().ToLower()) || string.IsNullOrEmpty(searchString))
                .Select(i => new DistrictDto
                {
                    Id = i.DistrictId,
@@ -66,10 +66,10 @@ namespace DAL
         {
             try
             {
-                var towns = _db.Towns.Where(t => t.DistrictId == id).ToList();
+                var towns = _db.Towns.Where(t => t.DistrictId == id);
                 _db.Towns.RemoveRange(towns);
 
-                var districts = _db.Districts.Where(i => i.DistrictId == id).ToList();
+                var districts = _db.Districts.Where(i => i.DistrictId == id);
                 _db.Districts.RemoveRange(districts);
 
                 _db.SaveChanges();
@@ -89,13 +89,14 @@ namespace DAL
 
         public DistrictDto GetDistrictById(int? id)
         {
-            var model = _db.Districts.First(x => x.DistrictId == id);
+            var district = _db.Districts.FirstOrDefault(x => x.DistrictId == id);
 
+            if (district == null) return null;
             return new DistrictDto()
             {
-                Id = model.DistrictId,
-                DistrictName = model.DistrictName,
-                ProvinceId = model.ProvinceId,
+                Id = district.DistrictId,
+                DistrictName = district.DistrictName,
+                ProvinceId = district.ProvinceId,
             };
         }
 

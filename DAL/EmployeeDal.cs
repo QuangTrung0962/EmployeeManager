@@ -30,7 +30,7 @@ namespace DAL
                     join j in _db.Jobs on e.Job equals j.Id
                     join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
                     from qualif in qualifications.DefaultIfEmpty()
-                    where string.IsNullOrEmpty(searchString) || e.Name.ToLower().Contains(searchString.ToLower())
+                    where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
                     select new EmployeeDto
                     {
                         Id = e.Id,
@@ -204,7 +204,9 @@ namespace DAL
         public EmployeeDto GetEmployeeById(int? id)
         {
             var employees = (from e in _db.Employees
-                                 join q in _db.Qualifications on e.Id equals q.EmployeeId where e.Id == id && q.EmployeeId == id select e);
+                             join q in _db.Qualifications on e.Id equals q.EmployeeId
+                             where e.Id == id && q.EmployeeId == id
+                             select e);
 
             Employee employee = employees.First();
             return new EmployeeDto
@@ -217,7 +219,7 @@ namespace DAL
                 PhoneNumber = employee.PhoneNumber,
                 JobName = GetJobNameById(employee.Job),
                 EthnicityName = GetEthnicityNameById(employee.Ethnicity),
-                Province = _provinceDal.GetProvineById(employee.ProvinceId),
+                Province = _provinceDal.GetProvinceById(employee.ProvinceId),
                 District = _districtDal.GetDistrictById(employee.DistrictId),
                 Town = _townDal.GetTownById(employee.TownId),
                 Details = employee.Details,
@@ -227,11 +229,11 @@ namespace DAL
 
         public List<EmployeeDto> GetDataForExcel()
         {
-            var qualifications = _db.Qualifications.Where(i => i.ExpirationDate >= DateTime.Now);
-
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
+                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
+                    from qualif in qualifications.DefaultIfEmpty()
                     select new EmployeeDto
                     {
                         Id = e.Id,
@@ -243,32 +245,19 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = qualifications.Count(q => q.EmployeeId == e.Id),
+                        NumberDegree = qualifications.Count()
                     }).ToList();
-
         }
 
         public int GetNumberOfRecords(string searchString)
         {
-            var qualifications = _db.Qualifications.Where(i => i.ExpirationDate >= DateTime.Now);
-
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
-                    where string.IsNullOrEmpty(searchString) || e.Name.ToLower().Contains(searchString.ToLower())
-                    select new EmployeeDto
-                    {
-                        Id = e.Id,
-                        Name = e.Name,
-                        Age = e.Age,
-                        DateOfBirth = e.DateOfBirth,
-                        JobName = j.JobName,
-                        EthnicityName = d.EthnicityName,
-                        IdCard = e.IdCard,
-                        PhoneNumber = e.PhoneNumber,
-                        Details = e.Details,
-                        NumberDegree = qualifications.Count(q => q.EmployeeId == e.Id),
-                    }).Count();
+                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
+                    where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
+                    select e)
+                    .Count();
         }
 
     }
