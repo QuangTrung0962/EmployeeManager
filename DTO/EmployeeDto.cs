@@ -56,5 +56,7 @@ namespace DTO
 
 		[Range(0,3)]
 		public int NumberDegree { get; set; }
+
+		
 	}
 }
