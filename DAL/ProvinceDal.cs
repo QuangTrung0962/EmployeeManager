@@ -2,6 +2,7 @@
 using DTO;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 
@@ -10,10 +11,12 @@ namespace DAL
 	public class ProvinceDal : IProvinceDal
     {
 		private readonly EmployeesDBEntities _db;
+        private readonly IBaseDal<Province> _service;
 
-		public ProvinceDal (EmployeesDBEntities context)
+		public ProvinceDal (EmployeesDBEntities db, IBaseDal<Province> service)
 		{
-			_db = context;
+			_db = db;
+            _service = service;
 		}
 
         public ProvinceDto GetProvinceById(int? id)
@@ -41,8 +44,7 @@ namespace DAL
 		{
 			try
 			{
-				_db.Provinces.Add(province);
-				_db.SaveChanges();
+				_service.InsertEntity(province);
 				return true;
 			}
             catch (DbUpdateException ex)
@@ -57,17 +59,12 @@ namespace DAL
             }
         }
 
-		public bool UpdateProvince(ProvinceDto provinceDto)
+		public bool UpdateProvince(Province province)
 		{
-            Province province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == provinceDto.Id);
-
-			if (province == null) return false;
- 
-			try
-			{
-                province.ProvinceId = provinceDto.Id;
-                province.ProvinceName = provinceDto.ProvinceName;
-                _db.SaveChanges();
+            try
+            {
+                if (province == null) return false;
+                _service.UpdateEntity(province);
 				return true;
 			}
             catch (DbUpdateException ex)
@@ -86,19 +83,10 @@ namespace DAL
         {
             try
 			{
-                var towns = _db.Towns.Where(t => t.District.ProvinceId == id);
-                _db.Towns.RemoveRange(towns);
-
-                var districts = _db.Districts.Where(i => i.ProvinceId == id);
-                _db.Districts.RemoveRange(districts);
-
-				var qualif = _db.Qualifications.Where(i => i.IssuancePlace == id);
-				_db.Qualifications.RemoveRange(qualif);
-
-                var province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == id);
-                _db.Provinces.Remove(province);
-
-				_db.SaveChanges();
+                Province province = _db.Provinces.FirstOrDefault(i => i.ProvinceId == id);
+                if (province == null) return false;
+                _db.Entry(province).State = EntityState.Detached;
+                _service.DeleteEntity(province);
 				return true;
 			}
             catch (DbUpdateException ex)

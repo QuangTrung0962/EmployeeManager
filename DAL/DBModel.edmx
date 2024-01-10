@@ -81,7 +81,9 @@
           <Property Name="DistrictId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_District_Province">
-          <End Role="Province" Type="Self.Province" Multiplicity="1" />
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="District" Type="Self.District" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
@@ -153,7 +155,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Town_District">
-          <End Role="District" Type="Self.District" Multiplicity="1" />
+          <End Role="District" Type="Self.District" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Town" Type="Self.Town" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="District">

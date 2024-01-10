@@ -10,7 +10,7 @@ namespace BUS
     public class ProvinceBus : IProvinceBus
     {
         private readonly IProvinceDal _provinceDal;
-
+    
         public ProvinceBus(IProvinceDal provinces)
         {
             _provinceDal = provinces;
@@ -26,21 +26,18 @@ namespace BUS
             return _provinceDal.GetProvinceById(id);
         }
 
-        public bool AddProvince(ProvinceDto provinceDTO)
+        public bool AddProvince(ProvinceDto provinceDto)
         {
-            Province province = new Province()
-            {
-                ProvinceId = provinceDTO.Id,
-                ProvinceName = provinceDTO.ProvinceName
-            };
+            Province province = ProvinceDtoToProvince(provinceDto);
 
             if (_provinceDal.AddProvince(province)) return true;
             else return false;
         }
 
-        public bool UpdateProvince(ProvinceDto provinceDTO)
+        public bool UpdateProvince(ProvinceDto provinceDto)
         {
-            if (_provinceDal.UpdateProvince(provinceDTO)) return true;
+            Province province = ProvinceDtoToProvince(provinceDto);
+            if (_provinceDal.UpdateProvince(province)) return true;
             else return false;
         }
 
@@ -48,6 +45,24 @@ namespace BUS
         {
             if (_provinceDal.DeleteProvince(id)) return true;
             else return false;
+        }
+
+        public Province ProvinceDtoToProvince(ProvinceDto provinceDto)
+        {
+            return new Province
+            {
+                ProvinceId = provinceDto.Id,
+                ProvinceName = provinceDto.ProvinceName
+            };
+        }
+
+        public ProvinceDto ProvinceToProvinceDto(Province province)
+        {
+            return new ProvinceDto
+            {
+                Id = province.ProvinceId,
+                ProvinceName = province.ProvinceName,
+            };
         }
     }
 }

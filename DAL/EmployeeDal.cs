@@ -203,12 +203,33 @@ namespace DAL
 
         public EmployeeDto GetEmployeeById(int? id)
         {
-            var employees = (from e in _db.Employees
-                             join q in _db.Qualifications on e.Id equals q.EmployeeId
-                             where e.Id == id && q.EmployeeId == id
-                             select e);
+            //var employees = (from e in _db.Employees
+            //                 join q in _db.Qualifications on e.Id equals q.EmployeeId
+            //                 where e.Id == id && q.EmployeeId == id
+            //                 select e);
 
-            Employee employee = employees.First();
+            //Employee employee = employees.FirstOrDefault();
+            //if (employee == null) return null;
+            //return new EmployeeDto
+            //{
+            //    Id = employee.Id,
+            //    Name = employee.Name,
+            //    DateOfBirth = employee.DateOfBirth,
+            //    Age = employee.Age,
+            //    IdCard = employee.IdCard,
+            //    PhoneNumber = employee.PhoneNumber,
+            //    JobName = GetJobNameById(employee.Job),
+            //    EthnicityName = GetEthnicityNameById(employee.Ethnicity),
+            //    Province = _provinceDal.GetProvinceById(employee.ProvinceId),
+            //    District = _districtDal.GetDistrictById(employee.DistrictId),
+            //    Town = _townDal.GetTownById(employee.TownId),
+            //    Details = employee.Details,
+            //    NumberDegree = employees.Count(),
+            //};
+
+            var employee = _db.Employees.FirstOrDefault(i => i.Id == id);
+            if (employee == null) return null;
+
             return new EmployeeDto
             {
                 Id = employee.Id,
@@ -223,7 +244,7 @@ namespace DAL
                 District = _districtDal.GetDistrictById(employee.DistrictId),
                 Town = _townDal.GetTownById(employee.TownId),
                 Details = employee.Details,
-                NumberDegree = employees.Count(),
+                NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == id),
             };
         }
 

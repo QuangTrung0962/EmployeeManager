@@ -2,6 +2,7 @@
 using DTO;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 
@@ -11,10 +12,11 @@ namespace DAL
     public class DistrictDal : IDistrictDal
     {
         private readonly EmployeesDBEntities _db;
-
-        public DistrictDal(EmployeesDBEntities context)
+        private readonly IBaseDal<District> _service;
+        public DistrictDal(EmployeesDBEntities context, IBaseDal<District> service)
         {
             _db = context;
+            _service = service;
         }
 
         public List<DistrictDto> GetDistrictsData(string searchString)
@@ -66,13 +68,10 @@ namespace DAL
         {
             try
             {
-                var towns = _db.Towns.Where(t => t.DistrictId == id);
-                _db.Towns.RemoveRange(towns);
-
-                var districts = _db.Districts.Where(i => i.DistrictId == id);
-                _db.Districts.RemoveRange(districts);
-
-                _db.SaveChanges();
+                District district = _db.Districts.FirstOrDefault(i => i.DistrictId == id);
+                if (district == null) return false;
+                _db.Entry(district).State = EntityState.Detached;
+                _service.DeleteEntity(district);
                 return true;
             }
             catch (DbUpdateException ex)

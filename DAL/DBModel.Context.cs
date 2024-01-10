@@ -22,7 +22,10 @@ namespace DAL
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            //modelBuilder.Entity<District>()
+            //    .HasMany(d => d.Towns)
+            //    .WithRequired(t => t.District)
+            //    .WillCascadeOnDelete(true);
         }
     
         public virtual DbSet<District> Districts { get; set; }

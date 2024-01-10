@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using DAL;
+using DTO;
 using System.Collections.Generic;
 
 
@@ -8,8 +9,10 @@ namespace BUS.Interfaces
     {
         List<ProvinceDto> GetProvincesData(string searchString);
         ProvinceDto GetProvinceById(int? id);
-        bool AddProvince(ProvinceDto provinceDTO);
-        bool UpdateProvince(ProvinceDto provinceDTO);
+        bool AddProvince(ProvinceDto provinceDto);
+        bool UpdateProvince(ProvinceDto provinceDto);
         bool DeleteProvince(int id);
+        Province ProvinceDtoToProvince(ProvinceDto provinceDto);
+        ProvinceDto ProvinceToProvinceDto(Province province);
     }
 }

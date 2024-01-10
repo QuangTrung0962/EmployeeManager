@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUI.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,7 @@ using WebGrease.Configuration;
 
 namespace GUI
 {
-	public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : System.Web.HttpApplication
 	{
 		protected void Application_Start()
 		{
