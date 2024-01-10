@@ -1,8 +1,6 @@
 ﻿using DAL.Interfaces;
 using DTO;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace DAL
@@ -13,47 +11,6 @@ namespace DAL
         public QualificationDal(EmployeesDBEntities context)
         {
             _db = context;
-        }
-
-        public bool AddQualification(Qualification qualification)
-        {
-            try
-            {
-                _db.Qualifications.Add(qualification);
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
-        }
-
-        public bool DeleteQualification(int id)
-        {
-            try
-            {
-                var obj = _db.Qualifications.FirstOrDefault(i => i.Id == id);
-                _db.Qualifications.Remove(obj);
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
         }
 
         public List<QualificationDto> GetQualificationsData(string searchString)
@@ -73,34 +30,6 @@ namespace DAL
                         EmployeeId = e.Id,
                         IssuancePlaceName = p.ProvinceName
                     }).ToList();
-        }
-
-        public bool UpdateQualification(QualificationDto qualificationDto)
-        {
-            Qualification qualif = _db.Qualifications.FirstOrDefault(i => i.Id == qualificationDto.Id);
-
-            if (qualif == null) return false;
-
-            try
-            {
-                qualif.Id = qualificationDto.Id;
-                qualif.Name = qualificationDto.Name;
-                qualif.ReleaseDate = qualificationDto.ReleaseDate;
-                qualif.IssuancePlace = qualificationDto.IssuancePlace;
-                qualif.ExpirationDate = qualificationDto.ExpirationDate;
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
         }
 
         public List<QualificationDto> GetQualificationsByEmployeeId(int id)

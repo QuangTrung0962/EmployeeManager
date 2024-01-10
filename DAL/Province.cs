@@ -11,7 +11,7 @@ namespace DAL
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Province
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,10 +21,16 @@ namespace DAL
             this.Employees = new HashSet<Employee>();
             this.Qualifications = new HashSet<Qualification>();
         }
-    
+
+        public Province(int id, string name)
+        {
+            ProvinceId = id;
+            ProvinceName = name;
+        }
+
         public int ProvinceId { get; set; }
         public string ProvinceName { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<District> Districts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

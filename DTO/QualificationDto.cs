@@ -5,6 +5,18 @@ namespace DTO
 {
     public class QualificationDto
     {
+        public QualificationDto() { }
+
+        public QualificationDto(int id, string name, DateTime releaseDate,int issuancePlace, DateTime expirationDate, int employeeId) 
+        {
+            Id = id;
+            Name = name;
+            ReleaseDate = releaseDate;
+            IssuancePlace = issuancePlace;
+            ExpirationDate = expirationDate;
+            EmployeeId = employeeId;
+        }
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tên văn bằng không được để trống")]

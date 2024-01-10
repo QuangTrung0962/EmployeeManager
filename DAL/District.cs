@@ -19,6 +19,13 @@ namespace DAL
         {
             this.Towns = new HashSet<Town>();
         }
+
+        public District(int id , string districtName, int provinceId)
+        {
+            DistrictId = id;
+            DistrictName = districtName;
+            ProvinceId = provinceId;
+        }
     
         public int DistrictId { get; set; }
         public string DistrictName { get; set; }

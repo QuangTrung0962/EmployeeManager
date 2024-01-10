@@ -12,5 +12,8 @@ namespace BUS.Interfaces
         bool AddTown(TownDto townDto);
         bool UpdateTown(TownDto townDto);
         bool DeleteTown(int id);
+        TownDto SetTownDtoModel(Town town);
+        Town SetTownModel (TownDto townDto);
+
     }
 }

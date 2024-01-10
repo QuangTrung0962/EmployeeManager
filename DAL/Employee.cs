@@ -20,6 +20,23 @@ namespace DAL
             this.Qualifications = new HashSet<Qualification>();
         }
     
+        public Employee(int id, string name, int age, DateTime dataOfBirth,
+            string jobName, string ethnicityName, string phoneNumber, string idCard, string details, int provinceId, int districtId, int townId)
+        {
+            Id = id;
+            Name = name;
+            Age = age;
+            DateOfBirth = dataOfBirth;
+            Job = jobName;
+            Ethnicity = ethnicityName;
+            PhoneNumber = phoneNumber;
+            IdCard = idCard;
+            Details = details;
+            ProvinceId = provinceId;
+            DistrictId = districtId;
+            TownId = townId;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public System.DateTime DateOfBirth { get; set; }

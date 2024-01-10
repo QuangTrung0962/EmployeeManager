@@ -7,9 +7,6 @@ namespace DAL.Interfaces
     public interface IEmployeeDal
     {
         List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize);
-        bool AddEmployee(Employee employee);
-        bool UppdateEmployee(EmployeeDto employeeDto);
-        bool DeleteEmployeeData(int? id);
         List<JobDto> GetJobsData();
         List<EthnicityDto> GetEthnicitiesData();
         List<ProvinceDto> GetProvincesData();

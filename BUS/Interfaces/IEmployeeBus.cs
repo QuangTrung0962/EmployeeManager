@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DAL;
 using DTO;
 using System.Collections.Generic;
 using System.IO;
@@ -25,5 +26,7 @@ namespace BUS.Interfaces
         int GetPageSize(int? page);
         bool SaveExcelFile(XLWorkbook workbook, string pathFile);
         bool ImportExcel(Stream excelFileStream, out string errorMessage);
+        EmployeeDto SetEmployeeDtoModel(Employee employee);
+        Employee SetEmployeeModel(EmployeeDto employeeDto);
     }
 }

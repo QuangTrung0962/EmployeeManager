@@ -7,8 +7,5 @@ namespace DAL.Interfaces
     {
         ProvinceDto GetProvinceById(int? id);
         List<ProvinceDto> GetProvincesData(string searchString);
-        bool AddProvince(Province province);
-        bool UpdateProvince(ProvinceDto provinceDto);
-        bool DeleteProvince(int id);
     }
 }

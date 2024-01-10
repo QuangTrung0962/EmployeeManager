@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDal.cs" />
     <Compile Include="DBModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -75,11 +76,11 @@
     <Compile Include="Employee.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EmployeeContext.cs" />
     <Compile Include="EmployeeDal.cs" />
     <Compile Include="Ethnicity.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IBaseDal.cs" />
     <Compile Include="Interfaces\IDistrictDal.cs" />
     <Compile Include="Interfaces\IEmployeeDal.cs" />
     <Compile Include="Interfaces\IProvinceDal.cs" />

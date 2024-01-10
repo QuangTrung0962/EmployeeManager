@@ -2,6 +2,8 @@
 using DAL;
 using DAL.Interfaces;
 using DTO;
+using log4net;
+using System;
 using System.Collections.Generic;
 
 namespace BUS
@@ -9,41 +11,65 @@ namespace BUS
     public class QualificationBus : IQualificationBus
     {
         private readonly IQualificationDal _qualificationDal;
-        public QualificationBus(IQualificationDal qualification)
+        private readonly IBaseDal<Qualification> _baseDal;
+        private readonly ILog _log;
+
+        public QualificationBus(IQualificationDal qualification,IBaseDal<Qualification> baseDal)
         {
             _qualificationDal = qualification;
+            _baseDal = baseDal;
+            _log = LogManager.GetLogger(typeof(DistrictBus));
         }
 
         public bool AddQualification(QualificationDto qualificationDto)
         {
-            Qualification obj = new Qualification()
+            try
             {
-                Name = qualificationDto.Name,
-                ReleaseDate = qualificationDto.ReleaseDate,
-                IssuancePlace = qualificationDto.IssuancePlace,
-                ExpirationDate = qualificationDto.ExpirationDate,
-                EmployeeId = qualificationDto.EmployeeId
-            };
-            
-            if (_qualificationDal.AddQualification(obj)) return true;
-            else return false;
+                Qualification qualification = SetQualificationModel(qualificationDto);
+                _baseDal.InsertEntity(qualification);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
+        }
+
+        public bool UpdateQualification(QualificationDto qualificationDto)
+        {
+            try
+            {
+                Qualification qualification = SetQualificationModel(qualificationDto);
+                _baseDal.UpdateEntity(qualification);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public bool DeleteQualification(int id)
         {
-            if (_qualificationDal.DeleteQualification(id)) return true;
-            else return false;
+            try
+            {
+                var qualificationDto = GetQualificationById(id);
+                Qualification qualification = SetQualificationModel(qualificationDto);
+                _baseDal.DeleteEntity(qualification);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public List<QualificationDto> GetQualificationsData(string searchString)
         {
             return _qualificationDal.GetQualificationsData(searchString);
-        }
-
-        public bool UpdateQualification(QualificationDto qualificationDto)
-        {
-            if (_qualificationDal.UpdateQualification(qualificationDto)) return true;
-            else return false;
         }
 
         public List<QualificationDto> GetQualificationsByEmployeeId(int id)
@@ -54,6 +80,18 @@ namespace BUS
         public QualificationDto GetQualificationById(int id)
         {
             return _qualificationDal.GetQualificationById(id);
+        }
+
+        public QualificationDto SetQualificationDtoModel(Qualification qualifi)
+        {
+            return new QualificationDto(qualifi.Id, qualifi.Name, qualifi.ReleaseDate, qualifi.IssuancePlace,
+                qualifi.ExpirationDate, qualifi.EmployeeId);
+        }
+
+        public Qualification SetQualificationModel(QualificationDto qualifi)
+        {
+            return new Qualification(qualifi.Id, qualifi.Name, qualifi.ReleaseDate, qualifi.IssuancePlace,
+               qualifi.ExpirationDate, qualifi.EmployeeId);
         }
     }
 

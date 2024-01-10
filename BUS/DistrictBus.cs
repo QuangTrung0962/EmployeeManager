@@ -2,36 +2,70 @@
 using DAL;
 using DAL.Interfaces;
 using DTO;
+using log4net;
+using System;
 using System.Collections.Generic;
+
 
 namespace BUS
 {
     public class DistrictBus : IDistrictBus
     {
         private readonly IDistrictDal _districtDal;
+        private readonly IBaseDal<District> _baseDal;
+        private readonly ILog _log;
 
-        public DistrictBus(IDistrictDal district)
+        public DistrictBus(IDistrictDal district, IBaseDal<District> baseDal)
         {
             _districtDal = district;
+            _baseDal = baseDal;
+            _log = LogManager.GetLogger(typeof(DistrictBus));
         }
 
         public bool AddDistrict(DistrictDto districtDto)
         {
-            District district = new District()
+            try
             {
-                DistrictId = districtDto.Id,
-                DistrictName = districtDto.DistrictName,
-                ProvinceId = districtDto.ProvinceId
-            };
-
-            if (_districtDal.AddDistrict(district)) return true;
-            else return false;
+                District district = SetDistrictModel(districtDto);
+                _baseDal.InsertEntity(district);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public bool DeleteDistrict(int id)
         {
-            if (_districtDal.DeleteDistrict(id)) return true;
-            else return false;
+            try
+            {
+                var districtDto = GetDistrictById(id);
+                District district = SetDistrictModel(districtDto);
+                _baseDal.DeleteEntity(district);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
+        }
+
+        public bool UpdateDistrict(DistrictDto districtDto)
+        {
+            try
+            {
+                District district = SetDistrictModel(districtDto);
+                _baseDal.UpdateEntity(district);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public DistrictDto GetDistrictById(int? id)
@@ -49,10 +83,14 @@ namespace BUS
             return _districtDal.GetDistrictsData(searchString);
         }
 
-        public bool UpdateDistrict(DistrictDto districtDto)
+        public District SetDistrictModel(DistrictDto districtDto)
         {
-            if (_districtDal.UpdateDistrict(districtDto)) return true;
-            else return false;
+            return new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+        }
+
+        public DistrictDto SetDistrictDtoModel(District district)
+        {
+            return new DistrictDto(district.DistrictId, district.DistrictName, district.ProvinceId);
         }
     }
 }

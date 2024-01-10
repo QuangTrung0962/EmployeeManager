@@ -7,13 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+
 namespace DAL
 {
-    using System;
-    using System.Collections.Generic;
-    
     public partial class Qualification
     {
+        public Qualification() { }
+
+        public Qualification(int id, string name, DateTime releaseDate, int issuancePlace, DateTime expirationDate, int employeeId) 
+        {
+            Id = id;
+            Name = name;
+            ReleaseDate = releaseDate;
+            IssuancePlace = issuancePlace;
+            ExpirationDate = expirationDate;
+            EmployeeId = employeeId;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public System.DateTime ReleaseDate { get; set; }

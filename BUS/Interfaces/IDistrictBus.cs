@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using DAL;
+using DTO;
 using System.Collections.Generic;
 
 namespace BUS.Interfaces
@@ -11,5 +12,7 @@ namespace BUS.Interfaces
         bool AddDistrict(DistrictDto districtDto);
         bool UpdateDistrict(DistrictDto districtDto);
         bool DeleteDistrict(int id);
+        District SetDistrictModel(DistrictDto districtDto);
+        DistrictDto SetDistrictDtoModel(District district);
     }
 }

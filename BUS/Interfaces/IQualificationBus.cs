@@ -1,6 +1,6 @@
-﻿using DTO;
+﻿using DAL;
+using DTO;
 using System.Collections.Generic;
-
 
 namespace BUS.Interfaces
 {
@@ -11,6 +11,8 @@ namespace BUS.Interfaces
         bool UpdateQualification(QualificationDto qualificationDto);
         bool DeleteQualification(int id);
         List<QualificationDto> GetQualificationsByEmployeeId(int id);
-        QualificationDto GetQualificationById (int id);
+        QualificationDto GetQualificationById(int id);
+        QualificationDto SetQualificationDtoModel(Qualification qualifi);
+        Qualification SetQualificationModel(QualificationDto qualifi);
     }
 }

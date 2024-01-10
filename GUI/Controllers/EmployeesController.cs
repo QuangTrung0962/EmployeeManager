@@ -9,7 +9,7 @@ namespace GUI.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeBus _employeeBUS;
-
+        
         public EmployeesController(IEmployeeBus employeeBUS)
         {
             _employeeBUS = employeeBUS;

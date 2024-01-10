@@ -9,16 +9,21 @@ using BUS.Interfaces;
 using DAL.Interfaces;
 using System;
 using System.IO;
+using log4net;
 
 namespace BUS
 {
     public class EmployeeBus : IEmployeeBus
     {
         private readonly IEmployeeDal _dataLayer;
+        private readonly IBaseDal<Employee> _baseDal;
+        private readonly ILog _log;
 
-        public EmployeeBus(IEmployeeDal employee)
+        public EmployeeBus(IEmployeeDal employee, IBaseDal<Employee> baseDal)
         {
             _dataLayer = employee;
+            _baseDal = baseDal;
+            _log = LogManager.GetLogger(typeof(EmployeeBus));
         }
 
         public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
@@ -85,43 +90,54 @@ namespace BUS
 
         public bool AddEmployee(EmployeeDto employeeDTO)
         {
-            Employee employee = new Employee()
+            try
             {
-                Id = employeeDTO.Id,
-                Name = employeeDTO.Name,
-                Age = employeeDTO.Age,
-                DateOfBirth = employeeDTO.DateOfBirth,
-                Job = employeeDTO.JobName,
-                Ethnicity = employeeDTO.EthnicityName,
-                PhoneNumber = employeeDTO.PhoneNumber,
-                IdCard = employeeDTO.IdCard,
-                Details = employeeDTO.Details,
-                ProvinceId = employeeDTO.ProvinceId,
-                DistrictId = employeeDTO.DistrictId,
-                TownId = employeeDTO.TownId,
-            };
+                Employee employee = SetEmployeeModel(employeeDTO);
+                _baseDal.InsertEntity(employee);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
+        }
 
-            if (_dataLayer.AddEmployee(employee)) return true;
-            else return false;
+        public bool UpdateEmployee(EmployeeDto employeeDTO)
+        {
+            try
+            {
+                Employee employee = SetEmployeeModel(employeeDTO);
+                _baseDal.UpdateEntity(employee);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
+        }
+
+        public bool DeleteEmployee(int? id)
+        {
+            try
+            {
+                var employeeDTO = GetEmployeeById(id);
+                Employee employee = SetEmployeeModel(employeeDTO);
+                _baseDal.DeleteEntity(employee);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public EmployeeDto GetEmployeeById(int? id)
         {
             if (id == null) return null;
             return _dataLayer.GetEmployeeById(id);
-        }
-
-        public bool UpdateEmployee(EmployeeDto employeeDTO)
-        {
-            if (_dataLayer.UppdateEmployee(employeeDTO)) return true;
-            else return false;
-
-        }
-
-        public bool DeleteEmployee(int? id)
-        {
-            if (_dataLayer.DeleteEmployeeData(id)) return true;
-            else return false;
         }
 
         public XLWorkbook ExportEmployeesData(List<EmployeeDto> employees)
@@ -293,12 +309,22 @@ namespace BUS
                         Details = details,
                     };
 
-                    _dataLayer.AddEmployee(employee);
+                    _baseDal.InsertEntity(employee);
                 }
 
                 errorMessage = null;
                 return true;
             }
+        }
+
+        public EmployeeDto SetEmployeeDtoModel(Employee employee)
+        {
+            return new EmployeeDto(employee.Id, employee.Name, employee.Age, employee.DateOfBirth, employee.Job, employee.Ethnicity, employee.PhoneNumber, employee.IdCard, employee.Details);
+        }
+
+        public Employee SetEmployeeModel(EmployeeDto employeeDto)
+        {
+            return new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
         }
     }
 }

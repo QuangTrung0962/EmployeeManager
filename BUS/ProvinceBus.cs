@@ -2,18 +2,23 @@
 using DAL;
 using DAL.Interfaces;
 using DTO;
+using log4net;
+using System;
 using System.Collections.Generic;
-
 
 namespace BUS
 {
     public class ProvinceBus : IProvinceBus
     {
         private readonly IProvinceDal _provinceDal;
+        private readonly IBaseDal<Province> _baseDal;
+        private readonly ILog _log;
 
-        public ProvinceBus(IProvinceDal provinces)
+        public ProvinceBus(IProvinceDal provinces, IBaseDal<Province> baseDal)
         {
             _provinceDal = provinces;
+            _baseDal = baseDal;
+            _log = LogManager.GetLogger(typeof(ProvinceBus));
         }
 
         public List<ProvinceDto> GetProvincesData(string searchString)
@@ -26,28 +31,60 @@ namespace BUS
             return _provinceDal.GetProvinceById(id);
         }
 
-        public bool AddProvince(ProvinceDto provinceDTO)
+        public bool AddProvince(ProvinceDto provinceDto)
         {
-            Province province = new Province()
+            try
             {
-                ProvinceId = provinceDTO.Id,
-                ProvinceName = provinceDTO.ProvinceName
-            };
-
-            if (_provinceDal.AddProvince(province)) return true;
-            else return false;
+                Province province = SetProvinceModel(provinceDto);
+                _baseDal.InsertEntity(province);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
-        public bool UpdateProvince(ProvinceDto provinceDTO)
+        public bool UpdateProvince(ProvinceDto provinceDto)
         {
-            if (_provinceDal.UpdateProvince(provinceDTO)) return true;
-            else return false;
+            try
+            {
+                Province province = SetProvinceModel(provinceDto);
+                _baseDal.UpdateEntity(province);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
         }
 
         public bool DeleteProvince(int id)
         {
-            if (_provinceDal.DeleteProvince(id)) return true;
-            else return false;
+            try
+            {
+                ProvinceDto provinceDto = GetProvinceById(id);
+                Province province = SetProvinceModel(provinceDto);
+                _baseDal.DeleteEntity(province);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return false;
+            }
+        }
+
+        public Province SetProvinceModel(ProvinceDto provinceDto)
+        {
+            return new Province(provinceDto.Id, provinceDto.ProvinceName);
+        }
+
+        public ProvinceDto SetProvinceDtoModel(Province province)
+        {
+            return new ProvinceDto(province.ProvinceId, province.ProvinceName);
         }
     }
 }

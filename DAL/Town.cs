@@ -14,6 +14,15 @@ namespace DAL
     
     public partial class Town
     {
+        public Town() { }
+
+        public Town(int id, string name, int districtId)
+        {
+            TownId = id;
+            TownName = name;
+            DistrictId = districtId;
+        }
+
         public int TownId { get; set; }
         public string TownName { get; set; }
         public int DistrictId { get; set; }

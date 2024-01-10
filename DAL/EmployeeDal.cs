@@ -1,8 +1,6 @@
 ﻿using DAL.Interfaces;
 using DTO;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace DAL
@@ -28,8 +26,6 @@ namespace DAL
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
-                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
-                    from qualif in qualifications.DefaultIfEmpty()
                     where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
                     select new EmployeeDto
                     {
@@ -42,96 +38,12 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = qualifications.Count()
+                        NumberDegree = _db.Qualifications.Where(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now).Count(),
                     })
                       .OrderBy(i => i.Id)
                       .Skip((pageIndex - 1) * pageSize)
                       .Take(pageSize)
                       .ToList();
-        }
-
-        //Thêm mới 1 nhân viên
-        public bool AddEmployee(Employee employee)
-        {
-            try
-            {
-                _db.Employees.Add(employee);
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
-        }
-
-
-        //Sửa thông tin nhân viên
-        public bool UppdateEmployee(EmployeeDto employeeDto)
-        {
-            Employee employee = _db.Employees.SingleOrDefault(i => i.Id == employeeDto.Id);
-            try
-            {
-                if (employee != null)
-                {
-                    employee.Id = employeeDto.Id;
-                    employee.Name = employeeDto.Name;
-                    employee.Age = employeeDto.Age;
-                    employee.DateOfBirth = employeeDto.DateOfBirth;
-                    employee.Job = employeeDto.JobName;
-                    employee.Ethnicity = employeeDto.EthnicityName;
-                    employee.PhoneNumber = employeeDto.PhoneNumber;
-                    employee.IdCard = employeeDto.IdCard;
-                    employee.Details = employeeDto.Details;
-                    employee.ProvinceId = employeeDto.ProvinceId;
-                    employee.DistrictId = employeeDto.DistrictId;
-                    employee.TownId = employeeDto.TownId;
-                }
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
-
-        }
-
-        public bool DeleteEmployeeData(int? id)
-        {
-            try
-            {
-                var degrees = _db.Qualifications.Where(x => x.EmployeeId == id);
-                if (degrees.Any())
-                    _db.Qualifications.RemoveRange(degrees);
-
-                var employee = _db.Employees.SingleOrDefault(i => i.Id == id);
-                _db.Employees.Remove(employee);
-                _db.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Database error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
         }
 
         //Lấy danh sách công việc
@@ -203,12 +115,9 @@ namespace DAL
 
         public EmployeeDto GetEmployeeById(int? id)
         {
-            var employees = (from e in _db.Employees
-                             join q in _db.Qualifications on e.Id equals q.EmployeeId
-                             where e.Id == id && q.EmployeeId == id
-                             select e);
+            var employee = _db.Employees.FirstOrDefault(i => i.Id == id);
+            if (employee == null) return null;
 
-            Employee employee = employees.First();
             return new EmployeeDto
             {
                 Id = employee.Id,
@@ -223,7 +132,7 @@ namespace DAL
                 District = _districtDal.GetDistrictById(employee.DistrictId),
                 Town = _townDal.GetTownById(employee.TownId),
                 Details = employee.Details,
-                NumberDegree = employees.Count(),
+                NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == id),
             };
         }
 
@@ -232,8 +141,6 @@ namespace DAL
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
-                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
-                    from qualif in qualifications.DefaultIfEmpty()
                     select new EmployeeDto
                     {
                         Id = e.Id,
@@ -245,7 +152,7 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = qualifications.Count()
+                        NumberDegree = _db.Qualifications.Where(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now).Count(),
                     }).ToList();
         }
 
@@ -259,6 +166,5 @@ namespace DAL
                     select e)
                     .Count();
         }
-
     }
 }
