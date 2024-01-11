@@ -9,7 +9,6 @@ namespace DAL
     public class DistrictDal : IDistrictDal
     {
         private readonly EmployeesDBEntities _db;
-
         public DistrictDal(EmployeesDBEntities context)
         {
             _db = context;
