@@ -1,6 +1,7 @@
 ﻿using DAL.Interfaces;
 using System.Data.Entity;
 
+
 namespace DAL
 {
     public class BaseDal<T> : IBaseDal<T> where T : class

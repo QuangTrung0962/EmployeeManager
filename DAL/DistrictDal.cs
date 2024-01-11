@@ -9,10 +9,11 @@ namespace DAL
     public class DistrictDal : IDistrictDal
     {
         private readonly EmployeesDBEntities _db;
-
-        public DistrictDal(EmployeesDBEntities context)
+        private readonly IBaseDal<District> _service;
+        public DistrictDal(EmployeesDBEntities context, IBaseDal<District> service)
         {
             _db = context;
+            _service = service;
         }
 
         public List<DistrictDto> GetDistrictsData(string searchString)
