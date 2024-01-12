@@ -86,6 +86,5 @@ namespace BUS
         {
             return new ProvinceDto(province.ProvinceId, province.ProvinceName);
         }
-      
     }
 }
