@@ -87,5 +87,21 @@ namespace BUS
             return new ProvinceDto(province.ProvinceId, province.ProvinceName);
         }
       
+        {
+            return new Province
+            {
+                ProvinceId = provinceDto.Id,
+                ProvinceName = provinceDto.ProvinceName
+            };
+        }
+
+        public ProvinceDto ProvinceToProvinceDto(Province province)
+        {
+            return new ProvinceDto
+            {
+                Id = province.ProvinceId,
+                ProvinceName = province.ProvinceName,
+            };
+        }
     }
 }
