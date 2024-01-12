@@ -1,6 +1,8 @@
 ﻿using BUS.Interfaces;
 using DTO;
+using log4net;
 using System;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,10 +11,12 @@ namespace GUI.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeBus _employeeBUS;
-        
+        private readonly ILog _log;
+
         public EmployeesController(IEmployeeBus employeeBUS)
         {
             _employeeBUS = employeeBUS;
+            _log = LogManager.GetLogger(typeof(EmployeesController));
         }
 
         // GET: Employee
@@ -119,7 +123,8 @@ namespace GUI.Controllers
                 var workbook = _employeeBUS.ExportEmployeesData(employees);
 
                 string nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
-                string pathFile = Server.MapPath("~/App_Data/Excel_File/" + nameFile);
+                string excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
+                string pathFile = Server.MapPath(excelFilePath + nameFile);
 
                 if (!_employeeBUS.SaveExcelFile(workbook, pathFile))
                 {
@@ -151,15 +156,13 @@ namespace GUI.Controllers
                 if (!_employeeBUS.ImportExcel(file.InputStream, out var message))
                     TempData["error"] = message;
                 else
-                {
-                    TempData["success"] = "Thành công";
-                }
+                    TempData["success"] = "Import file Thành công";
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Message"] = ex.Message;
+                _log.Error("Error: " + ex.Message);
                 return RedirectToAction("Index");
             }
         }

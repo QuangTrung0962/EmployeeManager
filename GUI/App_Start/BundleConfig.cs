@@ -26,12 +26,9 @@ namespace GUI
                       "~/Content/site.css"));
 
             // New code:
-            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+            bundles.Add(new ScriptBundle("~/bundles/api").Include(
                       "~/Scripts/knockout-{version}.js",
-                      "~/Scripts/app.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/excel").Include(
-                      "~/Scripts/excel.js", "~/Scripts/jquery-{version}.js"));
+                      "~/Scripts/api.js"));
         }
     }
 }

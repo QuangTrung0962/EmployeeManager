@@ -5,13 +5,13 @@ using System.Web.Http;
 
 namespace GUI.Controllers.Api
 {
-    public class TestApiController : ApiController
+    public class GetApiController : ApiController
     {
         private readonly IDistrictBus _districtBUS;
         private readonly ITownBus _townBUS;
         private readonly IEmployeeBus _employeeBUS;
 
-        public TestApiController(IDistrictBus districtBUS, ITownBus townBUS, IEmployeeBus employeeBUS)
+        public GetApiController(IDistrictBus districtBUS, ITownBus townBUS, IEmployeeBus employeeBUS)
         {
             _districtBUS = districtBUS;
             _townBUS = townBUS;
@@ -41,7 +41,7 @@ namespace GUI.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/TestApi/{searchString}")]
+        [Route("api/GetApi/{searchString}")]
         public IHttpActionResult ExportEmployeesBySearch()
         {
             var employees = _employeeBUS.GetDataForExcel();
