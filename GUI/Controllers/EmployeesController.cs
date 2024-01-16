@@ -20,13 +20,8 @@ namespace GUI.Controllers
         }
 
         // GET: Employee
-        public ActionResult Index(int? pageIndex, int? pageSize, string searchString, string currentFilter)
+        public ActionResult Index(int? pageIndex, int? pageSize, string searchString)
         {
-            if (string.IsNullOrEmpty(searchString))
-                searchString = currentFilter;
-
-            ViewBag.PageSize = pageSize;
-            ViewBag.CurrentFilter = searchString;
             PageList<EmployeeDto> employees = _employeeBUS.GetEmployeesData(searchString, pageIndex, pageSize);
 
             return View(employees);
@@ -40,8 +35,6 @@ namespace GUI.Controllers
                 Jobs = _employeeBUS.GetJobsDataForDropdown(),
                 Ethnicities = _employeeBUS.GetEthnicityDataForDropdown(),
                 Provinces = _employeeBUS.GetProvinceDataForDropdown(),
-                Districts = _employeeBUS.GetDistrcitDataForDropdown(),
-                Towns = _employeeBUS.GetTownDataForDropdown(),
             };
             return View(employeeDTO);
         }
@@ -73,8 +66,6 @@ namespace GUI.Controllers
             employee.Jobs = _employeeBUS.GetJobsDataForDropdown();
             employee.Ethnicities = _employeeBUS.GetEthnicityDataForDropdown();
             employee.Provinces = _employeeBUS.GetProvinceDataForDropdown();
-            employee.Districts = _employeeBUS.GetDistrcitDataForDropdown();
-            employee.Towns = _employeeBUS.GetTownDataForDropdown();
             return View(employee);
         }
 

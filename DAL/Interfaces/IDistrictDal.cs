@@ -8,6 +8,6 @@ namespace DAL.Interfaces
     {
         DistrictDto GetDistrictById(int? id);
         List<DistrictDto> GetDistrictsData(string searchString);
-        List<DistrictDto> GetDistrictsByProvinceId(int pronviceId);
+        List<DistrictDto> GetDistrictsByProvinceId(int provinceId);
     }
 }

@@ -25,7 +25,8 @@ namespace BUS
         {
             try
             {
-                Qualification qualification = SetQualificationModel(qualificationDto);
+                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
+               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
                 _baseDal.InsertEntity(qualification);
                 return true;
             }
@@ -40,7 +41,8 @@ namespace BUS
         {
             try
             {
-                Qualification qualification = SetQualificationModel(qualificationDto);
+                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
+               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
                 _baseDal.UpdateEntity(qualification);
                 return true;
             }
@@ -56,7 +58,8 @@ namespace BUS
             try
             {
                 var qualificationDto = GetQualificationById(id);
-                Qualification qualification = SetQualificationModel(qualificationDto);
+                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
+               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
                 _baseDal.DeleteEntity(qualification);
                 return true;
             }
@@ -82,17 +85,6 @@ namespace BUS
             return _qualificationDal.GetQualificationById(id);
         }
 
-        public QualificationDto SetQualificationDtoModel(Qualification qualifi)
-        {
-            return new QualificationDto(qualifi.Id, qualifi.Name, qualifi.ReleaseDate, qualifi.IssuancePlace,
-                qualifi.ExpirationDate, qualifi.EmployeeId);
-        }
-
-        public Qualification SetQualificationModel(QualificationDto qualifi)
-        {
-            return new Qualification(qualifi.Id, qualifi.Name, qualifi.ReleaseDate, qualifi.IssuancePlace,
-               qualifi.ExpirationDate, qualifi.EmployeeId);
-        }
     }
 
 }

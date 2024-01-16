@@ -1,5 +1,4 @@
-﻿using DAL;
-using DTO;
+﻿using DTO;
 using System.Collections.Generic;
 
 
@@ -12,7 +11,5 @@ namespace BUS.Interfaces
         bool AddProvince(ProvinceDto provinceDto);
         bool UpdateProvince(ProvinceDto provinceDto);
         bool DeleteProvince(int id);
-        Province SetProvinceModel(ProvinceDto provinceDto);
-        ProvinceDto SetProvinceDtoModel(Province province);
     }
 }

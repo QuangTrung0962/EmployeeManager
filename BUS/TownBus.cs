@@ -25,7 +25,7 @@ namespace BUS
         {
             try
             {
-                Town town = SetTownModel(townDto);
+                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
                 _baseDal.InsertEntity(town);
                 return true;
             }
@@ -40,7 +40,7 @@ namespace BUS
         {
             try
             {
-                Town town = SetTownModel(townDto);
+                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
                 _baseDal.UpdateEntity(town);
                 return true;
             }
@@ -56,7 +56,7 @@ namespace BUS
             try
             {
                 TownDto townDto = GetTownById(id);
-                Town town = SetTownModel(townDto);
+                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
                 _baseDal.DeleteEntity(town);
                 return true;
             }
@@ -80,16 +80,6 @@ namespace BUS
         public List<TownDto> GetTownsData(string searchString)
         {
             return _townDal.GetTownsData(searchString);
-        }
-
-        public Town SetTownModel(TownDto townDto)
-        {
-            return new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
-        }
-
-        public TownDto SetTownDtoModel(Town town)
-        {
-            return new TownDto(town.TownId, town.TownName, town.DistrictId);
         }
     }
 }

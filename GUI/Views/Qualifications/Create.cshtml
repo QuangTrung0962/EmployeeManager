@@ -41,7 +41,7 @@
                         <select class="form-control selectpicker" name="IssuancePlace">
                             @foreach (var item in ViewBag.provinces)
                             {
-                                <option id="test" class="selectpicker" value="@item.Value">@item.Text</option>
+                                <option id="test" class="selectpicker" value="@item.Id">@item.ProvinceName</option>
                             }
                         </select>
                     </div>

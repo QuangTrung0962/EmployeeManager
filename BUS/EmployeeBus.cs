@@ -11,36 +11,42 @@ using System;
 using System.IO;
 using log4net;
 
+
 namespace BUS
 {
     public class EmployeeBus : IEmployeeBus
     {
-        private readonly IEmployeeDal _dataLayer;
+        private readonly IEmployeeDal _employeeDal;
+        private readonly IProvinceDal _provinceDal;
+        private readonly IDistrictDal _districtDal;
+        private readonly ITownDal _townDal;
         private readonly IBaseDal<Employee> _baseDal;
         private readonly ILog _log;
 
-        public EmployeeBus(IEmployeeDal employee, IBaseDal<Employee> baseDal)
+        public EmployeeBus(IEmployeeDal employeeDal, IBaseDal<Employee> baseDal, IProvinceDal provinceDal, IDistrictDal districtDal, ITownDal townDal)
         {
-            _dataLayer = employee;
+            _employeeDal = employeeDal;
+            _provinceDal = provinceDal;
+            _districtDal = districtDal;
+            _townDal = townDal;
             _baseDal = baseDal;
             _log = LogManager.GetLogger(typeof(EmployeeBus));
         }
 
         public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
         {
-            pageSize = pageSize ?? PagingConstants.DefaultPageSize;
-            pageIndex = pageIndex ?? PagingConstants.DefaultFirstPage;
+            Paging page = new Paging(pageSize, pageIndex);
 
-            var employees = _dataLayer.GetEmployeesData(searchString, (int)pageIndex, (int)pageSize);
+            var employees = _employeeDal.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
 
             int numberRecords = GetNumberOfRecords(searchString);
 
-            return new PageList<EmployeeDto>(employees, numberRecords, pageIndex, pageSize);
+            return new PageList<EmployeeDto>(employees, numberRecords, page.PageIndex, page.PageSize, searchString);
         }
 
         public IEnumerable<SelectListItem> GetJobsDataForDropdown()
         {
-            var list = _dataLayer.GetJobsData();
+            var list = _employeeDal.GetJobsData();
             return list.Select(x => new SelectListItem()
             {
                 Text = x.JobName,
@@ -50,7 +56,7 @@ namespace BUS
 
         public IEnumerable<SelectListItem> GetEthnicityDataForDropdown()
         {
-            var list = _dataLayer.GetEthnicitiesData();
+            var list = _employeeDal.GetEthnicitiesData();
             return list.Select(x => new SelectListItem()
             {
                 Text = x.EthnicityName,
@@ -58,19 +64,14 @@ namespace BUS
             }).ToList();
         }
 
-        public IEnumerable<SelectListItem> GetProvinceDataForDropdown()
+        public List<ProvinceDto> GetProvinceDataForDropdown()
         {
-            var list = _dataLayer.GetProvincesData();
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.ProvinceName,
-                Value = x.Id.ToString()
-            }).ToList();
+           return _provinceDal.GetProvincesData("");
         }
 
         public IEnumerable<SelectListItem> GetDistrcitDataForDropdown()
         {
-            var list = _dataLayer.GetDistrictsData();
+            var list = _districtDal.GetDistrictsData("");
             return list.Select(x => new SelectListItem()
             {
                 Text = x.DistrictName,
@@ -80,7 +81,7 @@ namespace BUS
 
         public IEnumerable<SelectListItem> GetTownDataForDropdown()
         {
-            var list = _dataLayer.GetTownsData();
+            var list = _townDal.GetTownsData("");
             return list.Select(x => new SelectListItem()
             {
                 Text = x.TownName,
@@ -88,11 +89,11 @@ namespace BUS
             }).ToList();
         }
 
-        public bool AddEmployee(EmployeeDto employeeDTO)
+        public bool AddEmployee(EmployeeDto employeeDto)
         {
             try
             {
-                Employee employee = SetEmployeeModel(employeeDTO);
+                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId); 
                 _baseDal.InsertEntity(employee);
                 return true;
             }
@@ -103,11 +104,11 @@ namespace BUS
             }
         }
 
-        public bool UpdateEmployee(EmployeeDto employeeDTO)
+        public bool UpdateEmployee(EmployeeDto employeeDto)
         {
             try
             {
-                Employee employee = SetEmployeeModel(employeeDTO);
+                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
                 _baseDal.UpdateEntity(employee);
                 return true;
             }
@@ -122,8 +123,8 @@ namespace BUS
         {
             try
             {
-                var employeeDTO = GetEmployeeById(id);
-                Employee employee = SetEmployeeModel(employeeDTO);
+                var employeeDto = GetEmployeeById(id);
+                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
                 _baseDal.DeleteEntity(employee);
                 return true;
             }
@@ -137,7 +138,7 @@ namespace BUS
         public EmployeeDto GetEmployeeById(int? id)
         {
             if (id == null) return null;
-            return _dataLayer.GetEmployeeById(id);
+            return _employeeDal.GetEmployeeById(id);
         }
 
         public XLWorkbook ExportEmployeesData(List<EmployeeDto> employees)
@@ -180,26 +181,12 @@ namespace BUS
 
         public List<EmployeeDto> GetDataForExcel()
         {
-            return _dataLayer.GetDataForExcel();
+            return _employeeDal.GetDataForExcel();
         }
 
         public int GetNumberOfRecords(string searchString)
         {
-            return _dataLayer.GetNumberOfRecords(searchString);
-        }
-
-        public int GetPageIndex(int? page)
-        {
-            int pageIndex = page ?? PagingConstants.DefaultFirstPage;
-
-            return pageIndex;
-        }
-
-        public int GetPageSize(int? page)
-        {
-            int pageSize = page ?? PagingConstants.DefaultPageSize;
-
-            return pageSize;
+            return _employeeDal.GetNumberOfRecords(searchString);
         }
 
         public bool SaveExcelFile(XLWorkbook workbook, string pathFile)
@@ -317,14 +304,5 @@ namespace BUS
             }
         }
 
-        public EmployeeDto SetEmployeeDtoModel(Employee employee)
-        {
-            return new EmployeeDto(employee.Id, employee.Name, employee.Age, employee.DateOfBirth, employee.Job, employee.Ethnicity, employee.PhoneNumber, employee.IdCard, employee.Details);
-        }
-
-        public Employee SetEmployeeModel(EmployeeDto employeeDto)
-        {
-            return new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
-        }
     }
 }

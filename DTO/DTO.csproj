@@ -76,7 +76,7 @@
     <Compile Include="QualificationDto.cs" />
     <Compile Include="TownDto.cs" />
     <Compile Include="Utils\ExcelValidators.cs" />
-    <Compile Include="Utils\PagingConstants.cs" />
+    <Compile Include="Utils\Paging.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

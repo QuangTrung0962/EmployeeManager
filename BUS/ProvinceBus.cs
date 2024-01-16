@@ -35,7 +35,7 @@ namespace BUS
         {
             try
             {
-                Province province = SetProvinceModel(provinceDto);
+                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
                 _baseDal.InsertEntity(province);
                 return true;
             }
@@ -50,7 +50,7 @@ namespace BUS
         {
             try
             {
-                Province province = SetProvinceModel(provinceDto);
+                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
                 _baseDal.UpdateEntity(province);
                 return true;
             }
@@ -66,7 +66,7 @@ namespace BUS
             try
             {
                 ProvinceDto provinceDto = GetProvinceById(id);
-                Province province = SetProvinceModel(provinceDto);
+                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
                 _baseDal.DeleteEntity(province);
                 return true;
             }
@@ -75,16 +75,6 @@ namespace BUS
                 _log.Error("Error: " + ex);
                 return false;
             }
-        }
-
-        public Province SetProvinceModel(ProvinceDto provinceDto)
-        {
-            return new Province(provinceDto.Id, provinceDto.ProvinceName);
-        }
-
-        public ProvinceDto SetProvinceDtoModel(Province province)
-        {
-            return new ProvinceDto(province.ProvinceId, province.ProvinceName);
         }
 
     }

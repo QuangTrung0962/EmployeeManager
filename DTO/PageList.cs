@@ -10,13 +10,16 @@ namespace DTO
         public int PageIndex { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
-
-        public PageList(List<T> items, int? count,int? pageIndex, int? pageSize)
+        public string SearchString { get; set; }
+        public int Pages { get; set; }
+        public PageList(List<T> items, int? count,int pageIndex, int pageSize, string searchString)
         {
             Items = items;
-            PageIndex = (int)pageIndex;
+            PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling((int)count / (double)pageSize);
             TotalItems = (int)count;
+            SearchString = searchString;
+            Pages = pageSize;
         }
 
         public bool HasPreviousPage => PageIndex > 1;
@@ -28,7 +31,7 @@ namespace DTO
 
         public int PageNumber => PageIndex; 
 
-        public int PageSize => Items.Count;
+        public int PageSize => Pages;
 
         public bool IsFirstPage => PageIndex == 1;
 

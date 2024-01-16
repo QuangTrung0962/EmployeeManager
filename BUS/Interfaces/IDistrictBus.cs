@@ -8,11 +8,9 @@ namespace BUS.Interfaces
     {
         DistrictDto GetDistrictById(int? id);
         List<DistrictDto> GetDistrictsData(string searchString);
-        List<DistrictDto> GetDistrictsByProvinceId(int pronviceId);
+        List<DistrictDto> GetDistrictsByProvinceId(int provinceId);
         bool AddDistrict(DistrictDto districtDto);
         bool UpdateDistrict(DistrictDto districtDto);
         bool DeleteDistrict(int id);
-        District SetDistrictModel(DistrictDto districtDto);
-        DistrictDto SetDistrictDtoModel(District district);
     }
 }

@@ -15,9 +15,9 @@ namespace BUS
         private readonly IBaseDal<District> _baseDal;
         private readonly ILog _log;
 
-        public DistrictBus(IDistrictDal district, IBaseDal<District> baseDal)
+        public DistrictBus(IDistrictDal districtDal, IBaseDal<District> baseDal)
         {
-            _districtDal = district;
+            _districtDal = districtDal;
             _baseDal = baseDal;
             _log = LogManager.GetLogger(typeof(DistrictBus));
         }
@@ -26,7 +26,7 @@ namespace BUS
         {
             try
             {
-                District district = SetDistrictModel(districtDto);
+                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
                 _baseDal.InsertEntity(district);
                 return true;
             }
@@ -42,7 +42,7 @@ namespace BUS
             try
             {
                 var districtDto = GetDistrictById(id);
-                District district = SetDistrictModel(districtDto);
+                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
                 _baseDal.DeleteEntity(district);
                 return true;
             }
@@ -57,7 +57,7 @@ namespace BUS
         {
             try
             {
-                District district = SetDistrictModel(districtDto);
+                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
                 _baseDal.UpdateEntity(district);
                 return true;
             }
@@ -73,9 +73,9 @@ namespace BUS
             return _districtDal.GetDistrictById(id);
         }
 
-        public List<DistrictDto> GetDistrictsByProvinceId(int pronviceId)
+        public List<DistrictDto> GetDistrictsByProvinceId(int provinceId)
         {
-            return _districtDal.GetDistrictsByProvinceId(pronviceId);
+            return _districtDal.GetDistrictsByProvinceId(provinceId);
         }
 
         public List<DistrictDto> GetDistrictsData(string searchString)
@@ -83,14 +83,5 @@ namespace BUS
             return _districtDal.GetDistrictsData(searchString);
         }
 
-        public District SetDistrictModel(DistrictDto districtDto)
-        {
-            return new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
-        }
-
-        public DistrictDto SetDistrictDtoModel(District district)
-        {
-            return new DistrictDto(district.DistrictId, district.DistrictName, district.ProvinceId);
-        }
     }
 }

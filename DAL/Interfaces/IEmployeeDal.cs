@@ -9,9 +9,6 @@ namespace DAL.Interfaces
         List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize);
         List<JobDto> GetJobsData();
         List<EthnicityDto> GetEthnicitiesData();
-        List<ProvinceDto> GetProvincesData();
-        List<DistrictDto> GetDistrictsData();
-        List<TownDto> GetTownsData();
         string GetJobNameById(string id);
         string GetEthnicityNameById(string id);
         EmployeeDto GetEmployeeById(int? id);

@@ -155,7 +155,7 @@
                                 <select class="form-control selectpicker" data-bind="value: selectedProvince" name="provinceId">
                                     @foreach (var item in Model.Provinces)
                                     {
-                                        <option id="test" class="selectpicker" value="@item.Value">@item.Text</option>
+                                        <option id="test" class="selectpicker" value="@item.Id">@item.ProvinceName</option>
                                     }
                                 </select>
 
@@ -271,5 +271,5 @@
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/api")
 }

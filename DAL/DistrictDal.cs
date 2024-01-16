@@ -52,9 +52,9 @@ namespace DAL
             };
         }
 
-        public List<DistrictDto> GetDistrictsByProvinceId(int pronviceId)
+        public List<DistrictDto> GetDistrictsByProvinceId(int provinceId)
         {
-            return _db.Districts.Where(i => i.ProvinceId == pronviceId).
+            return _db.Districts.Where(i => i.ProvinceId == provinceId).
                 Select(j => new DistrictDto
                 {
                     Id = j.DistrictId,
