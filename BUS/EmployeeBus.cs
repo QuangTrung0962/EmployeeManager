@@ -18,17 +18,13 @@ namespace BUS
     {
         private readonly IEmployeeDal _employeeDal;
         private readonly IProvinceDal _provinceDal;
-        private readonly IDistrictDal _districtDal;
-        private readonly ITownDal _townDal;
         private readonly IBaseDal<Employee> _baseDal;
         private readonly ILog _log;
 
-        public EmployeeBus(IEmployeeDal employeeDal, IBaseDal<Employee> baseDal, IProvinceDal provinceDal, IDistrictDal districtDal, ITownDal townDal)
+        public EmployeeBus(IEmployeeDal employeeDal, IBaseDal<Employee> baseDal, IProvinceDal provinceDal)
         {
             _employeeDal = employeeDal;
             _provinceDal = provinceDal;
-            _districtDal = districtDal;
-            _townDal = townDal;
             _baseDal = baseDal;
             _log = LogManager.GetLogger(typeof(EmployeeBus));
         }
@@ -67,26 +63,6 @@ namespace BUS
         public List<ProvinceDto> GetProvinceDataForDropdown()
         {
            return _provinceDal.GetProvincesData("");
-        }
-
-        public IEnumerable<SelectListItem> GetDistrcitDataForDropdown()
-        {
-            var list = _districtDal.GetDistrictsData("");
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.DistrictName,
-                Value = x.Id.ToString()
-            }).ToList();
-        }
-
-        public IEnumerable<SelectListItem> GetTownDataForDropdown()
-        {
-            var list = _townDal.GetTownsData("");
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.TownName,
-                Value = x.Id.ToString()
-            }).ToList();
         }
 
         public bool AddEmployee(EmployeeDto employeeDto)

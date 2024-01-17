@@ -113,15 +113,16 @@ namespace GUI.Controllers
                 var employees = _employeeBUS.GetDataForExcel();
                 var workbook = _employeeBUS.ExportEmployeesData(employees);
 
-                string nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
-                string excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
-                string pathFile = Server.MapPath(excelFilePath + nameFile);
+                var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
+                var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
+                var pathFile = Server.MapPath(excelFilePath + nameFile);
 
                 if (!_employeeBUS.SaveExcelFile(workbook, pathFile))
                 {
                     TempData["error"] = "Có lỗi xảy ra";
                     return RedirectToAction("Index");
                 }
+
                 TempData["success"] = "Bạn đã lưu file Excel thành công";
                 return RedirectToAction("Index");
 
@@ -144,10 +145,8 @@ namespace GUI.Controllers
 
             try
             {
-                if (!_employeeBUS.ImportExcel(file.InputStream, out var message))
-                    TempData["error"] = message;
-                else
-                    TempData["success"] = "Import file Thành công";
+                TempData["error"] = !_employeeBUS.ImportExcel(file.InputStream, out var message) ? "message" : null;
+                TempData["success"] = "Import file Thành công";
 
                 return RedirectToAction("Index");
             }

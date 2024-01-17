@@ -28,16 +28,27 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <div class="d-flex flex-column">
-                        <label>2. Tên Quận/Huyện</label>
-                        @{
-                            List<DTO.DistrictDto> districts = ViewBag.districts;
-                            <select name="DistrictId" class="form-control">
-                                @foreach (var item in districts)
+                        <label>2. Tên Thành phố</label>
+                        <div>
+                            <select class="form-control selectpicker" data-bind="value: selectedProvince" name="provinceId">
+                                @foreach (var item in ViewBag.Provinces)
                                 {
-                                    <option value="@item.Id">@item.DistrictName</option>
+                                    <option id="test" class="selectpicker" value="@item.Id">@item.ProvinceName</option>
                                 }
                             </select>
-                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="d-flex flex-column">
+                        <label>3. Tên Quận/Huyện</label>
+                        <select data-bind="foreach: districts, value: selectedDistrict" class="form-control" name="districtId">
+                            <option data-bind="text: DistrictName, value: Id"></option>
+                        </select>
                     </div>
                 </div>
             </div>

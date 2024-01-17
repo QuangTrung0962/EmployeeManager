@@ -8,11 +8,13 @@ namespace GUI.Controllers
     {
         private readonly IDistrictBus _districtBus;
         private readonly ITownBus _townBus;
+        private readonly IProvinceBus _province;
 
-        public TownsController(IDistrictBus districtBus, ITownBus townBus)
+        public TownsController(IDistrictBus districtBus, ITownBus townBus, IProvinceBus province)
         {
             _districtBus = districtBus;
             _townBus = townBus;
+            _province = province;
         }
 
         // GET: Towns
@@ -25,7 +27,7 @@ namespace GUI.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.districts = _districtBus.GetDistrictsData("");
+            ViewBag.Provinces = _province.GetProvincesData("");
             return View();
         }
 
@@ -39,6 +41,7 @@ namespace GUI.Controllers
                 return RedirectToAction("Index");
             }
 
+
             TempData["success"] = "Bạn đã thêm thành công";
             return RedirectToAction("Index");
         }
@@ -49,7 +52,9 @@ namespace GUI.Controllers
             TownDto townDto = _townBus.GetTownById(id);
             if (townDto == null) return RedirectToAction("Index");
 
-            ViewBag.district = _districtBus.GetDistrictById(townDto.DistrictId).DistrictName;
+            var district = _districtBus.GetDistrictById(townDto.DistrictId);
+            ViewBag.DistrictName = district.DistrictName;
+            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
             return View(townDto);
         }
 
@@ -58,8 +63,8 @@ namespace GUI.Controllers
         {
             TownDto townDto = _townBus.GetTownById(id);
             if (townDto == null) return RedirectToAction("Index");
-
-            ViewBag.districts = _districtBus.GetDistrictsData("");
+            ViewBag.Provinces = _province.GetProvincesData("");
+            
             return View(townDto);
         }
 

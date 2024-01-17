@@ -39,16 +39,16 @@
                                     int currentYear = DateTime.Now.Year;
                                 }
                                 @Html.EditorFor(model => model.DateOfBirth, new
+                               {
+                                   htmlAttributes = new
                                    {
-                                       htmlAttributes = new
-                                       {
-                                           @class = "form-control",
-                                           placeholder = "mm/dd/yyyy",
-                                           autocomplete = "off",
-                                           @id = "dob",
-                                           max = currentYear.ToString() + "-12-31"
-                                       }
-                                   })
+                                       @class = "form-control",
+                                       //placeholder = "yyyy-MM-dd",
+                                       autocomplete = "off",
+                                       @id = "dob",
+                                       max = currentYear.ToString() + "-12-31"
+                                   }
+                               })
                                 @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
                             </div>
                         </div>

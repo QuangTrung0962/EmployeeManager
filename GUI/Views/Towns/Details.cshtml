@@ -22,9 +22,19 @@
                     @Html.DisplayName("Quận/Huyện")
                 </dt>
                 @{
-                    string district = ViewBag.district;
+                    string district = ViewBag.DistrictName;
                     <dd class="col-sm-10">
                         @Html.DisplayName(district)
+                    </dd>
+
+                }
+                <dt class="col-sm-2">
+                    @Html.DisplayName("Tỉnh/Thành phố")
+                </dt>
+                @{
+                    string province = ViewBag.ProvinceName;
+                    <dd class="col-sm-10">
+                        @Html.DisplayName(province)
                     </dd>
 
                 }

@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DAL;
 using DTO;
 using System.Collections.Generic;
 using System.IO;
@@ -13,8 +12,6 @@ namespace BUS.Interfaces
         IEnumerable<SelectListItem> GetJobsDataForDropdown();
         IEnumerable<SelectListItem> GetEthnicityDataForDropdown();
         List<ProvinceDto> GetProvinceDataForDropdown();
-        IEnumerable<SelectListItem> GetDistrcitDataForDropdown();
-        IEnumerable<SelectListItem> GetTownDataForDropdown();
         bool AddEmployee(EmployeeDto employeeDto);
         EmployeeDto GetEmployeeById(int? id);
         bool UpdateEmployee(EmployeeDto employeeDto);
