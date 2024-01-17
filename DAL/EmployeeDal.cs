@@ -38,7 +38,7 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = _db.Qualifications.Where(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now).Count(),
+                        NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
                     })
                       .OrderBy(i => i.Id)
                       .Skip((pageIndex - 1) * pageSize)
@@ -152,7 +152,7 @@ namespace DAL
                         IdCard = e.IdCard,
                         PhoneNumber = e.PhoneNumber,
                         Details = e.Details,
-                        NumberDegree = _db.Qualifications.Where(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now).Count(),
+                        NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
                     }).ToList();
         }
 
@@ -161,7 +161,6 @@ namespace DAL
             return (from e in _db.Employees
                     join d in _db.Ethnicities on e.Ethnicity equals d.Id
                     join j in _db.Jobs on e.Job equals j.Id
-                    join q in _db.Qualifications on e.Id equals q.EmployeeId into qualifications
                     where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
                     select e)
                     .Count();

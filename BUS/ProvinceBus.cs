@@ -14,9 +14,9 @@ namespace BUS
         private readonly IBaseDal<Province> _baseDal;
         private readonly ILog _log;
 
-        public ProvinceBus(IProvinceDal provinces, IBaseDal<Province> baseDal)
+        public ProvinceBus(IProvinceDal provinceDal, IBaseDal<Province> baseDal)
         {
-            _provinceDal = provinces;
+            _provinceDal = provinceDal;
             _baseDal = baseDal;
             _log = LogManager.GetLogger(typeof(ProvinceBus));
         }
