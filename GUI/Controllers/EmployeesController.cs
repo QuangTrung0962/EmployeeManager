@@ -147,7 +147,6 @@ namespace GUI.Controllers
             {
                 TempData["error"] = !_employeeBUS.ImportExcel(file.InputStream, out var message) ? "message" : null;
                 TempData["success"] = "Import file Thành công";
-
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
