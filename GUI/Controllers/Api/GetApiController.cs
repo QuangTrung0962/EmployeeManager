@@ -39,17 +39,5 @@ namespace GUI.Controllers.Api
 
             return Ok(towns);
         }
-
-        [HttpGet]
-        [Route("api/GetApi/{searchString}")]
-        public IHttpActionResult ExportEmployeesBySearch()
-        {
-            var employees = _employeeBUS.GetDataForExcel();
-
-            if (employees != null)
-                return Ok(employees);
-
-            return Ok("Fales");
-        }
     }
 }

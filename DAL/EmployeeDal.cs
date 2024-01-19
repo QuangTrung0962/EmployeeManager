@@ -20,30 +20,40 @@ namespace DAL
             _townDal = town;
         }
 
-        //Lấy danh sách nhân viên
+        private IQueryable<EmployeeDto> GetData(string searchString)
+        {
+            return from e in _db.Employees
+                   join d in _db.Ethnicities on e.Ethnicity equals d.Id
+                   join j in _db.Jobs on e.Job equals j.Id
+                   where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
+                   select new EmployeeDto
+                   {
+                       Id = e.Id,
+                       Name = e.Name,
+                       Age = e.Age,
+                       DateOfBirth = e.DateOfBirth,
+                       JobName = j.JobName,
+                       EthnicityName = d.EthnicityName,
+                       IdCard = e.IdCard,
+                       PhoneNumber = e.PhoneNumber,
+                       Details = e.Details,
+                       NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
+                   };
+        }
+
+
         public List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize)
         {
-            return (from e in _db.Employees
-                    join d in _db.Ethnicities on e.Ethnicity equals d.Id
-                    join j in _db.Jobs on e.Job equals j.Id
-                    where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
-                    select new EmployeeDto
-                    {
-                        Id = e.Id,
-                        Name = e.Name,
-                        Age = e.Age,
-                        DateOfBirth = e.DateOfBirth,
-                        JobName = j.JobName,
-                        EthnicityName = d.EthnicityName,
-                        IdCard = e.IdCard,
-                        PhoneNumber = e.PhoneNumber,
-                        Details = e.Details,
-                        NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
-                    })
+            return GetData(searchString)
                       .OrderBy(i => i.Id)
                       .Skip((pageIndex - 1) * pageSize)
                       .Take(pageSize)
                       .ToList();
+        }
+
+        public List<EmployeeDto> GetDataForExcel()
+        {
+            return GetData(null).ToList();
         }
 
         //Lấy danh sách công việc
@@ -68,47 +78,14 @@ namespace DAL
                     }).ToList();
         }
 
-        //Lấy danh sách tỉnh/thành phố
-        public List<ProvinceDto> GetProvincesData()
-        {
-            return (from i in _db.Provinces
-                    select new ProvinceDto
-                    {
-                        Id = i.ProvinceId,
-                        ProvinceName = i.ProvinceName,
-                    }).ToList();
-        }
-
-        //Lấy danh sách quận/huyện
-        public List<DistrictDto> GetDistrictsData()
-        {
-            return (from j in _db.Districts
-                    select new DistrictDto
-                    {
-                        Id = j.DistrictId,
-                        DistrictName = j.DistrictName,
-                    }).ToList();
-        }
-
-        //Lấy danh sách xã
-        public List<TownDto> GetTownsData()
-        {
-            return (from j in _db.Towns
-                    select new TownDto
-                    {
-                        Id = j.TownId,
-                        TownName = j.TownName,
-                    }).ToList();
-        }
-
         //Lấy tên công việc bằng id
-        public string GetJobNameById(string id)
+        private string GetJobNameById(string id)
         {
             return _db.Jobs.First(x => x.Id == id).JobName;
         }
 
         //Lấy tên dân tộc bằng id
-        public string GetEthnicityNameById(string id)
+        private string GetEthnicityNameById(string id)
         {
             return _db.Ethnicities.First(x => x.Id == id).EthnicityName;
         }
@@ -134,26 +111,6 @@ namespace DAL
                 Details = employee.Details,
                 NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == id),
             };
-        }
-
-        public List<EmployeeDto> GetDataForExcel()
-        {
-            return (from e in _db.Employees
-                    join d in _db.Ethnicities on e.Ethnicity equals d.Id
-                    join j in _db.Jobs on e.Job equals j.Id
-                    select new EmployeeDto
-                    {
-                        Id = e.Id,
-                        Name = e.Name,
-                        Age = e.Age,
-                        DateOfBirth = e.DateOfBirth,
-                        JobName = j.JobName,
-                        EthnicityName = d.EthnicityName,
-                        IdCard = e.IdCard,
-                        PhoneNumber = e.PhoneNumber,
-                        Details = e.Details,
-                        NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
-                    }).ToList();
         }
 
         public int GetNumberOfRecords(string searchString)

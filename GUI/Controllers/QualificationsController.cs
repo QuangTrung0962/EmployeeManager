@@ -8,11 +8,13 @@ namespace GUI.Controllers
     {
         private readonly IQualificationBus _qualificationBUS;
         private readonly IEmployeeBus _employeeBUS;
+        private readonly IProvinceBus _provinceBus;
 
-        public QualificationsController(IQualificationBus qualificationBus, IEmployeeBus employeeBUS)
+        public QualificationsController(IQualificationBus qualificationBus, IEmployeeBus employeeBUS, IProvinceBus provinceBus)
         {
             _qualificationBUS = qualificationBus;
             _employeeBUS = employeeBUS;
+            _provinceBus = provinceBus;
         }
 
         // GET: Qualification
@@ -33,7 +35,7 @@ namespace GUI.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.provinces = _employeeBUS.GetProvinceDataForDropdown();
+            ViewBag.provinces = _provinceBus.GetProvincesData(null);
             return View();
         }
 
@@ -60,7 +62,7 @@ namespace GUI.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.provinces = _employeeBUS.GetProvinceDataForDropdown();
+            ViewBag.provinces = _provinceBus.GetProvincesData(null);
             var obj = _qualificationBUS.GetQualificationById(id);
             return View(obj);
         }

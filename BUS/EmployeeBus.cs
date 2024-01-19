@@ -11,7 +11,6 @@ using System;
 using System.IO;
 using log4net;
 
-
 namespace BUS
 {
     public class EmployeeBus : IEmployeeBus
@@ -29,6 +28,36 @@ namespace BUS
             _log = LogManager.GetLogger(typeof(EmployeeBus));
         }
 
+        private int GetNumberOfRecords(string searchString)
+        {
+            return _employeeDal.GetNumberOfRecords(searchString);
+        }
+
+        private IEnumerable<SelectListItem> GetJobsDataForDropdown()
+        {
+            var list = _employeeDal.GetJobsData();
+            return list.Select(x => new SelectListItem()
+            {
+                Text = x.JobName,
+                Value = x.Id
+            }).ToList();
+        }
+
+        private IEnumerable<SelectListItem> GetEthnicityDataForDropdown()
+        {
+            var list = _employeeDal.GetEthnicitiesData();
+            return list.Select(x => new SelectListItem()
+            {
+                Text = x.EthnicityName,
+                Value = x.Id
+            }).ToList();
+        }
+
+        private List<ProvinceDto> GetProvinceDataForDropdown()
+        {
+            return _provinceDal.GetProvincesData(null);
+        }
+
         public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
         {
             Paging page = new Paging(pageSize, pageIndex);
@@ -40,36 +69,11 @@ namespace BUS
             return new PageList<EmployeeDto>(employees, numberRecords, page.PageIndex, page.PageSize, searchString);
         }
 
-        public IEnumerable<SelectListItem> GetJobsDataForDropdown()
-        {
-            var list = _employeeDal.GetJobsData();
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.JobName,
-                Value = x.Id
-            }).ToList();
-        }
-
-        public IEnumerable<SelectListItem> GetEthnicityDataForDropdown()
-        {
-            var list = _employeeDal.GetEthnicitiesData();
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.EthnicityName,
-                Value = x.Id
-            }).ToList();
-        }
-
-        public List<ProvinceDto> GetProvinceDataForDropdown()
-        {
-           return _provinceDal.GetProvincesData("");
-        }
-
         public bool AddEmployee(EmployeeDto employeeDto)
         {
             try
             {
-                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId); 
+                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
                 _baseDal.InsertEntity(employee);
                 return true;
             }
@@ -117,7 +121,7 @@ namespace BUS
             return _employeeDal.GetEmployeeById(id);
         }
 
-        public XLWorkbook ExportEmployeesData(List<EmployeeDto> employees)
+        private XLWorkbook CreateExcelData(List<EmployeeDto> employees)
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Employees");
@@ -155,18 +159,16 @@ namespace BUS
             return workbook;
         }
 
-        public List<EmployeeDto> GetDataForExcel()
+        private List<EmployeeDto> GetDataForExcel()
         {
             return _employeeDal.GetDataForExcel();
         }
 
-        public int GetNumberOfRecords(string searchString)
+        public bool ExportExcel(string pathFile)
         {
-            return _employeeDal.GetNumberOfRecords(searchString);
-        }
+            var employees = GetDataForExcel();
+            var workbook = CreateExcelData(employees);
 
-        public bool SaveExcelFile(XLWorkbook workbook, string pathFile)
-        {
             try
             {
                 workbook.SaveAs(pathFile);
@@ -278,6 +280,14 @@ namespace BUS
                 errorMessage = null;
                 return true;
             }
+        }
+
+        public EmployeeDto AddEmployeeInfo(EmployeeDto employeeDto)
+        {
+            employeeDto.Jobs = GetJobsDataForDropdown();
+            employeeDto.Ethnicities = GetEthnicityDataForDropdown();
+            employeeDto.Provinces = GetProvinceDataForDropdown();
+            return employeeDto;
         }
 
     }

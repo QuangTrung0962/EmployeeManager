@@ -9,8 +9,6 @@ namespace DAL.Interfaces
         List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize);
         List<JobDto> GetJobsData();
         List<EthnicityDto> GetEthnicitiesData();
-        string GetJobNameById(string id);
-        string GetEthnicityNameById(string id);
         EmployeeDto GetEmployeeById(int? id);
         List<EmployeeDto> GetDataForExcel();
         int GetNumberOfRecords(string searchString);

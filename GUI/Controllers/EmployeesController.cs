@@ -30,13 +30,8 @@ namespace GUI.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
-            EmployeeDto employeeDTO = new EmployeeDto()
-            {
-                Jobs = _employeeBUS.GetJobsDataForDropdown(),
-                Ethnicities = _employeeBUS.GetEthnicityDataForDropdown(),
-                Provinces = _employeeBUS.GetProvinceDataForDropdown(),
-            };
-            return View(employeeDTO);
+            EmployeeDto employeeDto = new EmployeeDto();
+            return View(_employeeBUS.AddEmployeeInfo(employeeDto));
         }
 
         [HttpPost]
@@ -63,10 +58,7 @@ namespace GUI.Controllers
         public ActionResult Edit(int? id)
         {
             var employee = _employeeBUS.GetEmployeeById(id);
-            employee.Jobs = _employeeBUS.GetJobsDataForDropdown();
-            employee.Ethnicities = _employeeBUS.GetEthnicityDataForDropdown();
-            employee.Provinces = _employeeBUS.GetProvinceDataForDropdown();
-            return View(employee);
+            return View(_employeeBUS.AddEmployeeInfo(employee));
         }
 
         [HttpPost]
@@ -110,20 +102,18 @@ namespace GUI.Controllers
         {
             try
             {
-                var employees = _employeeBUS.GetDataForExcel();
-                var workbook = _employeeBUS.ExportEmployeesData(employees);
-
+               
                 var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
                 var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
                 var pathFile = Server.MapPath(excelFilePath + nameFile);
 
-                if (!_employeeBUS.SaveExcelFile(workbook, pathFile))
+                if (!_employeeBUS.ExportExcel(pathFile))
                 {
                     TempData["error"] = "Có lỗi xảy ra";
                     return RedirectToAction("Index");
                 }
 
-                TempData["success"] = "Bạn đã lưu file Excel thành công";
+                TempData["success"] = "Bạn đã xuất file Excel thành công";
                 return RedirectToAction("Index");
 
             }
@@ -146,7 +136,7 @@ namespace GUI.Controllers
             try
             {
                 TempData["error"] = !_employeeBUS.ImportExcel(file.InputStream, out var message) ? "message" : null;
-                TempData["success"] = "Import file Thành công";
+                TempData["success"] = "Lưu file excel Thành công";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
