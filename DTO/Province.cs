@@ -7,23 +7,35 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DAL
+namespace DTO
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Job
+    public partial class Province
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Job()
+        public Province()
         {
+            this.Districts = new HashSet<District>();
             this.Employees = new HashSet<Employee>();
+            this.Qualifications = new HashSet<Qualification>();
         }
-    
-        public string Id { get; set; }
-        public string JobName { get; set; }
+
+        public Province(int id, string name)
+        {
+            ProvinceId = id;
+            ProvinceName = name;
+        }
+
+        public int ProvinceId { get; set; }
+        public string ProvinceName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<District> Districts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employees { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Qualification> Qualifications { get; set; }
     }
 }

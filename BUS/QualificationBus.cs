@@ -10,14 +10,14 @@ namespace BUS
 {
     public class QualificationBus : IQualificationBus
     {
-        private readonly IQualificationDal _qualificationDal;
-        private readonly IBaseDal<Qualification> _baseDal;
+        private readonly IQualificationDal _qualification;
+        private readonly IBaseDal<Qualification> _base;
         private readonly ILog _log;
 
-        public QualificationBus(IQualificationDal qualification,IBaseDal<Qualification> baseDal)
+        public QualificationBus(IQualificationDal qualification, IBaseDal<Qualification> baseDal)
         {
-            _qualificationDal = qualification;
-            _baseDal = baseDal;
+            _qualification = qualification;
+            _base = baseDal;
             _log = LogManager.GetLogger(typeof(DistrictBus));
         }
 
@@ -25,9 +25,11 @@ namespace BUS
         {
             try
             {
-                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
-               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
-                _baseDal.InsertEntity(qualification);
+                var qualification =
+                    new Qualification(qualificationDto.Id, qualificationDto.Name,
+                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
+                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                _base.InsertEntity(qualification);
                 return true;
             }
             catch (Exception ex)
@@ -41,9 +43,11 @@ namespace BUS
         {
             try
             {
-                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
-               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
-                _baseDal.UpdateEntity(qualification);
+                var qualification =
+                    new Qualification(qualificationDto.Id, qualificationDto.Name,
+                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
+                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                _base.UpdateEntity(qualification);
                 return true;
             }
             catch (Exception ex)
@@ -58,9 +62,11 @@ namespace BUS
             try
             {
                 var qualificationDto = GetQualificationById(id);
-                Qualification qualification = new Qualification(qualificationDto.Id, qualificationDto.Name, qualificationDto.ReleaseDate, qualificationDto.IssuancePlace,
-               qualificationDto.ExpirationDate, qualificationDto.EmployeeId);
-                _baseDal.DeleteEntity(qualification);
+                var qualification =
+                    new Qualification(qualificationDto.Id, qualificationDto.Name,
+                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
+                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                _base.DeleteEntity(qualification);
                 return true;
             }
             catch (Exception ex)
@@ -72,17 +78,17 @@ namespace BUS
 
         public List<QualificationDto> GetQualificationsData(string searchString)
         {
-            return _qualificationDal.GetQualificationsData(searchString);
+            return _qualification.GetQualificationsData(searchString);
         }
 
         public List<QualificationDto> GetQualificationsByEmployeeId(int id)
         {
-             return _qualificationDal.GetQualificationsByEmployeeId(id);
+            return _qualification.GetQualificationsByEmployeeId(id);
         }
 
         public QualificationDto GetQualificationById(int id)
         {
-            return _qualificationDal.GetQualificationById(id);
+            return _qualification.GetQualificationById(id);
         }
 
     }

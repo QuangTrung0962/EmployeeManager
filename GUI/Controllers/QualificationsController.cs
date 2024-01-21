@@ -6,36 +6,37 @@ namespace GUI.Controllers
 {
     public class QualificationsController : Controller
     {
-        private readonly IQualificationBus _qualificationBUS;
-        private readonly IEmployeeBus _employeeBUS;
-        private readonly IProvinceBus _provinceBus;
+        private readonly IQualificationBus _qualification;
+        private readonly IEmployeeBus _employee;
+        private readonly IGeneralBus _general;
 
-        public QualificationsController(IQualificationBus qualificationBus, IEmployeeBus employeeBUS, IProvinceBus provinceBus)
+        public QualificationsController(IQualificationBus qualification, IEmployeeBus employee,
+            IGeneralBus general)
         {
-            _qualificationBUS = qualificationBus;
-            _employeeBUS = employeeBUS;
-            _provinceBus = provinceBus;
+            _qualification = qualification;
+            _employee = employee;
+            _general = general;
         }
 
         // GET: Qualification
         public ActionResult Index(string searchString)
         {
             var qualifications =
-                _qualificationBUS.GetQualificationsData(searchString);
+                _qualification.GetQualificationsData(searchString);
 
             return View(qualifications);
         }
 
         public ActionResult QualificationsByEmployeeId(int id)
         {
-            var item = _qualificationBUS.GetQualificationsByEmployeeId(id);
-            ViewBag.id = id;
-            return View(item);
+            var qualifications = _qualification.GetQualificationsByEmployeeId(id);
+            ViewBag.Id = id;
+            return View(qualifications);
         }
 
         public ActionResult Create()
         {
-            ViewBag.provinces = _provinceBus.GetProvincesData(null);
+            SetDropDownListData();
             return View();
         }
 
@@ -43,27 +44,23 @@ namespace GUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(int id, QualificationDto qualificationDto)
         {
-            if (_employeeBUS.GetEmployeeById(id).NumberDegree >= 3)
+            if (_employee.GetEmployeeById(id).NumberDegree >= 3)
             {
                 TempData["error"] = "Nhân viên đã đủ số bằng cấp";
                 return RedirectToAction("Index");
             }
 
             qualificationDto.EmployeeId = id;
-            if (!ModelState.IsValid || !_qualificationBUS.AddQualification(qualificationDto))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã thêm thành công";
+            if (ModelState.IsValid && _qualification.AddQualification(qualificationDto))
+                TempData["success"] = "Bạn đã thêm thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int id)
         {
-            ViewBag.provinces = _provinceBus.GetProvincesData(null);
-            var obj = _qualificationBUS.GetQualificationById(id);
+            SetDropDownListData();
+            var obj = _qualification.GetQualificationById(id);
             return View(obj);
         }
 
@@ -72,34 +69,30 @@ namespace GUI.Controllers
         public ActionResult Edit(int id, QualificationDto qualificationDto)
         {
             qualificationDto.EmployeeId = id;
-            if (!ModelState.IsValid || !_qualificationBUS.UpdateQualification(qualificationDto))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã sửa thành công";
+            if (ModelState.IsValid && _qualification.UpdateQualification(qualificationDto))
+                TempData["success"] = "Bạn đã sửa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            var obj = _qualificationBUS.GetQualificationById(id);
+            var obj = _qualification.GetQualificationById(id);
             return View(obj);
         }
 
         [HttpPost]
         public ActionResult DeleteConfirmed(int id)
         {
-            
-            if (!ModelState.IsValid || !_qualificationBUS.DeleteQualification(id))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã xóa thành công";
+            if (ModelState.IsValid && _qualification.DeleteQualification(id))
+                TempData["success"] = "Bạn đã xóa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
+        }
+
+        private void SetDropDownListData()
+        {
+            ViewBag.Provinces = _general.LoadProvinceOptions();
         }
     }
 }

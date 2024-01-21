@@ -7,14 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DAL
+namespace DTO
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Town
     {
-        public Town() { }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Town()
+        {
+            this.Employees = new HashSet<Employee>();
+        }
 
         public Town(int id, string name, int districtId)
         {
@@ -26,7 +30,9 @@ namespace DAL
         public int TownId { get; set; }
         public string TownName { get; set; }
         public int DistrictId { get; set; }
-    
+
         public virtual District District { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employee> Employees { get; set; }
     }
 }

@@ -16,10 +16,10 @@
 
         <p>
             @Html.ActionLink("Thêm mới Employee", "Create", new { area = "" }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Export ra Excel", "ExportToExcel", new { area = "" }, new { @class = "btn btn-secondary" })
+            @Html.ActionLink("Export ra Excel", "ExportExcelFile", new { area = "" }, new { @class = "btn btn-secondary" })
         </p>
         <div>
-            @using (Html.BeginForm("ImportExcel", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("ImportExcelFile", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <input type="file" name="file" />
                 <input type="submit" value="Import file Excel" />

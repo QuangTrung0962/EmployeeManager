@@ -9,9 +9,9 @@ namespace DAL
     {
         private readonly EmployeesDBEntities _db;
 
-        public TownDal(EmployeesDBEntities context)
+        public TownDal(EmployeesDBEntities db)
         {
-            _db = context;
+            _db = db;
         }
 
         public TownDto GetTownById(int? id)

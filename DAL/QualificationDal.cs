@@ -8,9 +8,9 @@ namespace DAL
     public class QualificationDal : IQualificationDal
     {
         private readonly EmployeesDBEntities _db;
-        public QualificationDal(EmployeesDBEntities context)
+        public QualificationDal(EmployeesDBEntities db)
         {
-            _db = context;
+            _db = db;
         }
 
         public List<QualificationDto> GetQualificationsData(string searchString)

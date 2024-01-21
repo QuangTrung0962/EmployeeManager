@@ -7,15 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-
-namespace DAL
+namespace DTO
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Qualification
     {
         public Qualification() { }
 
-        public Qualification(int id, string name, DateTime releaseDate, int issuancePlace, DateTime expirationDate, int employeeId) 
+        public Qualification(int id, string name, DateTime releaseDate, DateTime expirationDate,
+            int issuancePlace, int employeeId)
         {
             Id = id;
             Name = name;
@@ -28,8 +30,8 @@ namespace DAL
         public int Id { get; set; }
         public string Name { get; set; }
         public System.DateTime ReleaseDate { get; set; }
-        public int IssuancePlace { get; set; }
         public System.DateTime ExpirationDate { get; set; }
+        public int IssuancePlace { get; set; }
         public int EmployeeId { get; set; }
     
         public virtual Employee Employee { get; set; }

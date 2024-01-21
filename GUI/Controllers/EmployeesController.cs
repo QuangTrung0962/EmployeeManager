@@ -1,6 +1,5 @@
 ﻿using BUS.Interfaces;
 using DTO;
-using log4net;
 using System;
 using System.Configuration;
 using System.Web;
@@ -10,122 +9,103 @@ namespace GUI.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly IEmployeeBus _employeeBUS;
-        private readonly ILog _log;
+        private readonly IEmployeeBus _employee;
+        private readonly IGeneralBus _general;
 
-        public EmployeesController(IEmployeeBus employeeBUS)
+        public EmployeesController(IEmployeeBus employee, IGeneralBus general)
         {
-            _employeeBUS = employeeBUS;
-            _log = LogManager.GetLogger(typeof(EmployeesController));
+            _employee = employee;
+            _general = general;
         }
 
-        // GET: Employee
         public ActionResult Index(int? pageIndex, int? pageSize, string searchString)
         {
-            PageList<EmployeeDto> employees = _employeeBUS.GetEmployeesData(searchString, pageIndex, pageSize);
+            var employees = _employee.GetEmployeesData(searchString, pageIndex, pageSize);
 
             return View(employees);
         }
 
-        // GET: Employees/Create
+
         public ActionResult Create()
         {
-            EmployeeDto employeeDto = new EmployeeDto();
-            return View(_employeeBUS.AddEmployeeInfo(employeeDto));
+            SetDropDownListData();
+            var employee = new EmployeeDto();
+            return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(EmployeeDto employee)
         {
-            if (!ModelState.IsValid || !_employeeBUS.AddEmployee(employee))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã thêm thành công";
+            if (ModelState.IsValid && _employee.AddEmployee(employee))
+                TempData["success"] = "Bạn đã thêm thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
 
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            EmployeeDto employee = _employeeBUS.GetEmployeeById(id);
+            var employee = _employee.GetEmployeeById(id);
             if (employee == null) return RedirectToAction("Index");
+
             return View(employee);
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            var employee = _employeeBUS.GetEmployeeById(id);
-            return View(_employeeBUS.AddEmployeeInfo(employee));
+            SetDropDownListData();
+            var employee = _employee.GetEmployeeById(id);
+
+            return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EmployeeDto employee)
         {
+            if (ModelState.IsValid && _employee.UpdateEmployee(employee))
+                TempData["success"] = "Bạn đã sửa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
 
-            if (!ModelState.IsValid || !_employeeBUS.UpdateEmployee(employee))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã sửa thành công";
             return RedirectToAction("Index");
         }
 
-        public ActionResult Delete(int? employeeId)
+        public ActionResult Delete(int employeeId)
         {
-            EmployeeDto employee = _employeeBUS.GetEmployeeById(employeeId);
+            var employee = _employee.GetEmployeeById(employeeId);
             if (employee == null) return RedirectToAction("Index");
             return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int? id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            if (!_employeeBUS.DeleteEmployee(id) || id == null)
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
+            if (ModelState.IsValid && _employee.DeleteEmployee(id))
+                TempData["success"] = "Bạn đã xóa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
 
-            TempData["success"] = "Bạn đã xóa thành công";
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult ExportToExcel()
+        public ActionResult ExportExcelFile()
         {
-            try
-            {
-               
-                var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
-                var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
-                var pathFile = Server.MapPath(excelFilePath + nameFile);
+            var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
+            var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
+            var pathFile = Server.MapPath(excelFilePath + nameFile);
 
-                if (!_employeeBUS.ExportExcel(pathFile))
-                {
-                    TempData["error"] = "Có lỗi xảy ra";
-                    return RedirectToAction("Index");
-                }
-
+            if (_employee.ExportExcel(pathFile))
                 TempData["success"] = "Bạn đã xuất file Excel thành công";
-                return RedirectToAction("Index");
+            else TempData["error"] = "Có lỗi xảy ra";
 
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Noti = "Lỗi: " + ex.Message;
-                return RedirectToAction("Index");
-            }
+
+            return RedirectToAction("Index");
+
         }
 
         [HttpPost]
-        public ActionResult ImportExcel(HttpPostedFileBase file)
+        public ActionResult ImportExcelFile(HttpPostedFileBase file)
         {
             if (file == null || file.ContentLength == 0)
             {
@@ -133,17 +113,18 @@ namespace GUI.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                TempData["error"] = !_employeeBUS.ImportExcel(file.InputStream, out var message) ? "message" : null;
+            if (_employee.ImportExcel(file.InputStream, out var message))
                 TempData["success"] = "Lưu file excel Thành công";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                _log.Error("Error: " + ex.Message);
-                return RedirectToAction("Index");
-            }
+            else TempData["error"] = message;
+
+            return RedirectToAction("Index");
+        }
+
+        private void SetDropDownListData()
+        {
+            ViewBag.Jobs = _general.LoadJobOptions();
+            ViewBag.Ethnicities = _general.LoadEthnicityOptions();
+            ViewBag.Provinces = _general.LoadProvinceOptions();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DTO;
 using System.IO;
+using System.Web.Mvc;
 
 namespace BUS.Interfaces
 {
@@ -12,6 +13,5 @@ namespace BUS.Interfaces
         bool DeleteEmployee(int? id);
         bool ExportExcel(string pathFile);
         bool ImportExcel(Stream excelFileStream, out string errorMessage);
-        EmployeeDto AddEmployeeInfo(EmployeeDto employeeDto);
     }
 }

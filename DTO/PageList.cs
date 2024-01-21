@@ -12,6 +12,9 @@ namespace DTO
         public int TotalItems { get; set; }
         public string SearchString { get; set; }
         public int Pages { get; set; }
+
+        public PageList() { }
+
         public PageList(List<T> items, int? count,int pageIndex, int pageSize, string searchString)
         {
             Items = items;

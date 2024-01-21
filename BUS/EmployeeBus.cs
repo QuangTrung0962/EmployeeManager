@@ -3,7 +3,6 @@ using DAL;
 using DTO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using DTO.Utils;
 using BUS.Interfaces;
 using DAL.Interfaces;
@@ -15,66 +14,51 @@ namespace BUS
 {
     public class EmployeeBus : IEmployeeBus
     {
-        private readonly IEmployeeDal _employeeDal;
-        private readonly IProvinceDal _provinceDal;
-        private readonly IBaseDal<Employee> _baseDal;
+        private readonly IEmployeeDal _employee;
+        private readonly IBaseDal<Employee> _base;
         private readonly ILog _log;
 
-        public EmployeeBus(IEmployeeDal employeeDal, IBaseDal<Employee> baseDal, IProvinceDal provinceDal)
+        public EmployeeBus(IEmployeeDal employee, IBaseDal<Employee> baseDal)
         {
-            _employeeDal = employeeDal;
-            _provinceDal = provinceDal;
-            _baseDal = baseDal;
+            _employee = employee;
+            _base = baseDal;
             _log = LogManager.GetLogger(typeof(EmployeeBus));
         }
 
         private int GetNumberOfRecords(string searchString)
         {
-            return _employeeDal.GetNumberOfRecords(searchString);
-        }
-
-        private IEnumerable<SelectListItem> GetJobsDataForDropdown()
-        {
-            var list = _employeeDal.GetJobsData();
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.JobName,
-                Value = x.Id
-            }).ToList();
-        }
-
-        private IEnumerable<SelectListItem> GetEthnicityDataForDropdown()
-        {
-            var list = _employeeDal.GetEthnicitiesData();
-            return list.Select(x => new SelectListItem()
-            {
-                Text = x.EthnicityName,
-                Value = x.Id
-            }).ToList();
-        }
-
-        private List<ProvinceDto> GetProvinceDataForDropdown()
-        {
-            return _provinceDal.GetProvincesData(null);
+            return _employee.GetNumberOfRecords(searchString);
         }
 
         public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
         {
-            Paging page = new Paging(pageSize, pageIndex);
+            try
+            {
+                var page = new Paging(pageSize, pageIndex);
 
-            var employees = _employeeDal.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
+                var employees = _employee.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
 
-            int numberRecords = GetNumberOfRecords(searchString);
+                var numberRecords = GetNumberOfRecords(searchString);
 
-            return new PageList<EmployeeDto>(employees, numberRecords, page.PageIndex, page.PageSize, searchString);
+                return new PageList<EmployeeDto>(employees, numberRecords, page.PageIndex, page.PageSize, searchString);
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex);
+                return new PageList<EmployeeDto>();
+            }
         }
 
         public bool AddEmployee(EmployeeDto employeeDto)
         {
             try
             {
-                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
-                _baseDal.InsertEntity(employee);
+                var employee =
+                    new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
+                    employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
+                    employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
+                    employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                _base.InsertEntity(employee);
                 return true;
             }
             catch (Exception ex)
@@ -88,8 +72,12 @@ namespace BUS
         {
             try
             {
-                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
-                _baseDal.UpdateEntity(employee);
+                var employee =
+                    new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
+                    employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
+                    employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
+                    employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                _base.UpdateEntity(employee);
                 return true;
             }
             catch (Exception ex)
@@ -104,8 +92,12 @@ namespace BUS
             try
             {
                 var employeeDto = GetEmployeeById(id);
-                Employee employee = new Employee(employeeDto.Id, employeeDto.Name, employeeDto.Age, employeeDto.DateOfBirth, employeeDto.JobName, employeeDto.EthnicityName, employeeDto.PhoneNumber, employeeDto.IdCard, employeeDto.Details, employeeDto.ProvinceId, employeeDto.DistrictId, employeeDto.TownId);
-                _baseDal.DeleteEntity(employee);
+                var employee =
+                   new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
+                   employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
+                   employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
+                   employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                _base.DeleteEntity(employee);
                 return true;
             }
             catch (Exception ex)
@@ -118,10 +110,10 @@ namespace BUS
         public EmployeeDto GetEmployeeById(int? id)
         {
             if (id == null) return null;
-            return _employeeDal.GetEmployeeById(id);
+            return _employee.GetEmployeeById(id);
         }
 
-        private XLWorkbook CreateExcelData(List<EmployeeDto> employees)
+        private XLWorkbook CreateExcelList(List<EmployeeDto> employees)
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Employees");
@@ -161,134 +153,132 @@ namespace BUS
 
         private List<EmployeeDto> GetDataForExcel()
         {
-            return _employeeDal.GetDataForExcel();
+            return _employee.GetDataForExcel();
         }
 
         public bool ExportExcel(string pathFile)
         {
-            var employees = GetDataForExcel();
-            var workbook = CreateExcelData(employees);
-
             try
             {
+                var employees = GetDataForExcel();
+                var workbook = CreateExcelList(employees);
                 workbook.SaveAs(pathFile);
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving Excel file: {ex.Message}");
+                _log.Error("Error: " + ex);
                 return false;
             }
         }
 
         public bool ImportExcel(Stream excelFileStream, out string errorMessage)
         {
-            using (var workbook = new XLWorkbook(excelFileStream))
+            errorMessage = null;
+            try
             {
-                var worksheet = workbook.Worksheet(1);
-                var currentRow = 2;
-
-                foreach (var row in worksheet.RowsUsed().Skip(1))
+                using (var workbook = new XLWorkbook(excelFileStream))
                 {
-                    var i = 0;
-                    var name = row.Cell(++i).Value.ToString();
-                    var dateOfBirth = row.Cell(++i).Value.ToString();
-                    var ethnicityId = row.Cell(++i).Value.ToString();
-                    var jobId = row.Cell(++i).Value.ToString();
-                    var idCard = row.Cell(++i).Value.ToString();
-                    var phoneNumber = row.Cell(++i).Value.ToString();
-                    var provinceId = row.Cell(++i).Value.ToString();
-                    var districtId = row.Cell(++i).Value.ToString();
-                    var villageId = row.Cell(++i).Value.ToString();
-                    var addressDescription = row.Cell(++i).Value.ToString();
+                    var worksheet = workbook.Worksheet(1);
+                    var currentRow = 2;
 
-                    if (!ExcelValidators.IsNonEmptyString(name) ||
-                        !ExcelValidators.IsNonEmptyString(phoneNumber) ||
-                        !ExcelValidators.IsNonEmptyString(idCard) ||
-                        !ExcelValidators.IsNonEmptyString(addressDescription) ||
-                        !ExcelValidators.IsNonEmptyString
-                        (ethnicityId) ||
-                        !ExcelValidators.IsNonEmptyString(jobId))
-
+                    foreach (var row in worksheet.RowsUsed().Skip(1))
                     {
-                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
-                        return false;
+                        var i = 0;
+                        var name = row.Cell(++i).Value.ToString();
+                        var dateOfBirth = row.Cell(++i).Value.ToString();
+                        var ethnicityId = row.Cell(++i).Value.ToString();
+                        var jobId = row.Cell(++i).Value.ToString();
+                        var idCard = row.Cell(++i).Value.ToString();
+                        var phoneNumber = row.Cell(++i).Value.ToString();
+                        var provinceId = row.Cell(++i).Value.ToString();
+                        var districtId = row.Cell(++i).Value.ToString();
+                        var villageId = row.Cell(++i).Value.ToString();
+                        var addressDescription = row.Cell(i).Value.ToString();
+
+                        if (!ExcelValidators.IsNonEmptyString(name) ||
+                            !ExcelValidators.IsNonEmptyString(phoneNumber) ||
+                            !ExcelValidators.IsNonEmptyString(idCard) ||
+                            !ExcelValidators.IsNonEmptyString(addressDescription) ||
+                            !ExcelValidators.IsNonEmptyString
+                            (ethnicityId) ||
+                            !ExcelValidators.IsNonEmptyString(jobId))
+                        {
+                            errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                            return false;
+                        }
+
+                        if (!ExcelValidators.IsNumber(provinceId) ||
+                            !ExcelValidators.IsNumber(districtId) ||
+                            !ExcelValidators.IsNumber(villageId))
+                        {
+                            errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                            return false;
+                        }
+
+                        if (!ExcelValidators.IsDateTime(dateOfBirth))
+                        {
+                            errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                            return false;
+                        }
+
+                        if (!ExcelValidators.IsIdCard(idCard))
+                        {
+                            errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                            return false;
+                        }
+
+                        if (!ExcelValidators.IsPhoneNumber(phoneNumber))
+                        {
+                            errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
+                            return false;
+                        }
+
+                        currentRow++;
                     }
 
-                    if (!ExcelValidators.IsNumber(provinceId) ||
-                        !ExcelValidators.IsNumber(districtId) ||
-                        !ExcelValidators.IsNumber(villageId))
+                    foreach (var row in worksheet.RowsUsed().Skip(1))
                     {
-                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
-                        return false;
+                        var i = 0;
+                        var name = row.Cell(++i).Value.ToString();
+                        var dateOfBirth = row.Cell(++i).GetDateTime();
+                        var age = DateTime.Now.Year - dateOfBirth.Year;
+                        var ethnicityId = int.Parse(row.Cell(++i).Value.ToString());
+                        var jobId = int.Parse(row.Cell(++i).Value.ToString());
+                        var idCard = row.Cell(++i).Value.ToString();
+                        var phoneNumber = row.Cell(++i).Value.ToString();
+                        var provinceId = int.Parse(row.Cell(++i).Value.ToString());
+                        var districtId = int.Parse(row.Cell(++i).Value.ToString());
+                        var townId = int.Parse(row.Cell(++i).Value.ToString());
+                        var details = row.Cell(i).Value.ToString();
+
+                        var employee = new Employee
+                        {
+                            Name = name,
+                            DateOfBirth = dateOfBirth,
+                            Age = age,
+                            EthnicityId = ethnicityId,
+                            JobId = jobId,
+                            IdCard = idCard,
+                            PhoneNumber = phoneNumber,
+                            ProvinceId = provinceId,
+                            DistrictId = districtId,
+                            TownId = townId,
+                            Details = details,
+                        };
+
+                        _base.InsertEntity(employee);
                     }
 
-                    if (!ExcelValidators.IsDateTime(dateOfBirth))
-                    {
-                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
-                        return false;
-                    }
-
-                    if (!ExcelValidators.IsIdCard(idCard))
-                    {
-                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
-                        return false;
-                    }
-
-                    if (!ExcelValidators.IsPhoneNumber(phoneNumber))
-                    {
-                        errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
-                        return false;
-                    }
-
-                    currentRow++;
+                    return true;
                 }
-
-                foreach (var row in worksheet.RowsUsed().Skip(1))
-                {
-                    var i = 0;
-                    var name = row.Cell(++i).Value.ToString();
-                    var dateOfBirth = row.Cell(++i).GetDateTime();
-                    var age = DateTime.Now.Year - dateOfBirth.Year;
-                    var ethnicityId = row.Cell(++i).Value.ToString();
-                    var jobId = row.Cell(++i).Value.ToString();
-                    var idCard = row.Cell(++i).Value.ToString();
-                    var phoneNumber = row.Cell(++i).Value.ToString();
-                    var provinceId = int.Parse(row.Cell(++i).Value.ToString());
-                    var districtId = int.Parse(row.Cell(++i).Value.ToString());
-                    var townId = int.Parse(row.Cell(++i).Value.ToString());
-                    var details = row.Cell(++i).Value.ToString();
-
-                    var employee = new Employee
-                    {
-                        Name = name,
-                        DateOfBirth = dateOfBirth,
-                        Age = age,
-                        Ethnicity = ethnicityId,
-                        Job = jobId,
-                        IdCard = idCard,
-                        PhoneNumber = phoneNumber,
-                        ProvinceId = provinceId,
-                        DistrictId = districtId,
-                        TownId = townId,
-                        Details = details,
-                    };
-
-                    _baseDal.InsertEntity(employee);
-                }
-
-                errorMessage = null;
-                return true;
             }
-        }
+            catch (Exception ex)
+            {
+                _log.Error("Error: " + ex.Message);
+                return false;
+            }
 
-        public EmployeeDto AddEmployeeInfo(EmployeeDto employeeDto)
-        {
-            employeeDto.Jobs = GetJobsDataForDropdown();
-            employeeDto.Ethnicities = GetEthnicityDataForDropdown();
-            employeeDto.Provinces = GetProvinceDataForDropdown();
-            return employeeDto;
         }
-
     }
 }

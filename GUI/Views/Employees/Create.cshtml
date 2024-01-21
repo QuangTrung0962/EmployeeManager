@@ -68,7 +68,12 @@
                 <div class="form-group">
                     <div class="d-flex flex-column">
                         <label>4. Dân tộc</label>
-                        @Html.DropDownList("EthnicityName", Model.Ethnicities, new { @class = "form-control selectpicker" })
+                        <select class="form-control selectpicker" name="EthnicityId">
+                            @foreach (var item in ViewBag.Ethnicities)
+                            {
+                                <option id="test" class="selectpicker" value="@item.Id">@item.EthnicityName</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>
@@ -79,7 +84,12 @@
                 <div class="form-group">
                     <div class="d-flex flex-column">
                         <label>5. Công việc</label>
-                        @Html.DropDownList("JobName", Model.Jobs, new { @class = "form-control selectpicker" })
+                        <select class="form-control selectpicker" name="JobId">
+                            @foreach (var item in ViewBag.Jobs)
+                            {
+                                <option id="test" class="selectpicker" value="@item.Id">@item.JobName</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>
@@ -144,7 +154,7 @@
                         <div>
                             <label>Tỉnh / Thành phố</label>
                             <select class="form-control selectpicker" data-bind="value: selectedProvince" name="provinceId">
-                                @foreach (var item in Model.Provinces)
+                                @foreach (var item in ViewBag.Provinces)
                                 {
                                     <option id="test" class="selectpicker" value="@item.Id">@item.ProvinceName</option>
                                 }
@@ -213,53 +223,7 @@
 }
 
 @section Scripts {
-    <script>
-        var dobInput = document.getElementById('dob');
-        var ageDisplay = document.getElementById('age');
-
-        dobInput.addEventListener('input', function () {
-            var dob = new Date(this.value);
-            var today = new Date();
-            var age = today.getFullYear() - dob.getFullYear();
-
-            //Vì dob đang ở dạng dd/MM/yyyy
-            if (today.getMonth() < dob.getDate() || (today.getMonth() === dob.getDate() && today.getDate() < dob.getMonth())) {
-                age--;
-            }
-
-            if (age < 0) age = "";
-
-            ageDisplay.value = age;
-        });
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var phoneNumberCheckbox = document.getElementById('not-phonenumber');
-            var phoneNumberInput = document.getElementById('phone-number');
-
-            var idCardCheckbox = document.getElementById('not-idcard');
-            var idCardInput = document.getElementById('id-card');
-
-            phoneNumberCheckbox.addEventListener('click', function () {               
-                if (phoneNumberCheckbox.checked) {
-                    phoneNumberInput.readOnly = true;
-                    phoneNumberInput.value = '';
-                } else {
-                    phoneNumberInput.readOnly = false;
-                }
-            });
-
-            idCardCheckbox.addEventListener('click', function () {
-                if (idCardCheckbox.checked) {
-                    idCardInput.readOnly = true;
-                    idCardInput.value = '';
-                } else {
-                    idCardInput.readOnly = false;
-                }
-            });
-        });
-    </script>
-
+    @Scripts.Render("~/bundles/validation")
     @Scripts.Render("~/bundles/api")
     @Scripts.Render("~/bundles/jqueryval")
 }

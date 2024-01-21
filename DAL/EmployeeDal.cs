@@ -8,23 +8,20 @@ namespace DAL
     public class EmployeeDal : IEmployeeDal
     {
         private readonly EmployeesDBEntities _db;
-        private readonly IProvinceDal _provinceDal;
-        private readonly IDistrictDal _districtDal;
-        private readonly ITownDal _townDal;
 
-        public EmployeeDal(EmployeesDBEntities context, IProvinceDal province, IDistrictDal district, ITownDal town)
+        public EmployeeDal(EmployeesDBEntities context)
         {
             _db = context;
-            _provinceDal = province;
-            _districtDal = district;
-            _townDal = town;
         }
 
         private IQueryable<EmployeeDto> GetData(string searchString)
         {
             return from e in _db.Employees
-                   join d in _db.Ethnicities on e.Ethnicity equals d.Id
-                   join j in _db.Jobs on e.Job equals j.Id
+                   join eth in _db.Ethnicities on e.EthnicityId equals eth.Id
+                   join j in _db.Jobs on e.JobId equals j.Id
+                   join p in _db.Provinces on e.ProvinceId equals p.ProvinceId
+                   join d in _db.Districts on e.DistrictId equals d.DistrictId
+                   join t in _db.Towns on e.TownId equals t.TownId
                    where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
                    select new EmployeeDto
                    {
@@ -32,10 +29,15 @@ namespace DAL
                        Name = e.Name,
                        Age = e.Age,
                        DateOfBirth = e.DateOfBirth,
+                       JobId = j.Id,
                        JobName = j.JobName,
-                       EthnicityName = d.EthnicityName,
+                       EthnicityId = eth.Id,
+                       EthnicityName = eth.EthnicityName,
                        IdCard = e.IdCard,
                        PhoneNumber = e.PhoneNumber,
+                       ProvinceId = p.ProvinceId,
+                       DistrictId = d.DistrictId,
+                       TownId = t.TownId,
                        Details = e.Details,
                        NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
                    };
@@ -45,7 +47,7 @@ namespace DAL
         public List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize)
         {
             return GetData(searchString)
-                      .OrderBy(i => i.Id)
+                      .OrderBy(i => i.Name)
                       .Skip((pageIndex - 1) * pageSize)
                       .Take(pageSize)
                       .ToList();
@@ -78,46 +80,43 @@ namespace DAL
                     }).ToList();
         }
 
-        //Lấy tên công việc bằng id
-        private string GetJobNameById(string id)
-        {
-            return _db.Jobs.First(x => x.Id == id).JobName;
-        }
-
-        //Lấy tên dân tộc bằng id
-        private string GetEthnicityNameById(string id)
-        {
-            return _db.Ethnicities.First(x => x.Id == id).EthnicityName;
-        }
-
         public EmployeeDto GetEmployeeById(int? id)
         {
-            var employee = _db.Employees.FirstOrDefault(i => i.Id == id);
-            if (employee == null) return null;
-
-            return new EmployeeDto
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                DateOfBirth = employee.DateOfBirth,
-                Age = employee.Age,
-                IdCard = employee.IdCard,
-                PhoneNumber = employee.PhoneNumber,
-                JobName = GetJobNameById(employee.Job),
-                EthnicityName = GetEthnicityNameById(employee.Ethnicity),
-                Province = _provinceDal.GetProvinceById(employee.ProvinceId),
-                District = _districtDal.GetDistrictById(employee.DistrictId),
-                Town = _townDal.GetTownById(employee.TownId),
-                Details = employee.Details,
-                NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == id),
-            };
+            return (from e in _db.Employees
+                    join eth in _db.Ethnicities on e.EthnicityId equals eth.Id
+                    join j in _db.Jobs on e.JobId equals j.Id
+                    join p in _db.Provinces on e.ProvinceId equals p.ProvinceId
+                    join d in _db.Districts on e.DistrictId equals d.DistrictId
+                    join t in _db.Towns on e.TownId equals t.TownId
+                    where e.Id == id
+                   select new EmployeeDto
+                   {
+                       Id = e.Id,
+                       Name = e.Name,
+                       Age = e.Age,
+                       DateOfBirth = e.DateOfBirth,
+                       JobId = j.Id,
+                       JobName = j.JobName,
+                       EthnicityId = eth.Id,
+                       EthnicityName = eth.EthnicityName,
+                       IdCard = e.IdCard,
+                       PhoneNumber = e.PhoneNumber,
+                       ProvinceId = p.ProvinceId,
+                       DistrictId = d.DistrictId,
+                       TownId = t.TownId,
+                       Details = e.Details,
+                       NumberDegree = _db.Qualifications.Count(i => i.EmployeeId == e.Id && i.ExpirationDate >= System.DateTime.Now),
+                   }).FirstOrDefault();
         }
 
         public int GetNumberOfRecords(string searchString)
         {
             return (from e in _db.Employees
-                    join d in _db.Ethnicities on e.Ethnicity equals d.Id
-                    join j in _db.Jobs on e.Job equals j.Id
+                    join eth in _db.Ethnicities on e.EthnicityId equals eth.Id
+                    join j in _db.Jobs on e.JobId equals j.Id
+                    join p in _db.Provinces on e.ProvinceId equals p.ProvinceId
+                    join d in _db.Districts on e.DistrictId equals d.DistrictId
+                    join t in _db.Towns on e.TownId equals t.TownId
                     where string.IsNullOrEmpty(searchString) || e.Name.Trim().ToLower().Contains(searchString.ToLower())
                     select e)
                     .Count();

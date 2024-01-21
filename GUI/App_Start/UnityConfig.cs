@@ -22,6 +22,7 @@ namespace GUI.App_Start
             container.RegisterType<ITownDal, TownDal>();
             container.RegisterType<IQualificationDal, QualificationDal>();
 
+            container.RegisterType<IGeneralBus, GeneralBus>();
             container.RegisterType<IProvinceBus, ProvinceBus>();
             container.RegisterType<IEmployeeBus, EmployeeBus>();
             container.RegisterType<IDistrictBus, DistrictBus>();

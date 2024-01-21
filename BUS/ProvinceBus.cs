@@ -8,35 +8,35 @@ using System.Collections.Generic;
 
 namespace BUS
 {
-    public class ProvinceBus : IProvinceBus
+    public class ProvinceBus : Interfaces.IProvinceBus
     {
-        private readonly IProvinceDal _provinceDal;
-        private readonly IBaseDal<Province> _baseDal;
+        private readonly DAL.Interfaces.IProvinceDal _province;
+        private readonly IBaseDal<Province> _base;
         private readonly ILog _log;
 
-        public ProvinceBus(IProvinceDal provinceDal, IBaseDal<Province> baseDal)
+        public ProvinceBus(DAL.Interfaces.IProvinceDal province, IBaseDal<Province> baseDal)
         {
-            _provinceDal = provinceDal;
-            _baseDal = baseDal;
+            _province = province;
+            _base = baseDal;
             _log = LogManager.GetLogger(typeof(ProvinceBus));
         }
 
         public List<ProvinceDto> GetProvincesData(string searchString)
         {
-            return _provinceDal.GetProvincesData(searchString);
+            return _province.GetProvincesData(searchString);
         }
 
         public ProvinceDto GetProvinceById(int? id)
         {
-            return _provinceDal.GetProvinceById(id);
+            return _province.GetProvinceById(id);
         }
 
         public bool AddProvince(ProvinceDto provinceDto)
         {
             try
             {
-                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
-                _baseDal.InsertEntity(province);
+                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                _base.InsertEntity(province);
                 return true;
             }
             catch (Exception ex)
@@ -50,8 +50,8 @@ namespace BUS
         {
             try
             {
-                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
-                _baseDal.UpdateEntity(province);
+                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                _base.UpdateEntity(province);
                 return true;
             }
             catch (Exception ex)
@@ -65,9 +65,9 @@ namespace BUS
         {
             try
             {
-                ProvinceDto provinceDto = GetProvinceById(id);
-                Province province = new Province(provinceDto.Id, provinceDto.ProvinceName);
-                _baseDal.DeleteEntity(province);
+                var provinceDto = GetProvinceById(id);
+                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                _base.DeleteEntity(province);
                 return true;
             }
             catch (Exception ex)
@@ -77,5 +77,9 @@ namespace BUS
             }
         }
 
+        public List<ProvinceDto> ProvincesDataForDropdown()
+        {
+            return _province.GetProvincesData(null);
+        }
     }
 }

@@ -1,27 +1,23 @@
 ﻿using BUS.Interfaces;
-using DTO;
-using System.Collections.Generic;
 using System.Web.Http;
 
 namespace GUI.Controllers.Api
 {
     public class GetApiController : ApiController
     {
-        private readonly IDistrictBus _districtBUS;
-        private readonly ITownBus _townBUS;
-        private readonly IEmployeeBus _employeeBUS;
+        private readonly IDistrictBus _district;
+        private readonly ITownBus _town;
 
-        public GetApiController(IDistrictBus districtBUS, ITownBus townBUS, IEmployeeBus employeeBUS)
+        public GetApiController(IDistrictBus district, ITownBus town)
         {
-            _districtBUS = districtBUS;
-            _townBUS = townBUS;
-            _employeeBUS = employeeBUS;
+            _district = district;
+            _town = town;
         }
 
         [HttpGet]
         public IHttpActionResult GetDistrictsByProvinceId(int id)
         {
-            List<DistrictDto> districts = _districtBUS.GetDistrictsByProvinceId(id);
+            var districts = _district.GetDistrictsByProvinceId(id);
 
             if (districts.Count == 0)
                 return NotFound();
@@ -32,7 +28,7 @@ namespace GUI.Controllers.Api
         [HttpGet]
         public IHttpActionResult GetTownsByDistrictId(int id)
         {
-            List<TownDto> towns = _townBUS.GetTownsByDistrictId(id);
+            var towns = _town.GetTownsByDistrictId(id);
 
             if (towns.Count == 0)
                 return NotFound();

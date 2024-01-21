@@ -6,98 +6,96 @@ namespace GUI.Controllers
 {
     public class DistrictsController : Controller
     {
-        private readonly IDistrictBus _districtBus;
-        private readonly IProvinceBus _provinceBus;
+        private readonly IDistrictBus _district;
+        private readonly IProvinceBus _province;
+        private readonly IGeneralBus _general;
 
-        public DistrictsController(IDistrictBus districtBus, IProvinceBus provinceBus)
+        public DistrictsController(IDistrictBus district, IProvinceBus province, IGeneralBus general)
         {
-            _districtBus = districtBus;
-            _provinceBus = provinceBus;
+            _district = district;
+            _province = province;
+            _general = general;
         }
 
         public ActionResult Index(string searchString)
         {
-            var district = _districtBus.GetDistrictsData(searchString);
-            return View(district);
+            var districts = _district.GetDistrictsData(searchString);
+            return View(districts);
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.provinces = _provinceBus.GetProvincesData("");
+            SetDropDownListData();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DistrictDto districtDto)
+        public ActionResult Create(DistrictDto district)
         {
-            if (!ModelState.IsValid || !_districtBus.AddDistrict(districtDto))
-            {
+            if (ModelState.IsValid && _district.AddDistrict(district))
+                TempData["success"] = "Bạn đã thêm thành công";
+            else
                 TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã thêm thành công";
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            DistrictDto districtDto = _districtBus.GetDistrictById(id);
-            if (districtDto == null) return RedirectToAction("Index");
+            var district = _district.GetDistrictById(id);
+            if (district == null) return RedirectToAction("Index");
 
-            ViewBag.province = _provinceBus.GetProvinceById(districtDto.ProvinceId).ProvinceName;
-            return View(districtDto);
+            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
+            return View(district);
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            DistrictDto districtDto = _districtBus.GetDistrictById(id);
-            if (districtDto == null) return RedirectToAction("Index");
+            var district = _district.GetDistrictById(id);
+            if (district == null) return RedirectToAction("Index");
 
-            ViewBag.provinces = _provinceBus.GetProvincesData("");
-            return View(districtDto);
+            SetDropDownListData();
+            return View(district);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(DistrictDto districtDto)
+        public ActionResult Edit(DistrictDto district)
         {
-            if (!ModelState.IsValid || !_districtBus.UpdateDistrict(districtDto))
-            {
+            if (ModelState.IsValid && _district.UpdateDistrict(district))
+                TempData["success"] = "Bạn đã sửa thành công";
+            else
                 TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-
-            }
-            TempData["success"] = "Bạn đã sửa thành công";
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult Delete(int? districtId)
+        public ActionResult Delete(int districtId)
         {
-            DistrictDto districtDto = _districtBus.GetDistrictById(districtId);
-            if (districtDto == null) return RedirectToAction("Index");
+            var district = _district.GetDistrictById(districtId);
+            if (district == null) return RedirectToAction("Index");
 
-            ViewBag.province = _provinceBus.GetProvinceById(districtDto.ProvinceId).ProvinceName;
-            return View(districtDto);
+            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
+            return View(district);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (!_districtBus.DeleteDistrict(id))
-            {
+            if (ModelState.IsValid && _district.DeleteDistrict(id))
+                TempData["success"] = "Bạn đã xóa thành công";
+            else
                 TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã xóa thành công";
             return RedirectToAction("Index");
+        }
+
+        private void SetDropDownListData()
+        {
+            ViewBag.Provinces = _general.LoadProvinceOptions();
         }
     }
 }

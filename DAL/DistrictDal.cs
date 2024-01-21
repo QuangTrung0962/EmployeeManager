@@ -9,14 +9,14 @@ namespace DAL
     public class DistrictDal : IDistrictDal
     {
         private readonly EmployeesDBEntities _db;
-        public DistrictDal(EmployeesDBEntities context)
+        public DistrictDal(EmployeesDBEntities db)
         {
-            _db = context;
+            _db = db;
         }
 
         public List<DistrictDto> GetDistrictsData(string searchString)
         {
-            bool isNumeric = int.TryParse(searchString, out int provinceId);
+            var isNumeric = int.TryParse(searchString, out int provinceId);
 
             if (isNumeric)
             {
@@ -54,8 +54,8 @@ namespace DAL
 
         public List<DistrictDto> GetDistrictsByProvinceId(int provinceId)
         {
-            return _db.Districts.Where(i => i.ProvinceId == provinceId).
-                Select(j => new DistrictDto
+            return _db.Districts.Where(i => i.ProvinceId == provinceId)
+                .Select(j => new DistrictDto
                 {
                     Id = j.DistrictId,
                     DistrictName = j.DistrictName,

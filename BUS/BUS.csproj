@@ -145,8 +145,10 @@
   <ItemGroup>
     <Compile Include="DistrictBus.cs" />
     <Compile Include="EmployeeBus.cs" />
+    <Compile Include="GeneralBus.cs" />
     <Compile Include="Interfaces\IDistrictBus.cs" />
     <Compile Include="Interfaces\IEmployeeBus.cs" />
+    <Compile Include="Interfaces\IGeneralBus.cs" />
     <Compile Include="Interfaces\IProvinceBus.cs" />
     <Compile Include="Interfaces\IQualificationBus.cs" />
     <Compile Include="Interfaces\ITownBus.cs" />

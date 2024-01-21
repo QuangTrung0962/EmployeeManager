@@ -10,14 +10,14 @@ namespace BUS
 {
     public class TownBus : ITownBus
     {
-        private readonly ITownDal _townDal;
-        private readonly IBaseDal<Town> _baseDal;
+        private readonly ITownDal _town;
+        private readonly IBaseDal<Town> _base;
         private readonly ILog _log;
 
-        public TownBus(ITownDal townDal, IBaseDal<Town> baseDal)
+        public TownBus(ITownDal town, IBaseDal<Town> baseDal)
         {
-            _townDal = townDal;
-            _baseDal = baseDal;
+            _town = town;
+            _base = baseDal;
             _log = LogManager.GetLogger(typeof(TownBus));
         }
 
@@ -25,8 +25,8 @@ namespace BUS
         {
             try
             {
-                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
-                _baseDal.InsertEntity(town);
+                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                _base.InsertEntity(town);
                 return true;
             }
             catch (Exception ex)
@@ -40,8 +40,8 @@ namespace BUS
         {
             try
             {
-                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
-                _baseDal.UpdateEntity(town);
+                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                _base.UpdateEntity(town);
                 return true;
             }
             catch (Exception ex)
@@ -55,9 +55,9 @@ namespace BUS
         {
             try
             {
-                TownDto townDto = GetTownById(id);
-                Town town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
-                _baseDal.DeleteEntity(town);
+                var townDto = GetTownById(id);
+                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                _base.DeleteEntity(town);
                 return true;
             }
             catch (Exception ex)
@@ -69,17 +69,17 @@ namespace BUS
 
         public TownDto GetTownById(int? id)
         {
-            return _townDal.GetTownById(id);
+            return _town.GetTownById(id);
         }
 
         public List<TownDto> GetTownsByDistrictId(int districtId)
         {
-            return _townDal.GetTownsByDistrictId(districtId);
+            return _town.GetTownsByDistrictId(districtId);
         }
 
         public List<TownDto> GetTownsData(string searchString)
         {
-            return _townDal.GetTownsData(searchString);
+            return _town.GetTownsData(searchString);
         }
     }
 }

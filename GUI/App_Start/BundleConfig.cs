@@ -29,6 +29,10 @@ namespace GUI
             bundles.Add(new ScriptBundle("~/bundles/api").Include(
                       "~/Scripts/knockout-{version}.js",
                       "~/Scripts/api.js"));
+            bundles.Add(new ScriptBundle("~/bundles/validation").Include(
+                     "~/Scripts/validation.js"));
+            bundles.Add(new ScriptBundle("~/bundles/degree-validation").Include(
+                     "~/Scripts/degree-validation.js"));
         }
     }
 }

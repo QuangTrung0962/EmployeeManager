@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DAL
+namespace DTO
 {
     using System;
     using System.Data.Entity;
@@ -22,10 +22,7 @@ namespace DAL
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<District>()
-            //    .HasMany(d => d.Towns)
-            //    .WithRequired(t => t.District)
-            //    .WillCascadeOnDelete(true);
+            throw new UnintentionalCodeFirstException();
         }
     
         public virtual DbSet<District> Districts { get; set; }
@@ -33,8 +30,7 @@ namespace DAL
         public virtual DbSet<Ethnicity> Ethnicities { get; set; }
         public virtual DbSet<Job> Jobs { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
-        public virtual DbSet<Town> Towns { get; set; }
         public virtual DbSet<Qualification> Qualifications { get; set; }
+        public virtual DbSet<Town> Towns { get; set; }
     }
 }

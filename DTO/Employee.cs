@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DAL
+namespace DTO
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Employee
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,40 +19,43 @@ namespace DAL
         {
             this.Qualifications = new HashSet<Qualification>();
         }
-    
-        public Employee(int id, string name, int age, DateTime dataOfBirth,
-            string jobName, string ethnicityName, string phoneNumber, string idCard, string details, int provinceId, int districtId, int townId)
+
+        public Employee(int id, string name, DateTime dateOfBirth, int age, int ethnicityId,
+            int jobId, string idCard, string phoneNumber, int provinceId, int districtId, int townId,
+            string details)
         {
             Id = id;
             Name = name;
+            DateOfBirth = dateOfBirth;
             Age = age;
-            DateOfBirth = dataOfBirth;
-            Job = jobName;
-            Ethnicity = ethnicityName;
-            PhoneNumber = phoneNumber;
+            EthnicityId = ethnicityId;
+            JobId = jobId;
             IdCard = idCard;
-            Details = details;
+            PhoneNumber = phoneNumber;
             ProvinceId = provinceId;
             DistrictId = districtId;
             TownId = townId;
+            Details = details;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public System.DateTime DateOfBirth { get; set; }
         public int Age { get; set; }
-        public string Ethnicity { get; set; }
-        public string Job { get; set; }
+        public int EthnicityId { get; set; }
+        public int JobId { get; set; }
         public string IdCard { get; set; }
         public string PhoneNumber { get; set; }
         public int ProvinceId { get; set; }
-        public string Details { get; set; }
         public int DistrictId { get; set; }
         public int TownId { get; set; }
-    
-        public virtual Ethnicity Ethnicity1 { get; set; }
-        public virtual Job Job1 { get; set; }
+        public string Details { get; set; }
+
+        public virtual District District { get; set; }
+        public virtual Ethnicity Ethnicity { get; set; }
+        public virtual Job Job { get; set; }
         public virtual Province Province { get; set; }
+        public virtual Town Town { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Qualification> Qualifications { get; set; }
     }

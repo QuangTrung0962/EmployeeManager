@@ -6,17 +6,17 @@ namespace GUI.Controllers
 {
     public class ProvincesController : Controller
     {
-        private readonly IProvinceBus _provinceBus;
+        private readonly IProvinceBus _province;
 
-        public ProvincesController(IProvinceBus provinceBus)
+        public ProvincesController(IProvinceBus province)
         {
-            _provinceBus = provinceBus;
+            _province = province;
         }
 
         // GET: Provinces
         public ActionResult Index(string searchString)
         {
-            var provinces = _provinceBus.GetProvincesData(searchString);
+            var provinces = _province.GetProvincesData(searchString);
             return View(provinces);
         }
 
@@ -28,29 +28,25 @@ namespace GUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProvinceDto provinceDto)
+        public ActionResult Create(ProvinceDto province)
         {
-            if (!ModelState.IsValid || !_provinceBus.AddProvince(provinceDto))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã thêm thành công";
+            if (ModelState.IsValid && _province.AddProvince(province))
+                TempData["success"] = "Bạn đã thêm thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
 
         public ActionResult Details(int? id)
         {
-            ProvinceDto provinceDTO = _provinceBus.GetProvinceById(id);
-            if (provinceDTO == null) return RedirectToAction("Index");
-            return View(provinceDTO);
+            var province = _province.GetProvinceById(id);
+            if (province == null) return RedirectToAction("Index");
+            return View(province);
         }
 
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            var province = _provinceBus.GetProvinceById(id);
+            var province = _province.GetProvinceById(id);
             return View(province);
         }
 
@@ -58,35 +54,27 @@ namespace GUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ProvinceDto provinceDto)
         {
-            if (!ModelState.IsValid || !_provinceBus.UpdateProvince(provinceDto))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-                
-            }
-            TempData["success"] = "Bạn đã sửa thành công";
+            if (ModelState.IsValid && _province.UpdateProvince(provinceDto))
+                TempData["success"] = "Bạn đã sửa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int? provinceId)
         {
-            ProvinceDto provinceDTO = _provinceBus.GetProvinceById(provinceId);
+            var province = _province.GetProvinceById(provinceId);
 
-            if (provinceDTO == null) return RedirectToAction("Index");
-            return View(provinceDTO);
+            if (province == null) return RedirectToAction("Index");
+            return View(province);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (!_provinceBus.DeleteProvince(id))
-            {
-                TempData["error"] = "Có lỗi xảy ra";
-                return RedirectToAction("Index");
-            }
-
-            TempData["success"] = "Bạn đã xóa thành công";
+            if (ModelState.IsValid && _province.DeleteProvince(id))
+                TempData["success"] = "Bạn đã xóa thành công";
+            else TempData["error"] = "Có lỗi xảy ra";
             return RedirectToAction("Index");
         }
     }

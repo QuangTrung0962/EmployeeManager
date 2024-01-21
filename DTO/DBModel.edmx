@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EmployeesDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="EmployeesDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="District">
           <Key>
             <PropertyRef Name="DistrictId" />
@@ -19,29 +19,29 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+          <Property Name="DateOfBirth" Type="date" Nullable="false" />
           <Property Name="Age" Type="int" Nullable="false" />
-          <Property Name="Ethnicity" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="Job" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="EthnicityId" Type="int" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
           <Property Name="IdCard" Type="nvarchar" MaxLength="12" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="12" />
           <Property Name="ProvinceId" Type="int" Nullable="false" />
-          <Property Name="Details" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="DistrictId" Type="int" Nullable="false" />
           <Property Name="TownId" Type="int" Nullable="false" />
+          <Property Name="Details" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="Ethnicity">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="EthnicityName" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="Job">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="JobName" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="Province">
@@ -58,19 +58,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="ReleaseDate" Type="date" Nullable="false" />
-          <Property Name="IssuancePlace" Type="int" Nullable="false" />
           <Property Name="ExpirationDate" Type="date" Nullable="false" />
+          <Property Name="IssuancePlace" Type="int" Nullable="false" />
           <Property Name="EmployeeId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="Town">
           <Key>
@@ -94,7 +84,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Ethnicity">
+        <Association Name="FK_Employee_District">
+          <End Role="District" Type="Self.District" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="District">
+              <PropertyRef Name="DistrictId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DistrictId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Ethnicity">
           <End Role="Ethnicity" Type="Self.Ethnicity" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
@@ -102,11 +104,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Employee">
-              <PropertyRef Name="Ethnicity" />
+              <PropertyRef Name="EthnicityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Job">
+        <Association Name="FK_Employee_Job">
           <End Role="Job" Type="Self.Job" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
@@ -114,12 +116,14 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Employee">
-              <PropertyRef Name="Job" />
+              <PropertyRef Name="JobId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Province">
-          <End Role="Province" Type="Self.Province" Multiplicity="1" />
+        <Association Name="FK_Employee_Province">
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
@@ -127,6 +131,18 @@
             </Principal>
             <Dependent Role="Employee">
               <PropertyRef Name="ProvinceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Town">
+          <End Role="Town" Type="Self.Town" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Town">
+              <PropertyRef Name="TownId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="TownId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -142,8 +158,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Qualification_Province1">
-          <End Role="Province" Type="Self.Province" Multiplicity="1" />
+        <Association Name="FK_Qualification_Province">
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Qualification" Type="Self.Qualification" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
@@ -175,29 +193,36 @@
           <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Qualification" EntityType="Self.Qualification" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Town" EntityType="Self.Town" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_District_Province" Association="Self.FK_District_Province">
             <End Role="Province" EntitySet="Province" />
             <End Role="District" EntitySet="District" />
           </AssociationSet>
-          <AssociationSet Name="FK_Employees_Ethnicity" Association="Self.FK_Employees_Ethnicity">
+          <AssociationSet Name="FK_Employee_District" Association="Self.FK_Employee_District">
+            <End Role="District" EntitySet="District" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Ethnicity" Association="Self.FK_Employee_Ethnicity">
             <End Role="Ethnicity" EntitySet="Ethnicity" />
             <End Role="Employee" EntitySet="Employee" />
           </AssociationSet>
-          <AssociationSet Name="FK_Employees_Job" Association="Self.FK_Employees_Job">
+          <AssociationSet Name="FK_Employee_Job" Association="Self.FK_Employee_Job">
             <End Role="Job" EntitySet="Job" />
             <End Role="Employee" EntitySet="Employee" />
           </AssociationSet>
-          <AssociationSet Name="FK_Employees_Province" Association="Self.FK_Employees_Province">
+          <AssociationSet Name="FK_Employee_Province" Association="Self.FK_Employee_Province">
             <End Role="Province" EntitySet="Province" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Town" Association="Self.FK_Employee_Town">
+            <End Role="Town" EntitySet="Town" />
             <End Role="Employee" EntitySet="Employee" />
           </AssociationSet>
           <AssociationSet Name="FK_Qualification_Employee" Association="Self.FK_Qualification_Employee">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Qualification" EntitySet="Qualification" />
           </AssociationSet>
-          <AssociationSet Name="FK_Qualification_Province1" Association="Self.FK_Qualification_Province1">
+          <AssociationSet Name="FK_Qualification_Province" Association="Self.FK_Qualification_Province">
             <End Role="Province" EntitySet="Province" />
             <End Role="Qualification" EntitySet="Qualification" />
           </AssociationSet>
@@ -206,7 +231,8 @@
             <End Role="Town" EntitySet="Town" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EmployeesDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -218,6 +244,7 @@
           <Property Name="DistrictName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProvinceId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Province" Relationship="Self.FK_District_Province" FromRole="District" ToRole="Province" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_District" FromRole="District" ToRole="Employee" />
           <NavigationProperty Name="Towns" Relationship="Self.FK_Town_District" FromRole="District" ToRole="Town" />
         </EntityType>
         <EntityType Name="Employee">
@@ -226,36 +253,38 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Age" Type="Int32" Nullable="false" />
-          <Property Name="Ethnicity" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Job" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EthnicityId" Type="Int32" Nullable="false" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
           <Property Name="IdCard" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
           <Property Name="ProvinceId" Type="Int32" Nullable="false" />
-          <Property Name="Details" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DistrictId" Type="Int32" Nullable="false" />
           <Property Name="TownId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Ethnicity1" Relationship="Self.FK_Employees_Ethnicity" FromRole="Employee" ToRole="Ethnicity" />
-          <NavigationProperty Name="Job1" Relationship="Self.FK_Employees_Job" FromRole="Employee" ToRole="Job" />
-          <NavigationProperty Name="Province" Relationship="Self.FK_Employees_Province" FromRole="Employee" ToRole="Province" />
-          <NavigationProperty Name="Qualifications" Relationship="EmployeesDBModel.FK_Qualification_Employee" FromRole="Employee" ToRole="Qualification" />
+          <Property Name="Details" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="District" Relationship="Self.FK_Employee_District" FromRole="Employee" ToRole="District" />
+          <NavigationProperty Name="Ethnicity" Relationship="Self.FK_Employee_Ethnicity" FromRole="Employee" ToRole="Ethnicity" />
+          <NavigationProperty Name="Job" Relationship="Self.FK_Employee_Job" FromRole="Employee" ToRole="Job" />
+          <NavigationProperty Name="Province" Relationship="Self.FK_Employee_Province" FromRole="Employee" ToRole="Province" />
+          <NavigationProperty Name="Town" Relationship="Self.FK_Employee_Town" FromRole="Employee" ToRole="Town" />
+          <NavigationProperty Name="Qualifications" Relationship="Self.FK_Qualification_Employee" FromRole="Employee" ToRole="Qualification" />
         </EntityType>
         <EntityType Name="Ethnicity">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="EthnicityName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Ethnicity" FromRole="Ethnicity" ToRole="Employee" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_Ethnicity" FromRole="Ethnicity" ToRole="Employee" />
         </EntityType>
         <EntityType Name="Job">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="JobName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Job" FromRole="Job" ToRole="Employee" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_Job" FromRole="Job" ToRole="Employee" />
         </EntityType>
         <EntityType Name="Province">
           <Key>
@@ -264,18 +293,21 @@
           <Property Name="ProvinceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProvinceName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Districts" Relationship="Self.FK_District_Province" FromRole="Province" ToRole="District" />
-          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Province" FromRole="Province" ToRole="Employee" />
-          <NavigationProperty Name="Qualifications" Relationship="EmployeesDBModel.FK_Qualification_Province1" FromRole="Province" ToRole="Qualification" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_Province" FromRole="Province" ToRole="Employee" />
+          <NavigationProperty Name="Qualifications" Relationship="Self.FK_Qualification_Province" FromRole="Province" ToRole="Qualification" />
         </EntityType>
-        <EntityType Name="sysdiagram">
+        <EntityType Name="Qualification">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReleaseDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IssuancePlace" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_Qualification_Employee" FromRole="Qualification" ToRole="Employee" />
+          <NavigationProperty Name="Province" Relationship="Self.FK_Qualification_Province" FromRole="Qualification" ToRole="Province" />
         </EntityType>
         <EntityType Name="Town">
           <Key>
@@ -285,9 +317,12 @@
           <Property Name="TownName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DistrictId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="District" Relationship="Self.FK_Town_District" FromRole="Town" ToRole="District" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employee_Town" FromRole="Town" ToRole="Employee" />
         </EntityType>
         <Association Name="FK_District_Province">
-          <End Role="Province" Type="Self.Province" Multiplicity="1" />
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="District" Type="Self.District" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
@@ -298,8 +333,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Town_District">
+        <Association Name="FK_Employee_District">
           <End Role="District" Type="Self.District" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="District">
+              <PropertyRef Name="DistrictId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DistrictId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Town_District">
+          <End Role="District" Type="Self.District" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Town" Type="Self.Town" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="District">
@@ -310,7 +359,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Ethnicity">
+        <Association Name="FK_Employee_Ethnicity">
           <End Role="Ethnicity" Type="Self.Ethnicity" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
@@ -318,11 +367,11 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Employee">
-              <PropertyRef Name="Ethnicity" />
+              <PropertyRef Name="EthnicityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Job">
+        <Association Name="FK_Employee_Job">
           <End Role="Job" Type="Self.Job" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
@@ -330,12 +379,14 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Employee">
-              <PropertyRef Name="Job" />
+              <PropertyRef Name="JobId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employees_Province">
-          <End Role="Province" Type="Self.Province" Multiplicity="1" />
+        <Association Name="FK_Employee_Province">
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
@@ -346,60 +397,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EmployeesDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Districts" EntityType="Self.District" />
-          <EntitySet Name="Employees" EntityType="Self.Employee" />
-          <EntitySet Name="Ethnicities" EntityType="Self.Ethnicity" />
-          <EntitySet Name="Jobs" EntityType="Self.Job" />
-          <EntitySet Name="Provinces" EntityType="Self.Province" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Towns" EntityType="Self.Town" />
-          <AssociationSet Name="FK_District_Province" Association="Self.FK_District_Province">
-            <End Role="Province" EntitySet="Provinces" />
-            <End Role="District" EntitySet="Districts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Town_District" Association="Self.FK_Town_District">
-            <End Role="District" EntitySet="Districts" />
-            <End Role="Town" EntitySet="Towns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employees_Ethnicity" Association="Self.FK_Employees_Ethnicity">
-            <End Role="Ethnicity" EntitySet="Ethnicities" />
-            <End Role="Employee" EntitySet="Employees" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employees_Job" Association="Self.FK_Employees_Job">
-            <End Role="Job" EntitySet="Jobs" />
-            <End Role="Employee" EntitySet="Employees" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employees_Province" Association="Self.FK_Employees_Province">
-            <End Role="Province" EntitySet="Provinces" />
-            <End Role="Employee" EntitySet="Employees" />
-          </AssociationSet>
-          <EntitySet Name="Qualifications" EntityType="EmployeesDBModel.Qualification" />
-          <AssociationSet Name="FK_Qualification_Employee" Association="EmployeesDBModel.FK_Qualification_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="Qualification" EntitySet="Qualifications" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Qualification_Province1" Association="EmployeesDBModel.FK_Qualification_Province1">
-            <End Role="Province" EntitySet="Provinces" />
-            <End Role="Qualification" EntitySet="Qualifications" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Qualification">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="ReleaseDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="IssuancePlace" Type="Int32" Nullable="false" />
-          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Employee" Relationship="EmployeesDBModel.FK_Qualification_Employee" FromRole="Qualification" ToRole="Employee" />
-          <NavigationProperty Name="Province" Relationship="EmployeesDBModel.FK_Qualification_Province1" FromRole="Qualification" ToRole="Province" />
-        </EntityType>
+        <Association Name="FK_Employee_Town">
+          <End Role="Town" Type="Self.Town" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Town">
+              <PropertyRef Name="TownId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="TownId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Qualification_Employee">
-          <End Type="EmployeesDBModel.Employee" Role="Employee" Multiplicity="1" />
-          <End Type="EmployeesDBModel.Qualification" Role="Qualification" Multiplicity="*" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Qualification" Type="Self.Qualification" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="Id" />
@@ -409,9 +421,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Qualification_Province1">
-          <End Type="EmployeesDBModel.Province" Role="Province" Multiplicity="1" />
-          <End Type="EmployeesDBModel.Qualification" Role="Qualification" Multiplicity="*" />
+        <Association Name="FK_Qualification_Province">
+          <End Role="Province" Type="Self.Province" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Qualification" Type="Self.Qualification" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Province">
               <PropertyRef Name="ProvinceId" />
@@ -421,6 +435,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="EmployeesDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Districts" EntityType="Self.District" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="Ethnicities" EntityType="Self.Ethnicity" />
+          <EntitySet Name="Jobs" EntityType="Self.Job" />
+          <EntitySet Name="Provinces" EntityType="Self.Province" />
+          <EntitySet Name="Qualifications" EntityType="Self.Qualification" />
+          <EntitySet Name="Towns" EntityType="Self.Town" />
+          <AssociationSet Name="FK_District_Province" Association="Self.FK_District_Province">
+            <End Role="Province" EntitySet="Provinces" />
+            <End Role="District" EntitySet="Districts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_District" Association="Self.FK_Employee_District">
+            <End Role="District" EntitySet="Districts" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Town_District" Association="Self.FK_Town_District">
+            <End Role="District" EntitySet="Districts" />
+            <End Role="Town" EntitySet="Towns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Ethnicity" Association="Self.FK_Employee_Ethnicity">
+            <End Role="Ethnicity" EntitySet="Ethnicities" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Job" Association="Self.FK_Employee_Job">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Province" Association="Self.FK_Employee_Province">
+            <End Role="Province" EntitySet="Provinces" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Town" Association="Self.FK_Employee_Town">
+            <End Role="Town" EntitySet="Towns" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Qualification_Employee" Association="Self.FK_Qualification_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Qualification" EntitySet="Qualifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Qualification_Province" Association="Self.FK_Qualification_Province">
+            <End Role="Province" EntitySet="Provinces" />
+            <End Role="Qualification" EntitySet="Qualifications" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -443,14 +502,14 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
                 <ScalarProperty Name="Age" ColumnName="Age" />
-                <ScalarProperty Name="Ethnicity" ColumnName="Ethnicity" />
-                <ScalarProperty Name="Job" ColumnName="Job" />
+                <ScalarProperty Name="EthnicityId" ColumnName="EthnicityId" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
                 <ScalarProperty Name="IdCard" ColumnName="IdCard" />
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="ProvinceId" ColumnName="ProvinceId" />
-                <ScalarProperty Name="Details" ColumnName="Details" />
                 <ScalarProperty Name="DistrictId" ColumnName="DistrictId" />
                 <ScalarProperty Name="TownId" ColumnName="TownId" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -478,14 +537,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="EmployeesDBModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+          <EntitySetMapping Name="Qualifications">
+            <EntityTypeMapping TypeName="EmployeesDBModel.Qualification">
+              <MappingFragment StoreEntitySet="Qualification">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="IssuancePlace" ColumnName="IssuancePlace" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -495,18 +555,6 @@
                 <ScalarProperty Name="TownId" ColumnName="TownId" />
                 <ScalarProperty Name="TownName" ColumnName="TownName" />
                 <ScalarProperty Name="DistrictId" ColumnName="DistrictId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Qualifications">
-            <EntityTypeMapping TypeName="EmployeesDBModel.Qualification">
-              <MappingFragment StoreEntitySet="Qualification">
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
-                <ScalarProperty Name="IssuancePlace" ColumnName="IssuancePlace" />
-                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

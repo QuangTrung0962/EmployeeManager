@@ -11,14 +11,14 @@ namespace BUS
 {
     public class DistrictBus : IDistrictBus
     {
-        private readonly IDistrictDal _districtDal;
-        private readonly IBaseDal<District> _baseDal;
+        private readonly IDistrictDal _district;
+        private readonly IBaseDal<District> _base;
         private readonly ILog _log;
 
-        public DistrictBus(IDistrictDal districtDal, IBaseDal<District> baseDal)
+        public DistrictBus(IDistrictDal district, IBaseDal<District> baseDal)
         {
-            _districtDal = districtDal;
-            _baseDal = baseDal;
+            _district = district;
+            _base = baseDal;
             _log = LogManager.GetLogger(typeof(DistrictBus));
         }
 
@@ -26,8 +26,9 @@ namespace BUS
         {
             try
             {
-                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
-                _baseDal.InsertEntity(district);
+                var district = 
+                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                _base.InsertEntity(district);
                 return true;
             }
             catch (Exception ex)
@@ -42,8 +43,9 @@ namespace BUS
             try
             {
                 var districtDto = GetDistrictById(id);
-                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
-                _baseDal.DeleteEntity(district);
+                District district = 
+                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                _base.DeleteEntity(district);
                 return true;
             }
             catch (Exception ex)
@@ -57,8 +59,9 @@ namespace BUS
         {
             try
             {
-                District district = new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
-                _baseDal.UpdateEntity(district);
+                var district = 
+                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                _base.UpdateEntity(district);
                 return true;
             }
             catch (Exception ex)
@@ -70,17 +73,17 @@ namespace BUS
 
         public DistrictDto GetDistrictById(int? id)
         {
-            return _districtDal.GetDistrictById(id);
+            return _district.GetDistrictById(id);
         }
 
         public List<DistrictDto> GetDistrictsByProvinceId(int provinceId)
         {
-            return _districtDal.GetDistrictsByProvinceId(provinceId);
+            return _district.GetDistrictsByProvinceId(provinceId);
         }
 
         public List<DistrictDto> GetDistrictsData(string searchString)
         {
-            return _districtDal.GetDistrictsData(searchString);
+            return _district.GetDistrictsData(searchString);
         }
 
     }
