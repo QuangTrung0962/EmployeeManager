@@ -339,9 +339,9 @@
     <Content Include="Views\Towns\Edit.cshtml" />
     <Content Include="Views\Towns\Delete.cshtml" />
     <Content Include="Views\Qualifications\Create.cshtml" />
-    <Content Include="Views\Qualifications\QualificationsByEmployeeId.cshtml" />
     <Content Include="Views\Qualifications\Edit.cshtml" />
     <Content Include="Views\Qualifications\Delete.cshtml" />
+    <Content Include="Views\Qualifications\EmployeeQualifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

@@ -6,11 +6,11 @@ namespace DAL.Interfaces
 {
     public interface IEmployeeDal
     {
-        List<EmployeeDto> GetEmployeesData(string searchString, int pageIndex, int pageSize);
-        List<JobDto> GetJobsData();
-        List<EthnicityDto> GetEthnicitiesData();
-        EmployeeDto GetEmployeeById(int? id);
-        List<EmployeeDto> GetDataForExcel();
+        List<Employee> GetEmployeesData(string searchString, int pageIndex, int pageSize);
+        List<Job> GetJobsData();
+        List<Ethnicity> GetEthnicitiesData();
+        Employee GetEmployeeById(int? id);
+        List<Employee> GetDataForExcel();
         int GetNumberOfRecords(string searchString);
     }
 }

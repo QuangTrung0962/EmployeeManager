@@ -26,11 +26,11 @@ namespace DTO
         }
     
         public virtual DbSet<District> Districts { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Ethnicity> Ethnicities { get; set; }
         public virtual DbSet<Job> Jobs { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
-        public virtual DbSet<Qualification> Qualifications { get; set; }
         public virtual DbSet<Town> Towns { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Qualification> Qualifications { get; set; }
     }
 }

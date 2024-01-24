@@ -17,14 +17,14 @@ namespace DTO
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public District()
         {
-            this.Employees = new HashSet<Employee>();
             this.Towns = new HashSet<Town>();
+            this.Employees = new HashSet<Employee>();
         }
-
-        public District(int id, string name, int provinceId)
+    
+        public District(int districtId, string districtName, int provinceId)
         {
-            DistrictId = id;
-            DistrictName = name;
+            DistrictId = districtId;
+            DistrictName = districtName;
             ProvinceId = provinceId;
         }
 
@@ -34,8 +34,8 @@ namespace DTO
     
         public virtual Province Province { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Employee> Employees { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Town> Towns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employee> Employees { get; set; }
     }
 }

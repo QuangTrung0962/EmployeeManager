@@ -21,11 +21,11 @@ namespace DTO
             this.Employees = new HashSet<Employee>();
             this.Qualifications = new HashSet<Qualification>();
         }
-
-        public Province(int id, string name)
+    
+        public Province(int provinceId, string provinceName)
         {
-            ProvinceId = id;
-            ProvinceName = name;
+            ProvinceId = provinceId;
+            ProvinceName = provinceName;
         }
 
         public int ProvinceId { get; set; }

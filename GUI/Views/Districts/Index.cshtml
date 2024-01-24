@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DTO.DistrictDto>
+﻿@model IEnumerable<DTO.ViewModels.DistrictViewModel>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,6 +24,9 @@
             <thead class="table-primary">
                 <tr>
                     <th>
+                        @Html.DisplayName("Tên Tỉnh/Thành phố")
+                    </th>
+                    <th>
                         @Html.DisplayName("Tên Quận/Huyện")
                     </th>
                     <th></th>
@@ -43,6 +46,9 @@
                     foreach (var item in Model)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProvinceName)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.DistrictName)
                             </td>

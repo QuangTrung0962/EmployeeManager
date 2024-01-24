@@ -145,6 +145,7 @@
   <ItemGroup>
     <Compile Include="DistrictBus.cs" />
     <Compile Include="EmployeeBus.cs" />
+    <Compile Include="Utils\ExcelValidators.cs" />
     <Compile Include="GeneralBus.cs" />
     <Compile Include="Interfaces\IDistrictBus.cs" />
     <Compile Include="Interfaces\IEmployeeBus.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="ProvinceBus.cs" />
     <Compile Include="QualificationBus.cs" />
     <Compile Include="TownBus.cs" />
+    <Compile Include="Utils\Paging.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

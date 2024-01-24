@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DTO.QualificationDto>
+﻿@model IEnumerable<DTO.ViewModels.QualificationViewModel>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -27,10 +28,13 @@
                         @Html.DisplayName("Ngày cấp")
                     </th>
                     <th>
+                        @Html.DisplayName("Ngày hết hạn")
+                    </th>
+                    <th>
                         @Html.DisplayName("Đơn vị cấp (Tỉnh)")
                     </th>
                     <th>
-                        @Html.DisplayName("Ngày hết hạn")
+                        @Html.DisplayName("Tên nhân viên")
                     </th>
                 </tr>
             </thead>
@@ -55,10 +59,13 @@
                                 @Html.DisplayFor(i => item.ReleaseDate)
                             </td>
                             <td>
+                                @Html.DisplayFor(i => item.ExpirationDate)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(i => item.IssuancePlaceName)
                             </td>
                             <td>
-                                @Html.DisplayFor(i => item.ExpirationDate)
+                                @Html.DisplayFor(i => item.EmployeeName)
                             </td>
                         </tr>
                     }

@@ -5,7 +5,7 @@ namespace DAL.Interfaces
 {
     public interface IProvinceDal
     {
-        ProvinceDto GetProvinceById(int? id);
-        List<ProvinceDto> GetProvincesData(string searchString);
+        Province GetProvinceById(int? id);
+        List<Province> GetProvincesData(string searchString);
     }
 }

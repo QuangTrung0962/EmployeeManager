@@ -11,7 +11,7 @@ namespace DTO
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class Employee
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,10 +19,10 @@ namespace DTO
         {
             this.Qualifications = new HashSet<Qualification>();
         }
-
-        public Employee(int id, string name, DateTime dateOfBirth, int age, int ethnicityId,
-            int jobId, string idCard, string phoneNumber, int provinceId, int districtId, int townId,
-            string details)
+    
+        public Employee(int id, string name, DateTime dateOfBirth, int age, int? ethnicityId, 
+            int? jobId, string idCard, string phoneNumber, int? provinceId, int? districtId, 
+            int? townId, string details, int? numberDegree)
         {
             Id = id;
             Name = name;
@@ -36,21 +36,23 @@ namespace DTO
             DistrictId = districtId;
             TownId = townId;
             Details = details;
+            NumberDegree = numberDegree;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public System.DateTime DateOfBirth { get; set; }
         public int Age { get; set; }
-        public int EthnicityId { get; set; }
-        public int JobId { get; set; }
+        public Nullable<int> EthnicityId { get; set; }
+        public Nullable<int> JobId { get; set; }
         public string IdCard { get; set; }
         public string PhoneNumber { get; set; }
-        public int ProvinceId { get; set; }
-        public int DistrictId { get; set; }
-        public int TownId { get; set; }
+        public Nullable<int> ProvinceId { get; set; }
+        public Nullable<int> DistrictId { get; set; }
+        public Nullable<int> TownId { get; set; }
         public string Details { get; set; }
-
+        public Nullable<int> NumberDegree { get; set; }
+    
         public virtual District District { get; set; }
         public virtual Ethnicity Ethnicity { get; set; }
         public virtual Job Job { get; set; }

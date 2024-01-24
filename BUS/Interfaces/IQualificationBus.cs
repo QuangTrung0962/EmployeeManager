@@ -1,15 +1,16 @@
 ﻿using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 
 namespace BUS.Interfaces
 {
     public interface IQualificationBus
     {
-        List<QualificationDto> GetQualificationsData(string searchString);
+        List<QualificationViewModel> GetQualificationsData(string searchString);
         bool AddQualification(QualificationDto qualificationDto);
         bool UpdateQualification(QualificationDto qualificationDto);
         bool DeleteQualification(int id);
-        List<QualificationDto> GetQualificationsByEmployeeId(int id);
+        List<QualificationViewModel> GetQualificationsByEmployeeId(int id);
         QualificationDto GetQualificationById(int id);
     }
 }

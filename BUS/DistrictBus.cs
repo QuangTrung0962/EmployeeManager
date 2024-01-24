@@ -1,10 +1,11 @@
 ﻿using BUS.Interfaces;
-using DAL;
 using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace BUS
@@ -22,12 +23,17 @@ namespace BUS
             _log = LogManager.GetLogger(typeof(DistrictBus));
         }
 
+        public List<DistrictViewModel> GetDistrictsData(string searchString)
+        {
+            var districts = _district.GetDistrictsData(searchString);
+            return SetDistrictsViewModel(districts);
+        }
+
         public bool AddDistrict(DistrictDto districtDto)
         {
             try
             {
-                var district = 
-                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                var district = SetDistrictModel(districtDto);
                 _base.InsertEntity(district);
                 return true;
             }
@@ -43,8 +49,7 @@ namespace BUS
             try
             {
                 var districtDto = GetDistrictById(id);
-                District district = 
-                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                var district = SetDistrictModel(districtDto);
                 _base.DeleteEntity(district);
                 return true;
             }
@@ -59,8 +64,7 @@ namespace BUS
         {
             try
             {
-                var district = 
-                    new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+                var district = SetDistrictModel(districtDto);
                 _base.UpdateEntity(district);
                 return true;
             }
@@ -73,18 +77,41 @@ namespace BUS
 
         public DistrictDto GetDistrictById(int? id)
         {
-            return _district.GetDistrictById(id);
+            var district = _district.GetDistrictById(id);
+            return SetDistrictDtoModel(district);
         }
 
-        public List<DistrictDto> GetDistrictsByProvinceId(int provinceId)
+        public DistrictViewModel GetDistrictViewModel(int id)
         {
-            return _district.GetDistrictsByProvinceId(provinceId);
+            var district = _district.GetDistrictById(id);
+            return SetDistrictViewModel(district);
         }
 
-        public List<DistrictDto> GetDistrictsData(string searchString)
+        public List<DistrictViewModel> GetDistrictsByProvinceId(int provinceId)
         {
-            return _district.GetDistrictsData(searchString);
+            var districts = _district.GetDistrictsByProvinceId(provinceId);
+            return SetDistrictsViewModel(districts);
         }
 
+        private District SetDistrictModel(DistrictDto districtDto)
+        {
+            return new District(districtDto.Id, districtDto.DistrictName, districtDto.ProvinceId);
+        }
+
+        private DistrictDto SetDistrictDtoModel(District district)
+        {
+            return new DistrictDto(district.DistrictId, district.DistrictName, district.ProvinceId);
+        }
+
+        private DistrictViewModel SetDistrictViewModel(District district)
+        {
+            return new DistrictViewModel(district.DistrictId, district.DistrictName,
+                district.Province.ProvinceName);
+        }
+
+        private List<DistrictViewModel> SetDistrictsViewModel(List<District> districts)
+        {
+            return districts.Select(i => SetDistrictViewModel(i)).ToList();
+        }
     }
 }

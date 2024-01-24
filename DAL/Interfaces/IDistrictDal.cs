@@ -6,8 +6,8 @@ namespace DAL.Interfaces
 {
     public interface IDistrictDal
     {
-        DistrictDto GetDistrictById(int? id);
-        List<DistrictDto> GetDistrictsData(string searchString);
-        List<DistrictDto> GetDistrictsByProvinceId(int provinceId);
+        District GetDistrictById(int? id);
+        List<District> GetDistrictsData(string searchString);
+        List<District> GetDistrictsByProvinceId(int provinceId);
     }
 }

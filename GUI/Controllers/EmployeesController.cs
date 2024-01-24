@@ -29,8 +29,7 @@ namespace GUI.Controllers
         public ActionResult Create()
         {
             SetDropDownListData();
-            var employee = new EmployeeDto();
-            return View(employee);
+            return View();
         }
 
         [HttpPost]
@@ -45,8 +44,13 @@ namespace GUI.Controllers
 
         public ActionResult Details(int id)
         {
-            var employee = _employee.GetEmployeeById(id);
-            if (employee == null) return RedirectToAction("Index");
+            var employee = _employee.GetEmployeeViewModel(id);
+
+            if (employee == null)
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return RedirectToAction("Index");
+            }
 
             return View(employee);
         }
@@ -55,6 +59,12 @@ namespace GUI.Controllers
         {
             SetDropDownListData();
             var employee = _employee.GetEmployeeById(id);
+
+            if (employee == null)
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return RedirectToAction("Index");
+            }
 
             return View(employee);
         }
@@ -72,8 +82,13 @@ namespace GUI.Controllers
 
         public ActionResult Delete(int employeeId)
         {
-            var employee = _employee.GetEmployeeById(employeeId);
-            if (employee == null) return RedirectToAction("Index");
+            var employee = _employee.GetEmployeeViewModel(employeeId);
+            if (employee == null)
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return RedirectToAction("Index");
+            }
+
             return View(employee);
         }
 
@@ -126,5 +141,6 @@ namespace GUI.Controllers
             ViewBag.Ethnicities = _general.LoadEthnicityOptions();
             ViewBag.Provinces = _general.LoadProvinceOptions();
         }
+
     }
 }

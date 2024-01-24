@@ -5,8 +5,8 @@ namespace DAL.Interfaces
 {
     public interface ITownDal
     {
-        TownDto GetTownById(int? id);
-        List<TownDto> GetTownsByDistrictId(int districtId);
-        List<TownDto> GetTownsData(string searchString);
+        Town GetTownById(int? id);
+        List<Town> GetTownsByDistrictId(int districtId);
+        List<Town> GetTownsData(string searchString);
     }
 }

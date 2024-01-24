@@ -119,8 +119,11 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TownDto.cs" />
-    <Compile Include="Utils\ExcelValidators.cs" />
-    <Compile Include="Utils\Paging.cs" />
+    <Compile Include="ViewModels\DistrictViewModel.cs" />
+    <Compile Include="ViewModels\EmployeeViewModel.cs" />
+    <Compile Include="ViewModels\ProvinceViewModel.cs" />
+    <Compile Include="ViewModels\QualificationViewModel.cs" />
+    <Compile Include="ViewModels\TownViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="DBModel.edmx">
@@ -148,5 +151,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

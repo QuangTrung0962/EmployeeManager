@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DAL;
 using DTO;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using DAL.Interfaces;
 using System;
 using System.IO;
 using log4net;
+using DTO.ViewModels;
 
 namespace BUS
 {
@@ -30,22 +30,25 @@ namespace BUS
             return _employee.GetNumberOfRecords(searchString);
         }
 
-        public PageList<EmployeeDto> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
+        public PageList<EmployeeViewModel> GetEmployeesData(string searchString, int? pageIndex, int? pageSize)
         {
             try
             {
                 var page = new Paging(pageSize, pageIndex);
 
-                var employees = _employee.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
+                var employees =
+                    _employee.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
 
+                var employeesViewModel = SetEmployeesViewModel(employees);
                 var numberRecords = GetNumberOfRecords(searchString);
 
-                return new PageList<EmployeeDto>(employees, numberRecords, page.PageIndex, page.PageSize, searchString);
+                return new PageList<EmployeeViewModel>(employeesViewModel, numberRecords, page.PageIndex,
+                    page.PageSize, searchString);
             }
             catch (Exception ex)
             {
                 _log.Error("Error: " + ex);
-                return new PageList<EmployeeDto>();
+                return new PageList<EmployeeViewModel>();
             }
         }
 
@@ -53,11 +56,7 @@ namespace BUS
         {
             try
             {
-                var employee =
-                    new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
-                    employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
-                    employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
-                    employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                var employee = SetEmployeeModel(employeeDto);
                 _base.InsertEntity(employee);
                 return true;
             }
@@ -72,11 +71,7 @@ namespace BUS
         {
             try
             {
-                var employee =
-                    new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
-                    employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
-                    employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
-                    employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                var employee = SetEmployeeModel(employeeDto);
                 _base.UpdateEntity(employee);
                 return true;
             }
@@ -92,11 +87,7 @@ namespace BUS
             try
             {
                 var employeeDto = GetEmployeeById(id);
-                var employee =
-                   new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
-                   employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId,
-                   employeeDto.IdCard, employeeDto.PhoneNumber, employeeDto.ProvinceId,
-                   employeeDto.DistrictId, employeeDto.TownId, employeeDto.Details);
+                var employee = SetEmployeeModel(employeeDto);
                 _base.DeleteEntity(employee);
                 return true;
             }
@@ -110,10 +101,17 @@ namespace BUS
         public EmployeeDto GetEmployeeById(int? id)
         {
             if (id == null) return null;
-            return _employee.GetEmployeeById(id);
+            var employee = _employee.GetEmployeeById(id);
+            return SetEmployeeDtoModel(employee);
         }
 
-        private XLWorkbook CreateExcelList(List<EmployeeDto> employees)
+        public EmployeeViewModel GetEmployeeViewModel(int id)
+        {
+            var employee = _employee.GetEmployeeById(id);
+            return SetEmployeeViewModel(employee);
+        }
+
+        private XLWorkbook CreateExcelList(List<EmployeeViewModel> employees)
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Employees");
@@ -151,9 +149,11 @@ namespace BUS
             return workbook;
         }
 
-        private List<EmployeeDto> GetDataForExcel()
+        private List<EmployeeViewModel> GetDataForExcel()
         {
-            return _employee.GetDataForExcel();
+            var employees = _employee.GetDataForExcel();
+
+            return SetEmployeesViewModel(employees);
         }
 
         public bool ExportExcel(string pathFile)
@@ -193,7 +193,7 @@ namespace BUS
                         var phoneNumber = row.Cell(++i).Value.ToString();
                         var provinceId = row.Cell(++i).Value.ToString();
                         var districtId = row.Cell(++i).Value.ToString();
-                        var villageId = row.Cell(++i).Value.ToString();
+                        var townId = row.Cell(++i).Value.ToString();
                         var addressDescription = row.Cell(i).Value.ToString();
 
                         if (!ExcelValidators.IsNonEmptyString(name) ||
@@ -210,7 +210,7 @@ namespace BUS
 
                         if (!ExcelValidators.IsNumber(provinceId) ||
                             !ExcelValidators.IsNumber(districtId) ||
-                            !ExcelValidators.IsNumber(villageId))
+                            !ExcelValidators.IsNumber(townId))
                         {
                             errorMessage = $"Lỗi ở dòng {currentRow} trong tệp excel";
                             return false;
@@ -280,5 +280,35 @@ namespace BUS
             }
 
         }
+
+        private EmployeeViewModel SetEmployeeViewModel(Employee employee)
+        {
+            return new EmployeeViewModel(employee.Id, employee.Name, employee.DateOfBirth,
+                employee.Age, employee.Ethnicity.EthnicityName, employee.Job.JobName,
+                employee.Province.ProvinceName, employee.District.DistrictName,
+                employee.Town.TownName, employee.Details, employee.Qualifications.Count);
+        }
+
+        private EmployeeDto SetEmployeeDtoModel(Employee employee)
+        {
+            return new EmployeeDto(employee.Id, employee.Name, employee.DateOfBirth,
+                employee.Age, employee.Ethnicity.Id, employee.Job.Id,
+                employee.Province.ProvinceId, employee.District.DistrictId,
+                employee.Town.TownId, employee.Details, employee.Qualifications.Count);
+        }
+
+        private Employee SetEmployeeModel(EmployeeDto employeeDto)
+        {
+            return new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
+                employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId, employeeDto.IdCard,
+                employeeDto.PhoneNumber, employeeDto.ProvinceId, employeeDto.DistrictId,
+                employeeDto.TownId, employeeDto.Details, employeeDto.NumberDegree);
+        }
+
+        private List<EmployeeViewModel> SetEmployeesViewModel(List<Employee> employees)
+        {
+            return employees.Select(employee => SetEmployeeViewModel(employee)).ToList();
+        }
+
     }
 }

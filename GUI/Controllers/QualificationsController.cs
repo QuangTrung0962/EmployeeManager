@@ -27,7 +27,7 @@ namespace GUI.Controllers
             return View(qualifications);
         }
 
-        public ActionResult QualificationsByEmployeeId(int id)
+        public ActionResult EmployeeQualifications(int id)
         {
             var qualifications = _qualification.GetQualificationsByEmployeeId(id);
             ViewBag.Id = id;
@@ -60,8 +60,8 @@ namespace GUI.Controllers
         public ActionResult Edit(int id)
         {
             SetDropDownListData();
-            var obj = _qualification.GetQualificationById(id);
-            return View(obj);
+            var qualification = _qualification.GetQualificationById(id);
+            return View(qualification);
         }
 
         [HttpPost]
@@ -72,13 +72,14 @@ namespace GUI.Controllers
             if (ModelState.IsValid && _qualification.UpdateQualification(qualificationDto))
                 TempData["success"] = "Bạn đã sửa thành công";
             else TempData["error"] = "Có lỗi xảy ra";
+
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            var obj = _qualification.GetQualificationById(id);
-            return View(obj);
+            var qualification = _qualification.GetQualificationById(id);
+            return View(qualification);
         }
 
         [HttpPost]
@@ -87,6 +88,7 @@ namespace GUI.Controllers
             if (ModelState.IsValid && _qualification.DeleteQualification(id))
                 TempData["success"] = "Bạn đã xóa thành công";
             else TempData["error"] = "Có lỗi xảy ra";
+
             return RedirectToAction("Index");
         }
 

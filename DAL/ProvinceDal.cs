@@ -14,26 +14,22 @@ namespace DAL
             _db = db;
         }
 
-        public ProvinceDto GetProvinceById(int? id)
+        private IQueryable<Province> GetData()
         {
-            var province = _db.Provinces.FirstOrDefault(x => x.ProvinceId == id);
-            if (province == null) return null;
-
-            return new ProvinceDto()
-            {
-                Id = province.ProvinceId,
-                ProvinceName = province.ProvinceName,
-            };
+            return _db.Provinces;
         }
 
-        public List<ProvinceDto> GetProvincesData(string searchString)
+        public Province GetProvinceById(int? id)
         {
-            return _db.Provinces.Where(i => i.ProvinceName.Trim().ToLower().Contains(searchString.Trim().ToLower()) || string.IsNullOrEmpty(searchString))
-                .Select(i => new ProvinceDto
-                {
-                    Id = i.ProvinceId,
-                    ProvinceName = i.ProvinceName,
-                }).ToList();
+            return GetData().Where(i => i.ProvinceId == id).FirstOrDefault();
+        }
+
+        public List<Province> GetProvincesData(string searchString)
+        {
+            return GetData()
+                    .Where(i => string.IsNullOrEmpty(searchString) ||
+                        i.ProvinceName.Trim().ToLower().Contains(searchString.Trim().ToLower()))
+                    .ToList();
         }
     }
 }

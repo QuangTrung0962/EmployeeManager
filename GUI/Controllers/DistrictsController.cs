@@ -7,13 +7,11 @@ namespace GUI.Controllers
     public class DistrictsController : Controller
     {
         private readonly IDistrictBus _district;
-        private readonly IProvinceBus _province;
         private readonly IGeneralBus _general;
 
-        public DistrictsController(IDistrictBus district, IProvinceBus province, IGeneralBus general)
+        public DistrictsController(IDistrictBus district, IGeneralBus general)
         {
             _district = district;
-            _province = province;
             _general = general;
         }
 
@@ -44,10 +42,9 @@ namespace GUI.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            var district = _district.GetDistrictById(id);
+            var district = _district.GetDistrictViewModel(id);
             if (district == null) return RedirectToAction("Index");
 
-            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
             return View(district);
         }
 
@@ -75,10 +72,8 @@ namespace GUI.Controllers
         [HttpGet]
         public ActionResult Delete(int districtId)
         {
-            var district = _district.GetDistrictById(districtId);
+            var district = _district.GetDistrictViewModel(districtId);
             if (district == null) return RedirectToAction("Index");
-
-            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
             return View(district);
         }
 

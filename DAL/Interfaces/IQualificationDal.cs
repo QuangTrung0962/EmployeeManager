@@ -5,8 +5,8 @@ namespace DAL.Interfaces
 {
     public interface IQualificationDal
     {
-        List<QualificationDto> GetQualificationsData(string searchString);
-        List<QualificationDto> GetQualificationsByEmployeeId(int id);
-        QualificationDto GetQualificationById(int id);
+        List<Qualification> GetQualificationsData(string searchString);
+        List<Qualification> GetQualificationsByEmployeeId(int id);
+        Qualification GetQualificationById(int id);
     }
 }

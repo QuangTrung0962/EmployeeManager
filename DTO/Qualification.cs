@@ -10,8 +10,7 @@
 namespace DTO
 {
     using System;
-    using System.Collections.Generic;
-    
+
     public partial class Qualification
     {
         public Qualification() { }
@@ -22,8 +21,8 @@ namespace DTO
             Id = id;
             Name = name;
             ReleaseDate = releaseDate;
-            IssuancePlace = issuancePlace;
             ExpirationDate = expirationDate;
+            IssuancePlace = issuancePlace;
             EmployeeId = employeeId;
         }
 
@@ -33,7 +32,7 @@ namespace DTO
         public System.DateTime ExpirationDate { get; set; }
         public int IssuancePlace { get; set; }
         public int EmployeeId { get; set; }
-    
+
         public virtual Employee Employee { get; set; }
         public virtual Province Province { get; set; }
     }

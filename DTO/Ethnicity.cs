@@ -11,7 +11,7 @@ namespace DTO
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Ethnicity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,10 +19,10 @@ namespace DTO
         {
             this.Employees = new HashSet<Employee>();
         }
-    
+
         public int Id { get; set; }
         public string EthnicityName { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employees { get; set; }
     }

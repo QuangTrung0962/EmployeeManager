@@ -1,41 +1,44 @@
 ﻿using BUS.Interfaces;
-using DAL;
 using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BUS
 {
-    public class ProvinceBus : Interfaces.IProvinceBus
+    public class ProvinceBus : IProvinceBus
     {
-        private readonly DAL.Interfaces.IProvinceDal _province;
+        private readonly IProvinceDal _province;
         private readonly IBaseDal<Province> _base;
         private readonly ILog _log;
 
-        public ProvinceBus(DAL.Interfaces.IProvinceDal province, IBaseDal<Province> baseDal)
+        public ProvinceBus(IProvinceDal province, IBaseDal<Province> baseDal)
         {
             _province = province;
             _base = baseDal;
             _log = LogManager.GetLogger(typeof(ProvinceBus));
         }
 
-        public List<ProvinceDto> GetProvincesData(string searchString)
+        public List<ProvinceViewModel> GetProvincesData(string searchString)
         {
-            return _province.GetProvincesData(searchString);
+            var provinces = _province.GetProvincesData(searchString);
+            return SetProvincesViewModel(provinces);
         }
 
         public ProvinceDto GetProvinceById(int? id)
         {
-            return _province.GetProvinceById(id);
+            var province = _province.GetProvinceById(id);
+            return SetProvinceDtoModel(province);
         }
 
         public bool AddProvince(ProvinceDto provinceDto)
         {
             try
             {
-                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                var province = SetProvinceModel(provinceDto);
                 _base.InsertEntity(province);
                 return true;
             }
@@ -50,7 +53,7 @@ namespace BUS
         {
             try
             {
-                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                var province = SetProvinceModel(provinceDto);
                 _base.UpdateEntity(province);
                 return true;
             }
@@ -66,7 +69,7 @@ namespace BUS
             try
             {
                 var provinceDto = GetProvinceById(id);
-                var province = new Province(provinceDto.Id, provinceDto.ProvinceName);
+                var province = SetProvinceModel(provinceDto);
                 _base.DeleteEntity(province);
                 return true;
             }
@@ -77,9 +80,25 @@ namespace BUS
             }
         }
 
-        public List<ProvinceDto> ProvincesDataForDropdown()
+        private Province SetProvinceModel(ProvinceDto provinceDto)
         {
-            return _province.GetProvincesData(null);
+            return new Province(provinceDto.Id, provinceDto.ProvinceName);
         }
+
+        private ProvinceDto SetProvinceDtoModel(Province province)
+        {
+            return new ProvinceDto(province.ProvinceId, province.ProvinceName);
+        }
+
+        private ProvinceViewModel SetProvinceViewModel(Province province)
+        {
+            return new ProvinceViewModel(province.ProvinceId, province.ProvinceName);
+        }
+
+        private List<ProvinceViewModel> SetProvincesViewModel(List<Province> provinces)
+        {
+            return provinces.Select(i => SetProvinceViewModel(i)).ToList();
+        }
+
     }
 }

@@ -1,31 +1,41 @@
 ﻿using BUS.Interfaces;
-using DAL;
 using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace BUS
 {
     public class TownBus : ITownBus
     {
         private readonly ITownDal _town;
+        private readonly IProvinceDal _province;
         private readonly IBaseDal<Town> _base;
         private readonly ILog _log;
 
-        public TownBus(ITownDal town, IBaseDal<Town> baseDal)
+        public TownBus(ITownDal town, IBaseDal<Town> baseDal, IProvinceDal province)
         {
             _town = town;
             _base = baseDal;
             _log = LogManager.GetLogger(typeof(TownBus));
+            _province = province;
+        }
+
+        public List<TownViewModel> GetTownsData(string searchString)
+        {
+            var towns = _town.GetTownsData(searchString);
+            return SetTownsViewModel(towns);
         }
 
         public bool AddTown(TownDto townDto)
         {
             try
             {
-                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                var town = SetTownModel(townDto);
                 _base.InsertEntity(town);
                 return true;
             }
@@ -40,7 +50,7 @@ namespace BUS
         {
             try
             {
-                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                var town = SetTownModel(townDto);
                 _base.UpdateEntity(town);
                 return true;
             }
@@ -56,7 +66,7 @@ namespace BUS
             try
             {
                 var townDto = GetTownById(id);
-                var town = new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+                var town = SetTownModel(townDto);
                 _base.DeleteEntity(town);
                 return true;
             }
@@ -69,17 +79,45 @@ namespace BUS
 
         public TownDto GetTownById(int? id)
         {
-            return _town.GetTownById(id);
+            var town = _town.GetTownById(id);
+            return SetTownDtoModel(town);
         }
 
-        public List<TownDto> GetTownsByDistrictId(int districtId)
+        public TownViewModel GetTownViewModel(int id)
         {
-            return _town.GetTownsByDistrictId(districtId);
+            var town = _town.GetTownById(id);
+            return SetTownViewModel(town);
         }
 
-        public List<TownDto> GetTownsData(string searchString)
+        public List<TownViewModel> GetTownsByDistrictId(int districtId)
         {
-            return _town.GetTownsData(searchString);
+            var towns = _town.GetTownsByDistrictId(districtId);
+            return SetTownsViewModel(towns);
         }
+
+        private Town SetTownModel(TownDto townDto)
+        {
+            return new Town(townDto.Id, townDto.TownName, townDto.DistrictId);
+        }
+
+        private TownDto SetTownDtoModel(Town town)
+        {
+            return new TownDto(town.TownId, town.TownName, town.DistrictId);
+        }
+
+        private TownViewModel SetTownViewModel(Town town)
+        {
+            var id = town.District.ProvinceId;
+            var provinceName = _province.GetProvinceById(id).ProvinceName;
+            return new TownViewModel(town.TownId, town.TownName, town.District.DistrictName,
+                provinceName);
+        }
+
+        private List<TownViewModel> SetTownsViewModel(List<Town> towns)
+        {
+            return towns.Select(i => SetTownViewModel(i)).ToList();
+        }
+
+
     }
 }

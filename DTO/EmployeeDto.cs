@@ -6,6 +6,22 @@ namespace DTO
     public class EmployeeDto
     {
         public EmployeeDto() { }
+
+        public EmployeeDto(int id, string name, DateTime dateOfBirth, int age, int ethnicityId,
+            int jobId, int provinceId, int districtId, int townId, string details, int? numberDegree)
+        {
+            Id = id;
+            Name = name;
+            DateOfBirth = dateOfBirth;
+            Age = age;
+            EthnicityId = ethnicityId;
+            JobId = jobId;
+            ProvinceId = provinceId;
+            DistrictId = districtId;
+            TownId = townId;
+            Details = details;
+            NumberDegree = numberDegree;
+        }
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tên không được để trống")]
@@ -20,10 +36,8 @@ namespace DTO
         [Required(ErrorMessage = "Tuổi không được để trống")]
         [Range(0, 100, ErrorMessage = "Tuổi từ 1 - 100!")]
         public int Age { get; set; }
-        public int EthnicityId { get; set; }
-        public string EthnicityName { get; set; }
-        public int JobId { get; set; }
-        public string JobName { get; set; }
+        public int? EthnicityId { get; set; }
+        public int? JobId { get; set; }
 
         [StringLength(12)]
         [RegularExpression(@"^[0-9]{12}$", ErrorMessage = "Không phải số căn cước công dân")]
@@ -34,15 +48,15 @@ namespace DTO
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Không phải số điện thoại")]
         public string PhoneNumber { get; set; }
 
-        public int ProvinceId { get; set; }
-        public int DistrictId { get; set; }
-        public int TownId { get; set; }
+        public int? ProvinceId { get; set; }
+        public int? DistrictId { get; set; }
+        public int? TownId { get; set; }
 
         [Required(ErrorMessage = "Thông tin cụ thể không được để trống")]
         [StringLength(250)]
         public string Details { get; set; }
 
         [Range(0, 3)]
-        public int NumberDegree { get; set; }
+        public int? NumberDegree { get; set; }
     }
 }

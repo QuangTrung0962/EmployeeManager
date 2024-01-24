@@ -13,7 +13,6 @@ namespace GUI.Controllers
             _province = province;
         }
 
-        // GET: Provinces
         public ActionResult Index(string searchString)
         {
             var provinces = _province.GetProvincesData(searchString);

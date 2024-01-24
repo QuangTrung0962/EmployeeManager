@@ -1,4 +1,5 @@
 ﻿using BUS.Interfaces;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DTO;
 using System.Web.Mvc;
 
@@ -6,17 +7,12 @@ namespace GUI.Controllers
 {
     public class TownsController : Controller
     {
-        private readonly IDistrictBus _district;
         private readonly ITownBus _town;
-        private readonly IProvinceBus _province;
         private readonly IGeneralBus _general;
 
-        public TownsController(IDistrictBus district, ITownBus town, 
-            IProvinceBus province, IGeneralBus general)
+        public TownsController(ITownBus town, IGeneralBus general)
         {
-            _district = district;
             _town = town;
-            _province = province;
             _general = general;
         }
 
@@ -45,21 +41,18 @@ namespace GUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            var town = _town.GetTownById(id);
+            var town = _town.GetTownViewModel(id);
             if (town == null) return RedirectToAction("Index");
 
-            var district = _district.GetDistrictById(town.DistrictId);
-            ViewBag.DistrictName = district.DistrictName;
-            ViewBag.ProvinceName = _province.GetProvinceById(district.ProvinceId).ProvinceName;
             return View(town);
         }
 
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            TownDto townDto = _town.GetTownById(id);
+            var townDto = _town.GetTownById(id);
             if (townDto == null) return RedirectToAction("Index");
             SetDropDownListData();
 
@@ -77,12 +70,10 @@ namespace GUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Delete(int? townId)
+        public ActionResult Delete(int townId)
         {
-            var town = _town.GetTownById(townId);
+            var town = _town.GetTownViewModel(townId);
             if (town == null) return RedirectToAction("Index");
-
-            ViewBag.district = _district.GetDistrictById(town.DistrictId).DistrictName;
             return View(town);
         }
 

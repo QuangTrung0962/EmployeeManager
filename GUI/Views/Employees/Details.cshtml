@@ -1,4 +1,4 @@
-﻿@model DTO.EmployeeDto
+﻿@model DTO.ViewModels.EmployeeViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -57,19 +57,25 @@
                     @Html.DisplayName("Thành phố")
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.ProvinceId)
+                    @Html.DisplayFor(model => model.ProvinceName)
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayName("Quận")
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DistrictId)
+                    @Html.DisplayFor(model => model.DistrictName)
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayName("Xã")
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.TownId)
+                    @Html.DisplayFor(model => model.TownName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayName("Số bằng cấp")
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NumberDegree)
                 </dd>
             </dl>
         </div>

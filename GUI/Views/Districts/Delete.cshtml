@@ -1,4 +1,4 @@
-﻿@model DTO.DistrictDto
+﻿@model DTO.ViewModels.DistrictViewModel
 
 @{
     ViewBag.Title = "Delete";
@@ -12,24 +12,18 @@
 
             <div>
                 <dl class="row">
-                    <dt class="col-sm-5">
+                    <dt class="col-sm-2">
+                        @Html.DisplayName("Tỉnh/Thành phố")
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ProvinceName)
+                    </dd>
+                    <dt class="col-sm-2">
                         @Html.DisplayName("Quận/Huyện")
                     </dt>
                     <dd class="col-sm-10">
                         @Html.DisplayFor(model => model.DistrictName)
                     </dd>
-
-
-                    <dt class="col-sm-5">
-                        @Html.DisplayName("Tỉnh/Thành phố")
-                    </dt>
-                    @{
-                        string name = ViewBag.ProvinceName;
-                        <dd class="col-sm-10">
-                            @Html.DisplayName(name)
-                        </dd>
-
-                    }
                 </dl>
 
                 @using (Html.BeginForm("Delete", "Districts", FormMethod.Post))

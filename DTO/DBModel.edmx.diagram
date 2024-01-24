@@ -4,23 +4,23 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ee24dbc555a240d090f40f3f59497b66" Name="Diagram1">
+      <Diagram DiagramId="ee24dbc555a240d090f40f3f59497b66" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="EmployeesDBModel.District" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EmployeesDBModel.Employee" Width="1.5" PointX="7.5" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="EmployeesDBModel.Ethnicity" Width="1.5" PointX="5.25" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="EmployeesDBModel.Job" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EmployeesDBModel.Province" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EmployeesDBModel.Qualification" Width="1.5" PointX="9.75" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="EmployeesDBModel.Town" Width="1.5" PointX="5.25" PointY="9" IsExpanded="true" />
         <AssociationConnector Association="EmployeesDBModel.FK_District_Province" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Employee_District" ManuallyRouted="false" />
         <AssociationConnector Association="EmployeesDBModel.FK_Town_District" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Ethnicity" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Job" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Province" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Town" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Employee" ManuallyRouted="false" />
-        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Province" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Employee" Width="1.5" PointX="7.5" PointY="4.5" />
+        <EntityTypeShape EntityType="EmployeesDBModel.Qualification" Width="1.5" PointX="9.75" PointY="5.25" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employee_District" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Ethnicity" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Job" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Province" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Employee_Town" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Employee" />
+        <AssociationConnector Association="EmployeesDBModel.FK_Qualification_Province" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

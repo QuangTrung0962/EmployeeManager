@@ -1,10 +1,11 @@
 ﻿using BUS.Interfaces;
-using DAL;
 using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BUS
 {
@@ -25,10 +26,7 @@ namespace BUS
         {
             try
             {
-                var qualification =
-                    new Qualification(qualificationDto.Id, qualificationDto.Name,
-                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
-                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                var qualification = SetQualificationModel(qualificationDto);
                 _base.InsertEntity(qualification);
                 return true;
             }
@@ -43,10 +41,7 @@ namespace BUS
         {
             try
             {
-                var qualification =
-                    new Qualification(qualificationDto.Id, qualificationDto.Name,
-                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
-                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                var qualification = SetQualificationModel(qualificationDto);
                 _base.UpdateEntity(qualification);
                 return true;
             }
@@ -62,10 +57,7 @@ namespace BUS
             try
             {
                 var qualificationDto = GetQualificationById(id);
-                var qualification =
-                    new Qualification(qualificationDto.Id, qualificationDto.Name,
-                    qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
-                    qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+                var qualification = SetQualificationModel(qualificationDto);
                 _base.DeleteEntity(qualification);
                 return true;
             }
@@ -76,21 +68,49 @@ namespace BUS
             }
         }
 
-        public List<QualificationDto> GetQualificationsData(string searchString)
+        public List<QualificationViewModel> GetQualificationsData(string searchString)
         {
-            return _qualification.GetQualificationsData(searchString);
+            var qualifications = _qualification.GetQualificationsData(searchString);
+            return SetQualificationsViewModel(qualifications);
         }
 
-        public List<QualificationDto> GetQualificationsByEmployeeId(int id)
+        public List<QualificationViewModel> GetQualificationsByEmployeeId(int id)
         {
-            return _qualification.GetQualificationsByEmployeeId(id);
+            var qualifications = _qualification.GetQualificationsByEmployeeId(id);
+            return SetQualificationsViewModel(qualifications);
         }
 
         public QualificationDto GetQualificationById(int id)
         {
-            return _qualification.GetQualificationById(id);
+            var qualification = _qualification.GetQualificationById(id);
+            return SetQualificationDtoModel(qualification);
         }
 
+        private Qualification SetQualificationModel(QualificationDto qualificationDto)
+        {
+            return new Qualification(qualificationDto.Id, qualificationDto.Name,
+                qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
+                qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
+        }
+
+        private QualificationDto SetQualificationDtoModel(Qualification qualification)
+        {
+            return new QualificationDto(qualification.Id, qualification.Name,
+                qualification.ReleaseDate, qualification.ExpirationDate,
+                qualification.Province.ProvinceId, qualification.Employee.Id);
+        }
+
+        private QualificationViewModel SetQualificationViewModel(Qualification qualification)
+        {
+            return new QualificationViewModel(qualification.Id, qualification.Name,
+                qualification.ReleaseDate, qualification.ExpirationDate,
+                qualification.Province.ProvinceName, qualification.Employee.Name);
+        }
+        private List<QualificationViewModel> SetQualificationsViewModel
+            (List<Qualification> qualifications)
+        {
+            return qualifications.Select(i => SetQualificationViewModel(i)).ToList();
+        }
     }
 
 }
