@@ -1,4 +1,7 @@
 ﻿using BUS.Interfaces;
+using System;
+using System.Configuration;
+using System.Web;
 using System.Web.Http;
 
 namespace GUI.Controllers.Api
@@ -7,11 +10,13 @@ namespace GUI.Controllers.Api
     {
         private readonly IDistrictBus _district;
         private readonly ITownBus _town;
+        private readonly IEmployeeBus _employee;
 
-        public GetApiController(IDistrictBus district, ITownBus town)
+        public GetApiController(IDistrictBus district, ITownBus town, IEmployeeBus employee)
         {
             _district = district;
             _town = town;
+            _employee = employee;
         }
 
         [HttpGet]
@@ -34,6 +39,20 @@ namespace GUI.Controllers.Api
                 return NotFound();
 
             return Ok(towns);
+        }
+
+        [Route("api/getapi/ExportEmployeesData")]
+        [HttpGet]
+        public IHttpActionResult ExportEmployeesData(string searchString)
+        {
+            var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
+            var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
+            var pathFile = HttpContext.Current.Server.MapPath(excelFilePath + nameFile);
+
+            var import = _employee.ExportExcel(pathFile, searchString);
+
+            if (import) return Ok();
+            return NotFound();
         }
     }
 }

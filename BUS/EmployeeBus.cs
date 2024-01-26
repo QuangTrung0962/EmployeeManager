@@ -149,18 +149,18 @@ namespace BUS
             return workbook;
         }
 
-        private List<EmployeeViewModel> GetDataForExcel()
+        private List<EmployeeViewModel> GetDataForExcel(string searchString)
         {
-            var employees = _employee.GetDataForExcel();
+            var employees = _employee.GetDataForExcel(searchString);
 
             return SetEmployeesViewModel(employees);
         }
 
-        public bool ExportExcel(string pathFile)
+        public bool ExportExcel(string pathFile, string searchString)
         {
             try
             {
-                var employees = GetDataForExcel();
+                var employees = GetDataForExcel(searchString);
                 var workbook = CreateExcelList(employees);
                 workbook.SaveAs(pathFile);
                 return true;

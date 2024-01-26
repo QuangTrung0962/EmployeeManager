@@ -10,7 +10,7 @@ namespace DAL.Interfaces
         List<Job> GetJobsData();
         List<Ethnicity> GetEthnicitiesData();
         Employee GetEmployeeById(int? id);
-        List<Employee> GetDataForExcel();
+        List<Employee> GetDataForExcel(string searchString);
         int GetNumberOfRecords(string searchString);
     }
 }

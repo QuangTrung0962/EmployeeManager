@@ -38,9 +38,12 @@ namespace DAL
                     .ToList();
         }
 
-        public List<Employee> GetDataForExcel()
+        public List<Employee> GetDataForExcel(string searchString)
         {
-            return GetData().ToList();
+            return GetData()
+                .Where(i => string.IsNullOrEmpty(searchString) ||
+                        i.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()))
+                .ToList();
         }
 
         //Lấy danh sách công việc

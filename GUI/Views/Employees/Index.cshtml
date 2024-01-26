@@ -16,7 +16,7 @@
 
         <p>
             @Html.ActionLink("Thêm mới Employee", "Create", new { area = "" }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Export ra Excel", "ExportExcelFile", new { area = "" }, new { @class = "btn btn-secondary" })
+            <a class="btn btn-secondary" id="exportLink">Export ra Excel</a>
         </p>
         <div>
             @using (Html.BeginForm("ImportExcelFile", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -119,3 +119,32 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('exportLink').addEventListener('click', function () {
+            exportExcel();
+        });
+
+        function exportExcel() {
+            const searchString = '@Model.SearchString';
+            fetch('/api/getapi/ExportEmployeesData?searchString=' + searchString)
+                .then(response => {
+                    if (response.ok) {
+                        toastr.options = {
+                            "positionClass": "toast-top-right"
+                        };
+                        toastr.success('Xuất file Excel thành công');
+                    }
+                    else {
+                        toastr.options = {
+                            "positionClass": "toast-top-right"
+                        };
+                        toastr.error('Có lỗi xảy ra');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+}

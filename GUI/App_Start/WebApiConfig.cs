@@ -22,12 +22,6 @@ namespace GUI
                 defaults: new { id = UrlParameter.Optional }
             );
 
-            config.Routes.MapHttpRoute(
-                name: "test",
-                routeTemplate: "api/{controller}/{searchString}",
-                defaults: new { controller = "TestApi", searchString = RouteParameter.Optional }
-            );
-
         }
     }
 }

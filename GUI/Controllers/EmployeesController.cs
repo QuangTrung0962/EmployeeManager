@@ -1,7 +1,5 @@
 ﻿using BUS.Interfaces;
 using DTO;
-using System;
-using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 
@@ -101,22 +99,6 @@ namespace GUI.Controllers
             else TempData["error"] = "Có lỗi xảy ra";
 
             return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public ActionResult ExportExcelFile()
-        {
-            var nameFile = "Export_" + DateTime.Now.Ticks + ".xlsx";
-            var excelFilePath = ConfigurationManager.AppSettings["ExcelFilePath"];
-            var pathFile = Server.MapPath(excelFilePath + nameFile);
-
-            if (_employee.ExportExcel(pathFile))
-                TempData["success"] = "Bạn đã xuất file Excel thành công";
-            else TempData["error"] = "Có lỗi xảy ra";
-
-
-            return RedirectToAction("Index");
-
         }
 
         [HttpPost]
