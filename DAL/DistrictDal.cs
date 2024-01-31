@@ -39,7 +39,7 @@ namespace DAL
 
         public District GetDistrictById(int? id)
         {
-            return GetData().Where(i => i.DistrictId == id).FirstOrDefault();
+            return GetData().FirstOrDefault(i => i.DistrictId == id);
         }
 
         public List<DistrictViewModel> GetDistrictsByProvinceId(int provinceId)

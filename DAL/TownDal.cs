@@ -38,7 +38,7 @@ namespace DAL
 
         public Town GetTownById(int? id)
         {
-            return GetData().Where(i => i.TownId == id).FirstOrDefault();
+            return GetData().FirstOrDefault(i => i.TownId == id);
         }
 
         public List<TownViewModel> GetTownsByDistrictId(int districtId)

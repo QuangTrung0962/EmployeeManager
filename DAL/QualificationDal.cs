@@ -39,7 +39,7 @@ namespace DAL
 
         public Qualification GetQualificationById(int id)
         {
-            return GetData().Where(i => i.Id == id).FirstOrDefault();
+            return GetData().FirstOrDefault(i => i.Id == id);
         }
     }
 }

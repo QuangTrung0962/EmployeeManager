@@ -64,7 +64,7 @@ namespace DAL
 
         public Employee GetEmployeeById(int? id)
         {
-            return GetData().Where(i => i.Id == id).FirstOrDefault();
+            return GetData().FirstOrDefault(i => i.Id == id);
         }
 
         public int GetNumberOfRecords(string searchString)

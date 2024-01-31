@@ -22,7 +22,7 @@ namespace DAL
 
         public Province GetProvinceById(int? id)
         {
-            return GetData().Where(i => i.ProvinceId == id).FirstOrDefault();
+            return GetData().FirstOrDefault(i => i.ProvinceId == id);
         }
 
         public List<ProvinceViewModel> GetProvincesData(string searchString)
