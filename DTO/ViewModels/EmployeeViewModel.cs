@@ -5,22 +5,6 @@ namespace DTO.ViewModels
 {
     public class EmployeeViewModel
     {
-        public EmployeeViewModel() { }
-        public EmployeeViewModel(Employee entity)
-        {
-            Id = entity.Id;
-            Name = entity.Name;
-            DateOfBirth = entity.DateOfBirth;
-            Age = entity.Age;
-            EthnicityName = entity.Ethnicity.EthnicityName;
-            JobName = entity.Job.JobName;
-            ProvinceName = entity.Province.ProvinceName;
-            DistrictName = entity.District.DistrictName;
-            TownName = entity.Town.TownName;
-            Details = entity.Details;
-            NumberDegree = entity.Qualifications.Count;
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         [DataType(DataType.Date)]
@@ -36,5 +20,21 @@ namespace DTO.ViewModels
         public string TownName { get; set; }
         public string Details { get; set; }
         public int? NumberDegree { get; set; }
+
+        public EmployeeViewModel() { }
+        public EmployeeViewModel(Employee entity)
+        {
+            Id = entity.Id;
+            Name = entity.Name;
+            DateOfBirth = entity.DateOfBirth;
+            Age = entity.Age;
+            EthnicityName = entity.Ethnicity.EthnicityName;
+            JobName = entity.Job.JobName;
+            ProvinceName = entity.Province.ProvinceName;
+            DistrictName = entity.District.DistrictName;
+            TownName = entity.Town.TownName;
+            Details = entity.Details;
+            NumberDegree = entity.Qualifications.Count;
+        }
     }
 }

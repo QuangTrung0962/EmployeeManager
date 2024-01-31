@@ -20,13 +20,6 @@ namespace DTO
             this.Employees = new HashSet<Employee>();
         }
 
-        public Town(TownDto townDto)
-        {
-            TownId = townDto.Id;
-            TownName = townDto.TownName;
-            DistrictId = townDto.DistrictId;
-        }
-
         public int TownId { get; set; }
         public string TownName { get; set; }
         public int DistrictId { get; set; }
@@ -34,5 +27,12 @@ namespace DTO
         public virtual District District { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employees { get; set; }
+
+        public Town(TownDto townDto)
+        {
+            TownId = townDto.Id;
+            TownName = townDto.TownName;
+            DistrictId = townDto.DistrictId;
+        }
     }
 }

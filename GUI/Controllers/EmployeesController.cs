@@ -122,6 +122,5 @@ namespace GUI.Controllers
             ViewBag.Ethnicities = _general.LoadEthnicityOptions();
             ViewBag.Provinces = _general.LoadProvinceOptions();
         }
-
     }
 }

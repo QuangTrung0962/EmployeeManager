@@ -2,7 +2,12 @@
 {
     public class TownViewModel
     {
-        public TownViewModel(){}
+        public int Id { get; set; }
+        public string TownName { get; set; }
+        public string DistrictName { get; set; }
+        public string ProvinceName { get; set; }
+
+        public TownViewModel() { }
 
         public TownViewModel(Town town)
         {
@@ -11,10 +16,5 @@
             DistrictName = town.District.DistrictName;
             ProvinceName = town.District.Province.ProvinceName;
         }
-
-        public int Id { get; set; }
-        public string TownName { get; set; }
-        public string DistrictName { get; set; }
-        public string ProvinceName {  get; set; }
     }
 }

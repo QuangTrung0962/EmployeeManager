@@ -5,18 +5,6 @@ namespace DTO
 {
     public class QualificationDto
     {
-        public QualificationDto() { }
-
-        public QualificationDto(Qualification qualification)
-        {
-            Id = qualification.Id;
-            Name = qualification.Name;
-            ReleaseDate = qualification.ReleaseDate;
-            IssuancePlace = qualification.IssuancePlace;
-            ExpirationDate = qualification.ExpirationDate;
-            EmployeeId = qualification.EmployeeId;
-        }
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tên văn bằng không được để trống")]
@@ -34,6 +22,18 @@ namespace DTO
         public DateTime ExpirationDate { get; set; }
         public int IssuancePlace { get; set; }
         public int EmployeeId { get; set; }
+
+        public QualificationDto() { }
+
+        public QualificationDto(Qualification qualification)
+        {
+            Id = qualification.Id;
+            Name = qualification.Name;
+            ReleaseDate = qualification.ReleaseDate;
+            IssuancePlace = qualification.IssuancePlace;
+            ExpirationDate = qualification.ExpirationDate;
+            EmployeeId = qualification.EmployeeId;
+        }
 
     }
 }

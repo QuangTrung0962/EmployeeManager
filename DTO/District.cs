@@ -11,7 +11,7 @@ namespace DTO
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class District
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,22 +20,22 @@ namespace DTO
             this.Towns = new HashSet<Town>();
             this.Employees = new HashSet<Employee>();
         }
-    
+
+        public int DistrictId { get; set; }
+        public string DistrictName { get; set; }
+        public int ProvinceId { get; set; }
+
+        public virtual Province Province { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Town> Towns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employee> Employees { get; set; }
+
         public District(DistrictDto districtDto)
         {
             DistrictId = districtDto.Id;
             DistrictName = districtDto.DistrictName;
             ProvinceId = districtDto.ProvinceId;
         }
-
-        public int DistrictId { get; set; }
-        public string DistrictName { get; set; }
-        public int ProvinceId { get; set; }
-    
-        public virtual Province Province { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Town> Towns { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Employee> Employees { get; set; }
     }
 }

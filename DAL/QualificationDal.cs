@@ -7,6 +7,7 @@ using System.Linq;
 namespace DAL
 {
     public class QualificationDal : IQualificationDal
+
     {
         private readonly EmployeesDBEntities _db;
         public QualificationDal(EmployeesDBEntities db)
@@ -28,8 +29,6 @@ namespace DAL
                      .Where(i => string.IsNullOrEmpty(searchString) ||
                         i.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()))
                      .ToList();
-
-
         }
 
         public List<Qualification> GetQualificationsByEmployeeId(int id)

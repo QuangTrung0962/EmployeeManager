@@ -1,8 +1,11 @@
-﻿
-namespace DTO.ViewModels
+﻿namespace DTO.ViewModels
 {
     public class DistrictViewModel
     {
+        public int Id { get; set; }
+        public string DistrictName { get; set; }
+
+        public string ProvinceName { get; set; }
         public DistrictViewModel() { }
 
         public DistrictViewModel(District district)
@@ -11,10 +14,5 @@ namespace DTO.ViewModels
             DistrictName = district.DistrictName;
             ProvinceName = district.Province.ProvinceName;
         }
-
-        public int Id { get; set; }
-        public string DistrictName { get; set; }
-
-        public string ProvinceName { get; set; }
     }
 }

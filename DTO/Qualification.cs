@@ -13,6 +13,16 @@ namespace DTO
 
     public partial class Qualification
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public System.DateTime ReleaseDate { get; set; }
+        public System.DateTime ExpirationDate { get; set; }
+        public int IssuancePlace { get; set; }
+        public int EmployeeId { get; set; }
+
+        public virtual Employee Employee { get; set; }
+        public virtual Province Province { get; set; }
+
         public Qualification() { }
 
         public Qualification(QualificationDto enity)
@@ -24,15 +34,5 @@ namespace DTO
             IssuancePlace = enity.IssuancePlace;
             EmployeeId = enity.EmployeeId;
         }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public System.DateTime ReleaseDate { get; set; }
-        public System.DateTime ExpirationDate { get; set; }
-        public int IssuancePlace { get; set; }
-        public int EmployeeId { get; set; }
-
-        public virtual Employee Employee { get; set; }
-        public virtual Province Province { get; set; }
     }
 }

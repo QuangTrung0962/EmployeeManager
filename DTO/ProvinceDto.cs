@@ -2,20 +2,20 @@
 
 namespace DTO
 {
-	public class ProvinceDto
-	{
-		public ProvinceDto() { }
+    public class ProvinceDto
+    {
+        public int Id { get; set; }
 
-		public ProvinceDto(Province province) 
-		{
-			Id = province.ProvinceId;
-			ProvinceName = province.ProvinceName;
-		}
+        [Required(ErrorMessage = "Tên tỉnh/thành phố không được để trống")]
+        [StringLength(250)]
+        public string ProvinceName { get; set; }
 
-		public int Id { get; set; }
+        public ProvinceDto() { }
 
-		[Required(ErrorMessage = "Tên tỉnh/thành phố không được để trống")]
-		[StringLength(250)]
-		public string ProvinceName { get; set; }
-	}
+        public ProvinceDto(Province province)
+        {
+            Id = province.ProvinceId;
+            ProvinceName = province.ProvinceName;
+        }
+    }
 }

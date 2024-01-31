@@ -5,22 +5,6 @@ namespace DTO
 {
     public class EmployeeDto
     {
-        public EmployeeDto() { }
-
-        public EmployeeDto(Employee employee)
-        {
-            Id = employee.Id;
-            Name = employee.Name;
-            DateOfBirth = employee.DateOfBirth;
-            Age = employee.Age;
-            EthnicityId = employee.EthnicityId;
-            JobId = employee.JobId;
-            ProvinceId = employee.ProvinceId;
-            DistrictId = employee.DistrictId;
-            TownId = employee.TownId;
-            Details = employee.Details;
-            NumberDegree = employee.Qualifications.Count;
-        }
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tên không được để trống")]
@@ -57,5 +41,22 @@ namespace DTO
 
         [Range(0, 3)]
         public int? NumberDegree { get; set; }
+
+        public EmployeeDto() { }
+
+        public EmployeeDto(Employee employee)
+        {
+            Id = employee.Id;
+            Name = employee.Name;
+            DateOfBirth = employee.DateOfBirth;
+            Age = employee.Age;
+            EthnicityId = employee.EthnicityId;
+            JobId = employee.JobId;
+            ProvinceId = employee.ProvinceId;
+            DistrictId = employee.DistrictId;
+            TownId = employee.TownId;
+            Details = employee.Details;
+            NumberDegree = employee.Qualifications.Count;
+        }
     }
 }

@@ -6,18 +6,6 @@ namespace DTO.ViewModels
 {
     public class QualificationViewModel
     {
-        public QualificationViewModel() { }
-
-        public QualificationViewModel(Qualification qualification)
-        {
-            Id = qualification.Id;
-            Name = qualification.Name;
-            ReleaseDate = qualification.ReleaseDate;
-            ExpirationDate = qualification.ExpirationDate;
-            IssuancePlaceName = qualification.Province.ProvinceName;
-            EmployeeName = qualification.Employee.Name;
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         [DataType(DataType.Date)]
@@ -29,5 +17,17 @@ namespace DTO.ViewModels
         public DateTime ExpirationDate { get; set; }
         public string IssuancePlaceName { get; set; }
         public string EmployeeName { get; set; }
+
+        public QualificationViewModel() { }
+
+        public QualificationViewModel(Qualification qualification)
+        {
+            Id = qualification.Id;
+            Name = qualification.Name;
+            ReleaseDate = qualification.ReleaseDate;
+            ExpirationDate = qualification.ExpirationDate;
+            IssuancePlaceName = qualification.Province.ProvinceName;
+            EmployeeName = qualification.Employee.Name;
+        }
     }
 }
