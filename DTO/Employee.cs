@@ -20,23 +20,21 @@ namespace DTO
             this.Qualifications = new HashSet<Qualification>();
         }
     
-        public Employee(int id, string name, DateTime dateOfBirth, int age, int? ethnicityId, 
-            int? jobId, string idCard, string phoneNumber, int? provinceId, int? districtId, 
-            int? townId, string details, int? numberDegree)
+        public Employee(EmployeeDto employeeDto)
         {
-            Id = id;
-            Name = name;
-            DateOfBirth = dateOfBirth;
-            Age = age;
-            EthnicityId = ethnicityId;
-            JobId = jobId;
-            IdCard = idCard;
-            PhoneNumber = phoneNumber;
-            ProvinceId = provinceId;
-            DistrictId = districtId;
-            TownId = townId;
-            Details = details;
-            NumberDegree = numberDegree;
+            Id = employeeDto.Id;
+            Name = employeeDto.Name;
+            DateOfBirth = employeeDto.DateOfBirth;
+            Age = employeeDto.Age;
+            EthnicityId = employeeDto.EthnicityId;
+            JobId = employeeDto.JobId;
+            IdCard = employeeDto.IdCard;
+            PhoneNumber = employeeDto.PhoneNumber;
+            ProvinceId = employeeDto.ProvinceId;
+            DistrictId = employeeDto.DistrictId;
+            TownId = employeeDto.TownId;
+            Details = employeeDto.Details;
+            NumberDegree = employeeDto.NumberDegree;
         }
 
         public int Id { get; set; }

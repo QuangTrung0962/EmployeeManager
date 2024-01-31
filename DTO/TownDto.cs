@@ -6,11 +6,11 @@ namespace DTO
 	{
 		public TownDto() { }
 
-		public TownDto(int id, string name, int districtId) 
+		public TownDto(Town town) 
 		{
-			Id = id;
-			TownName = name;
-			DistrictId = districtId;
+			Id = town.TownId;
+			TownName = town.TownName;
+			DistrictId = town.DistrictId;
 		}
 
 		public int Id { get; set; }

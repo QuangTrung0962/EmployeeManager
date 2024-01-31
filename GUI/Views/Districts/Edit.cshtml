@@ -1,5 +1,5 @@
 ﻿@model DTO.DistrictDto
-
+@using DTO.ViewModels;
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -30,7 +30,7 @@
                     <div class="d-flex flex-column">
                         <label>2. Tên Tỉnh/Thành phố</label>
                         @{
-                            List<DTO.ProvinceDto> provinces = ViewBag.Provinces;
+                            List<ProvinceViewModel> provinces = ViewBag.Provinces;
                             <select name="ProvinceId" class="form-control">
                                 @foreach (var item in provinces)
                                 {

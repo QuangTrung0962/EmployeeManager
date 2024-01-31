@@ -5,11 +5,11 @@ namespace DTO.ViewModels
     {
         public DistrictViewModel() { }
 
-        public DistrictViewModel(int id, string districtName, string provinceName)
+        public DistrictViewModel(District district)
         {
-            Id = id;
-            DistrictName = districtName;
-            ProvinceName = provinceName;
+            Id = district.DistrictId;
+            DistrictName = district.DistrictName;
+            ProvinceName = district.Province.ProvinceName;
         }
 
         public int Id { get; set; }

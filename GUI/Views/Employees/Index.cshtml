@@ -16,7 +16,7 @@
 
         <p>
             @Html.ActionLink("Thêm mới Employee", "Create", new { area = "" }, new { @class = "btn btn-primary" })
-            <a class="btn btn-secondary" id="exportLink">Export ra Excel</a>
+            <a class="btn btn-secondary" id="exportLink">Xuất ra Excel</a>
         </p>
         <div>
             @using (Html.BeginForm("ImportExcelFile", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" }))

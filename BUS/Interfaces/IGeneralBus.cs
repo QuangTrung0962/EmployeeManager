@@ -1,4 +1,5 @@
 ﻿using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 
 namespace BUS.Interfaces
@@ -7,6 +8,6 @@ namespace BUS.Interfaces
     {
         List<JobDto> LoadJobOptions();
         List<EthnicityDto> LoadEthnicityOptions();
-        List<ProvinceDto> LoadProvinceOptions();
+        List<ProvinceViewModel> LoadProvinceOptions();
     }
 }

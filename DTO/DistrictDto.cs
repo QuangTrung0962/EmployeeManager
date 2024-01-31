@@ -6,11 +6,11 @@ namespace DTO
     {
         public DistrictDto() { }
 
-        public DistrictDto(int id,string districtName, int provinceId) 
+        public DistrictDto(District district) 
         {
-            Id = id;
-            DistrictName = districtName;
-            ProvinceId = provinceId;
+            Id = district.DistrictId;
+            DistrictName = district.DistrictName;
+            ProvinceId = district.ProvinceId;
         }
 
         public int Id { get; set; }

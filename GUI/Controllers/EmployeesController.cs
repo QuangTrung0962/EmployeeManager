@@ -23,7 +23,6 @@ namespace GUI.Controllers
             return View(employees);
         }
 
-
         public ActionResult Create()
         {
             SetDropDownListData();

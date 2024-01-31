@@ -7,15 +7,14 @@ namespace DTO
     {
         public QualificationDto() { }
 
-        public QualificationDto(int id, string name, DateTime releaseDate, DateTime expirationDate,
-            int issuancePlace, int employeeId)
+        public QualificationDto(Qualification qualification)
         {
-            Id = id;
-            Name = name;
-            ReleaseDate = releaseDate;
-            IssuancePlace = issuancePlace;
-            ExpirationDate = expirationDate;
-            EmployeeId = employeeId;
+            Id = qualification.Id;
+            Name = qualification.Name;
+            ReleaseDate = qualification.ReleaseDate;
+            IssuancePlace = qualification.IssuancePlace;
+            ExpirationDate = qualification.ExpirationDate;
+            EmployeeId = qualification.EmployeeId;
         }
 
         public int Id { get; set; }

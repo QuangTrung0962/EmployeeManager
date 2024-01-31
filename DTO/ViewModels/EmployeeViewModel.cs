@@ -1,27 +1,24 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace DTO.ViewModels
 {
     public class EmployeeViewModel
     {
         public EmployeeViewModel() { }
-        public EmployeeViewModel(int id, string name, DateTime dateOfBirth, int age,
-            string ethnicityName, string jobName, string provinceName, string districtName,
-            string townName, string details, int? numberDegree)
+        public EmployeeViewModel(Employee entity)
         {
-            Id = id;
-            Name = name;
-            DateOfBirth = dateOfBirth;
-            Age = age;
-            EthnicityName = ethnicityName;
-            JobName = jobName;
-            ProvinceName = provinceName;
-            DistrictName = districtName;
-            TownName = townName;
-            Details = details;
-            NumberDegree = numberDegree;
+            Id = entity.Id;
+            Name = entity.Name;
+            DateOfBirth = entity.DateOfBirth;
+            Age = entity.Age;
+            EthnicityName = entity.Ethnicity.EthnicityName;
+            JobName = entity.Job.JobName;
+            ProvinceName = entity.Province.ProvinceName;
+            DistrictName = entity.District.DistrictName;
+            TownName = entity.Town.TownName;
+            Details = entity.Details;
+            NumberDegree = entity.Qualifications.Count;
         }
 
         public int Id { get; set; }

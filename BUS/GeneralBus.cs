@@ -1,6 +1,7 @@
 ﻿using BUS.Interfaces;
 using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,12 +35,9 @@ namespace BUS
             }).ToList();
         }
 
-        public List<ProvinceDto> LoadProvinceOptions()
+        public List<ProvinceViewModel> LoadProvinceOptions()
         {
-            return _province.GetProvincesData(null).Select(i => new ProvinceDto
-            { 
-                Id = i.ProvinceId, ProvinceName = i.ProvinceName
-            }).ToList();
+            return _province.GetProvincesData(null);
         }
     }
 }

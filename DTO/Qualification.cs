@@ -15,15 +15,14 @@ namespace DTO
     {
         public Qualification() { }
 
-        public Qualification(int id, string name, DateTime releaseDate, DateTime expirationDate,
-            int issuancePlace, int employeeId)
+        public Qualification(QualificationDto enity)
         {
-            Id = id;
-            Name = name;
-            ReleaseDate = releaseDate;
-            ExpirationDate = expirationDate;
-            IssuancePlace = issuancePlace;
-            EmployeeId = employeeId;
+            Id = enity.Id;
+            Name = enity.Name;
+            ReleaseDate = enity.ReleaseDate;
+            ExpirationDate = enity.ExpirationDate;
+            IssuancePlace = enity.IssuancePlace;
+            EmployeeId = enity.EmployeeId;
         }
 
         public int Id { get; set; }

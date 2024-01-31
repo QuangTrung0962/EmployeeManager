@@ -2,14 +2,14 @@
 {
     public class TownViewModel
     {
-        public TownViewModel() { }
+        public TownViewModel(){}
 
-        public TownViewModel(int id, string name, string districtName, string provinceName)
+        public TownViewModel(Town town)
         {
-            Id = id;
-            TownName = name;
-            DistrictName = districtName;
-            ProvinceName = provinceName;
+            Id = town.TownId;
+            TownName = town.TownName;
+            DistrictName = town.District.DistrictName;
+            ProvinceName = town.District.Province.ProvinceName;
         }
 
         public int Id { get; set; }

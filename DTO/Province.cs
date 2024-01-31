@@ -22,10 +22,10 @@ namespace DTO
             this.Qualifications = new HashSet<Qualification>();
         }
     
-        public Province(int provinceId, string provinceName)
+        public Province(ProvinceDto provinceDto)
         {
-            ProvinceId = provinceId;
-            ProvinceName = provinceName;
+            ProvinceId = provinceDto.Id;
+            ProvinceName = provinceDto.ProvinceName;
         }
 
         public int ProvinceId { get; set; }

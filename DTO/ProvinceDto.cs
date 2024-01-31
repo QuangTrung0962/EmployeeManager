@@ -6,10 +6,10 @@ namespace DTO
 	{
 		public ProvinceDto() { }
 
-		public ProvinceDto(int id, string provinceName) 
+		public ProvinceDto(Province province) 
 		{
-			Id = id;
-			ProvinceName = provinceName;
+			Id = province.ProvinceId;
+			ProvinceName = province.ProvinceName;
 		}
 
 		public int Id { get; set; }

@@ -39,10 +39,9 @@ namespace BUS
                 var employees =
                     _employee.GetEmployeesData(searchString, page.PageIndex, page.PageSize);
 
-                var employeesViewModel = SetEmployeesViewModel(employees);
                 var numberRecords = GetNumberOfRecords(searchString);
 
-                return new PageList<EmployeeViewModel>(employeesViewModel, numberRecords, page.PageIndex,
+                return new PageList<EmployeeViewModel>(employees, numberRecords, page.PageIndex,
                     page.PageSize, searchString);
             }
             catch (Exception ex)
@@ -56,7 +55,7 @@ namespace BUS
         {
             try
             {
-                var employee = SetEmployeeModel(employeeDto);
+                var employee = new Employee(employeeDto);
                 _base.InsertEntity(employee);
                 return true;
             }
@@ -71,7 +70,7 @@ namespace BUS
         {
             try
             {
-                var employee = SetEmployeeModel(employeeDto);
+                var employee = new Employee(employeeDto);
                 _base.UpdateEntity(employee);
                 return true;
             }
@@ -87,7 +86,7 @@ namespace BUS
             try
             {
                 var employeeDto = GetEmployeeById(id);
-                var employee = SetEmployeeModel(employeeDto);
+                var employee = new Employee(employeeDto);
                 _base.DeleteEntity(employee);
                 return true;
             }
@@ -102,13 +101,13 @@ namespace BUS
         {
             if (id == null) return null;
             var employee = _employee.GetEmployeeById(id);
-            return SetEmployeeDtoModel(employee);
+            return new EmployeeDto(employee);
         }
 
         public EmployeeViewModel GetEmployeeViewModel(int id)
         {
             var employee = _employee.GetEmployeeById(id);
-            return SetEmployeeViewModel(employee);
+            return new EmployeeViewModel(employee);
         }
 
         private XLWorkbook CreateExcelList(List<EmployeeViewModel> employees)
@@ -151,9 +150,7 @@ namespace BUS
 
         private List<EmployeeViewModel> GetDataForExcel(string searchString)
         {
-            var employees = _employee.GetDataForExcel(searchString);
-
-            return SetEmployeesViewModel(employees);
+            return _employee.GetDataForExcel(searchString);
         }
 
         public bool ExportExcel(string pathFile, string searchString)
@@ -279,35 +276,6 @@ namespace BUS
                 return false;
             }
 
-        }
-
-        private EmployeeViewModel SetEmployeeViewModel(Employee employee)
-        {
-            return new EmployeeViewModel(employee.Id, employee.Name, employee.DateOfBirth,
-                employee.Age, employee.Ethnicity.EthnicityName, employee.Job.JobName,
-                employee.Province.ProvinceName, employee.District.DistrictName,
-                employee.Town.TownName, employee.Details, employee.Qualifications.Count);
-        }
-
-        private EmployeeDto SetEmployeeDtoModel(Employee employee)
-        {
-            return new EmployeeDto(employee.Id, employee.Name, employee.DateOfBirth,
-                employee.Age, employee.Ethnicity.Id, employee.Job.Id,
-                employee.Province.ProvinceId, employee.District.DistrictId,
-                employee.Town.TownId, employee.Details, employee.Qualifications.Count);
-        }
-
-        private Employee SetEmployeeModel(EmployeeDto employeeDto)
-        {
-            return new Employee(employeeDto.Id, employeeDto.Name, employeeDto.DateOfBirth,
-                employeeDto.Age, employeeDto.EthnicityId, employeeDto.JobId, employeeDto.IdCard,
-                employeeDto.PhoneNumber, employeeDto.ProvinceId, employeeDto.DistrictId,
-                employeeDto.TownId, employeeDto.Details, employeeDto.NumberDegree);
-        }
-
-        private List<EmployeeViewModel> SetEmployeesViewModel(List<Employee> employees)
-        {
-            return employees.Select(employee => SetEmployeeViewModel(employee)).ToList();
         }
 
     }

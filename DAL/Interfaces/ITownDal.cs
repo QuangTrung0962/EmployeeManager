@@ -1,4 +1,5 @@
 ﻿using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 
 namespace DAL.Interfaces
@@ -6,7 +7,7 @@ namespace DAL.Interfaces
     public interface ITownDal
     {
         Town GetTownById(int? id);
-        List<Town> GetTownsByDistrictId(int districtId);
-        List<Town> GetTownsData(string searchString);
+        List<TownViewModel> GetTownsByDistrictId(int districtId);
+        List<TownViewModel> GetTownsData(string searchString);
     }
 }

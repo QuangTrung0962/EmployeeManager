@@ -1,4 +1,5 @@
 ﻿using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 
 
@@ -6,11 +7,11 @@ namespace DAL.Interfaces
 {
     public interface IEmployeeDal
     {
-        List<Employee> GetEmployeesData(string searchString, int pageIndex, int pageSize);
+        List<EmployeeViewModel> GetEmployeesData(string searchString, int pageIndex, int pageSize);
         List<Job> GetJobsData();
         List<Ethnicity> GetEthnicitiesData();
         Employee GetEmployeeById(int? id);
-        List<Employee> GetDataForExcel(string searchString);
+        List<EmployeeViewModel> GetDataForExcel(string searchString);
         int GetNumberOfRecords(string searchString);
     }
 }

@@ -7,20 +7,19 @@ namespace DTO
     {
         public EmployeeDto() { }
 
-        public EmployeeDto(int id, string name, DateTime dateOfBirth, int age, int ethnicityId,
-            int jobId, int provinceId, int districtId, int townId, string details, int? numberDegree)
+        public EmployeeDto(Employee employee)
         {
-            Id = id;
-            Name = name;
-            DateOfBirth = dateOfBirth;
-            Age = age;
-            EthnicityId = ethnicityId;
-            JobId = jobId;
-            ProvinceId = provinceId;
-            DistrictId = districtId;
-            TownId = townId;
-            Details = details;
-            NumberDegree = numberDegree;
+            Id = employee.Id;
+            Name = employee.Name;
+            DateOfBirth = employee.DateOfBirth;
+            Age = employee.Age;
+            EthnicityId = employee.EthnicityId;
+            JobId = employee.JobId;
+            ProvinceId = employee.ProvinceId;
+            DistrictId = employee.DistrictId;
+            TownId = employee.TownId;
+            Details = employee.Details;
+            NumberDegree = employee.Qualifications.Count;
         }
         public int Id { get; set; }
 

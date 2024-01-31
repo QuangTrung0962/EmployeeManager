@@ -1,5 +1,6 @@
 ﻿using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -27,23 +28,26 @@ namespace DAL
                     .Include(i => i.Qualifications);
         }
 
-        public List<Employee> GetEmployeesData(string searchString, int pageIndex, int pageSize)
+        public List<EmployeeViewModel> GetEmployeesData(string searchString, int pageIndex, int pageSize)
         {
-            return GetData()
+            var data = GetData()
                     .Where(i => string.IsNullOrEmpty(searchString) ||
                         i.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()))
                     .OrderBy(i => i.Name)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
+            return SetEmployeesViewModel(data);
         }
 
-        public List<Employee> GetDataForExcel(string searchString)
+        public List<EmployeeViewModel> GetDataForExcel(string searchString)
         {
-            return GetData()
+            var data = GetData()
                 .Where(i => string.IsNullOrEmpty(searchString) ||
                         i.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()))
                 .ToList();
+
+            return SetEmployeesViewModel(data);
         }
 
         //Lấy danh sách công việc
@@ -69,6 +73,11 @@ namespace DAL
                     .Where(i => string.IsNullOrEmpty(searchString) ||
                         i.Name.Trim().ToLower().Contains(searchString.Trim().ToLower()))
                     .Count();
+        }
+
+        private List<EmployeeViewModel> SetEmployeesViewModel(List<Employee> employees)
+        {
+            return employees.Select(i => new EmployeeViewModel(i)).ToList();
         }
     }
 }

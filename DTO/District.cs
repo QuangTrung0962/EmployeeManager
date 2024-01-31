@@ -21,11 +21,11 @@ namespace DTO
             this.Employees = new HashSet<Employee>();
         }
     
-        public District(int districtId, string districtName, int provinceId)
+        public District(DistrictDto districtDto)
         {
-            DistrictId = districtId;
-            DistrictName = districtName;
-            ProvinceId = provinceId;
+            DistrictId = districtDto.Id;
+            DistrictName = districtDto.DistrictName;
+            ProvinceId = districtDto.ProvinceId;
         }
 
         public int DistrictId { get; set; }

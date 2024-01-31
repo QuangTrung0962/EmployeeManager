@@ -26,7 +26,7 @@ namespace BUS
         {
             try
             {
-                var qualification = SetQualificationModel(qualificationDto);
+                var qualification = new Qualification(qualificationDto);
                 _base.InsertEntity(qualification);
                 return true;
             }
@@ -41,7 +41,7 @@ namespace BUS
         {
             try
             {
-                var qualification = SetQualificationModel(qualificationDto);
+                var qualification = new Qualification(qualificationDto);
                 _base.UpdateEntity(qualification);
                 return true;
             }
@@ -57,7 +57,7 @@ namespace BUS
             try
             {
                 var qualificationDto = GetQualificationById(id);
-                var qualification = SetQualificationModel(qualificationDto);
+                var qualification = new Qualification(qualificationDto);
                 _base.DeleteEntity(qualification);
                 return true;
             }
@@ -83,33 +83,13 @@ namespace BUS
         public QualificationDto GetQualificationById(int id)
         {
             var qualification = _qualification.GetQualificationById(id);
-            return SetQualificationDtoModel(qualification);
+            return new QualificationDto(qualification);
         }
 
-        private Qualification SetQualificationModel(QualificationDto qualificationDto)
-        {
-            return new Qualification(qualificationDto.Id, qualificationDto.Name,
-                qualificationDto.ReleaseDate, qualificationDto.ExpirationDate,
-                qualificationDto.IssuancePlace, qualificationDto.EmployeeId);
-        }
-
-        private QualificationDto SetQualificationDtoModel(Qualification qualification)
-        {
-            return new QualificationDto(qualification.Id, qualification.Name,
-                qualification.ReleaseDate, qualification.ExpirationDate,
-                qualification.Province.ProvinceId, qualification.Employee.Id);
-        }
-
-        private QualificationViewModel SetQualificationViewModel(Qualification qualification)
-        {
-            return new QualificationViewModel(qualification.Id, qualification.Name,
-                qualification.ReleaseDate, qualification.ExpirationDate,
-                qualification.Province.ProvinceName, qualification.Employee.Name);
-        }
         private List<QualificationViewModel> SetQualificationsViewModel
             (List<Qualification> qualifications)
         {
-            return qualifications.Select(i => SetQualificationViewModel(i)).ToList();
+            return qualifications.Select(i => new QualificationViewModel(i)).ToList();
         }
     }
 

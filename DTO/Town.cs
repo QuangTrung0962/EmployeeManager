@@ -20,11 +20,11 @@ namespace DTO
             this.Employees = new HashSet<Employee>();
         }
 
-        public Town(int townId, string townName, int districtId)
+        public Town(TownDto townDto)
         {
-            TownId = townId;
-            TownName = townName;
-            DistrictId = districtId;
+            TownId = townDto.Id;
+            TownName = townDto.TownName;
+            DistrictId = townDto.DistrictId;
         }
 
         public int TownId { get; set; }

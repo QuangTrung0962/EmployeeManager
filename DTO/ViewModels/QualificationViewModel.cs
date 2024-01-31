@@ -8,15 +8,14 @@ namespace DTO.ViewModels
     {
         public QualificationViewModel() { }
 
-        public QualificationViewModel(int id, string name, DateTime releaseDate,
-            DateTime expirationDate, string issuancePlaceName, string employeeName)
+        public QualificationViewModel(Qualification qualification)
         {
-            Id = id;
-            Name = name;
-            ReleaseDate = releaseDate;
-            ExpirationDate = expirationDate;
-            IssuancePlaceName = issuancePlaceName;
-            EmployeeName = employeeName;
+            Id = qualification.Id;
+            Name = qualification.Name;
+            ReleaseDate = qualification.ReleaseDate;
+            ExpirationDate = qualification.ExpirationDate;
+            IssuancePlaceName = qualification.Province.ProvinceName;
+            EmployeeName = qualification.Employee.Name;
         }
 
         public int Id { get; set; }

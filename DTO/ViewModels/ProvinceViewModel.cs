@@ -4,10 +4,10 @@
     {
         public ProvinceViewModel() { }
 
-        public ProvinceViewModel(int id, string name)
+        public ProvinceViewModel(Province province)
         {
-            Id = id;
-            ProvinceName = name;
+            Id = province.ProvinceId;
+            ProvinceName = province.ProvinceName;
         }
 
         public int Id { get; set; }

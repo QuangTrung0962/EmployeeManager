@@ -1,5 +1,6 @@
 ﻿using DAL.Interfaces;
 using DTO;
+using DTO.ViewModels;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -22,17 +23,18 @@ namespace DAL
                     .Include(i => i.Towns);
         }
 
-        public List<District> GetDistrictsData(string searchString)
+        public List<DistrictViewModel> GetDistrictsData(string searchString)
         {
             if (int.TryParse(searchString, out int provinceId))
             {
                 return GetDistrictsByProvinceId(provinceId);
             }
 
-            return GetData()
+            var data = GetData()
                     .Where(i => string.IsNullOrEmpty(searchString) ||
                         i.DistrictName.Trim().ToLower().Contains(searchString.Trim().ToLower()))
                     .ToList();
+            return SetDistrictsViewModel(data);
         }
 
         public District GetDistrictById(int? id)
@@ -40,11 +42,15 @@ namespace DAL
             return GetData().Where(i => i.DistrictId == id).FirstOrDefault();
         }
 
-        public List<District> GetDistrictsByProvinceId(int provinceId)
+        public List<DistrictViewModel> GetDistrictsByProvinceId(int provinceId)
         {
-            return GetData().Where(i => i.ProvinceId == provinceId).ToList();
-                
+            var data = GetData().Where(i => i.ProvinceId == provinceId).ToList();
+            return SetDistrictsViewModel(data);
         }
 
+        private List<DistrictViewModel> SetDistrictsViewModel(List<District> districts)
+        {
+            return districts.Select(i => new DistrictViewModel(i)).ToList();
+        }
     }
 }
